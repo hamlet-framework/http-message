@@ -1,0 +1,9 @@
+{
+  "require": {
+    "php": "^7.2",
+    "psr/http-message": "@stable",
+    "guzzlehttp/psr7": "@stable",
+    "zendframework/zend-diactoros": "@stable",
+    "nyholm/psr7": "@stable"
+  }
+}

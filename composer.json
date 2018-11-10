@@ -1,0 +1,43 @@
+{
+  "name": "hamlet-framework/http-message",
+  "type": "framework",
+  "description": "Hamlet Framework / HTTP / Request",
+  "keywords": ["framework", "http", "psr", "psr-7"],
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Vasily Kartashov",
+      "email": "info@kartashov.com"
+    }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "classmap-authoritative": true,
+    "sort-packages": true
+  },
+  "provide": {
+    "psr/http-message-implementation": "1.0"
+  },
+  "require": {
+    "php": "^7.2",
+    "psr/http-message": "@stable"
+  },
+  "require-dev": {
+    "hamlet-framework/http-message-spec": "dev-master",
+    "phpstan/phpstan": "dev-master",
+    "vimeo/psalm": "dev-master",
+    "phake/phake": "dev-master",
+    "squizlabs/php_codesniffer": "@stable",
+    "phpunit/phpunit": "@stable"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hamlet\\Http\\Message\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Hamlet\\Http\\Message\\": "tests"
+    }
+  }
+}
