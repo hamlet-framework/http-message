@@ -15,17 +15,17 @@ class Uri extends Chain implements UriInterface
 
     use UriValidatorTrait;
 
-    public static function validatingBuilder(): URIBuilder
+    public static function validatingBuilder(): UriBuilder
     {
         return self::builder(true);
     }
 
-    public static function nonValidatingBuilder(): URIBuilder
+    public static function nonValidatingBuilder(): UriBuilder
     {
         return self::builder(false);
     }
 
-    private static function builder(bool $validate = true): URIBuilder
+    private static function builder(bool $validate = true): UriBuilder
     {
         $instance = new static;
         $constructor = function (array $properties, array $generators) use ($instance): Uri {
@@ -33,7 +33,7 @@ class Uri extends Chain implements UriInterface
             $instance->generators = $generators;
             return $instance;
         };
-        return new class($constructor, $validate) extends URIBuilder {};
+        return new class($constructor, $validate) extends UriBuilder {};
     }
 
     /**
