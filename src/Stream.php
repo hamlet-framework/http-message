@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -11,7 +11,7 @@ use RuntimeException;
 
 class Stream implements StreamInterface, LoggerAwareInterface
 {
-    /** @var resource A resource reference */
+    /** @var resource|null */
     private $stream;
 
     /** @var bool */
@@ -26,7 +26,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
     /** @var array|mixed|null|void */
     private $uri;
 
-    /** @var int */
+    /** @var int|null */
     private $size;
 
     /** @var LoggerInterface */
@@ -75,6 +75,9 @@ class Stream implements StreamInterface, LoggerAwareInterface
     public static function fromString(string $data): StreamInterface
     {
         $resource = \fopen('php://temp', 'rw+');
+        if ($resource === false) {
+            throw new RuntimeException('Cannot open temporary stream');
+        }
         \fwrite($resource, $data);
         return static::fromResource($resource);
     }
@@ -116,7 +119,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
             return null;
         }
         $result = $this->stream;
-        unset($this->stream);
+        $this->stream = null;
         $this->size = $this->uri = null;
         $this->readable = $this->writable = $this->seekable = false;
         return $result;
@@ -135,8 +138,11 @@ class Stream implements StreamInterface, LoggerAwareInterface
             \clearstatcache(true, $this->uri);
         }
         $stats = \fstat($this->stream);
+        if ($stats === false) {
+            throw new RuntimeException('Cannot retrieve stream information');
+        }
         if (isset($stats['size'])) {
-            $this->size = $stats['size'];
+            $this->size = (int) $stats['size'];
             return $this->size;
         }
         return null;
@@ -147,7 +153,8 @@ class Stream implements StreamInterface, LoggerAwareInterface
         if (!isset($this->stream)) {
             throw new RuntimeException('No resource');
         }
-        if (false === $result = \ftell($this->stream)) {
+        $result = \ftell($this->stream);
+        if ($result === false) {
             throw new RuntimeException('Unable to determine stream position');
         }
         return $result;
@@ -158,7 +165,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
         if (!isset($this->stream)) {
             throw new RuntimeException('No resource');
         }
-        return !$this->stream || \feof($this->stream);
+        return \feof($this->stream);
     }
 
     public function isSeekable(): bool
@@ -168,9 +175,13 @@ class Stream implements StreamInterface, LoggerAwareInterface
 
     public function seek($offset, $whence = \SEEK_SET): void
     {
+        if (!isset($this->stream)) {
+            throw new RuntimeException('Unable to read stream contents');
+        }
         if (!$this->seekable) {
             throw new RuntimeException('Stream is not seekable');
-        } elseif (\fseek($this->stream, $offset, $whence) === -1) {
+        }
+        if (\fseek($this->stream, $offset, $whence) === -1) {
             throw new RuntimeException('Unable to seek to stream position ' . $offset . ' with whence ' . \var_export($whence, true));
         }
     }
@@ -187,12 +198,16 @@ class Stream implements StreamInterface, LoggerAwareInterface
 
     public function write($string): int
     {
+        if (!isset($this->stream)) {
+            throw new RuntimeException('Unable to read stream contents');
+        }
         if (!$this->writable) {
             throw new RuntimeException('Cannot write to a non-writable stream');
         }
         // We can't know the size after writing anything
         $this->size = null;
-        if (false === $result = \fwrite($this->stream, $string)) {
+        $result = \fwrite($this->stream, $string);
+        if ($result === false) {
             throw new RuntimeException('Unable to write to stream');
         }
         return $result;
@@ -205,6 +220,9 @@ class Stream implements StreamInterface, LoggerAwareInterface
 
     public function read($length): string
     {
+        if (!isset($this->stream)) {
+            throw new RuntimeException('Unable to read stream contents');
+        }
         if (!\is_int($length) || $length < 0) {
             throw new InvalidArgumentException('Length must be a non-negative number');
         }
@@ -214,7 +232,11 @@ class Stream implements StreamInterface, LoggerAwareInterface
         if ($length === 0) {
             return '';
         }
-        return \fread($this->stream, $length);
+        $result = \fread($this->stream, $length);
+        if ($result === false) {
+            throw new RuntimeException('Cannot read from stream');
+        }
+        return $result;
     }
 
     public function getContents(): string

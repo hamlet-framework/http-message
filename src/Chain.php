@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -22,6 +22,11 @@ abstract class Chain
         return new static;
     }
 
+    /**
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
     protected function &fetch(string $name, $default = null)
     {
         if (\array_key_exists($name, $this->properties)) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message\Traits;
 
@@ -124,10 +124,10 @@ trait MessageValidatorTrait
             if (!\is_string($value) && !\is_int($value)) {
                 throw new InvalidArgumentException('Header values must be strings');
             }
-            if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
+            if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", (string) $value)) {
                 throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
             }
-            if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', $value)) {
+            if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', (string) $value)) {
                 throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
             }
             $normalizedValues[] = \trim((string) $value, " \t");

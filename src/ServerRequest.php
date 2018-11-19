@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -7,6 +7,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ServerRequest extends Request implements ServerRequestInterface
 {
+    /**
+     * @param bool $validate
+     * @return ServerRequestBuilder
+     */
     protected static function builder(bool $validate)
     {
         $instance = new static;
@@ -48,7 +52,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param array $cookies
      * @return static
      */
-    public function withCookieParams($cookies)
+    public function withCookieParams(array $cookies)
     {
         $request = new static;
         $request->parent = &$this;
@@ -65,7 +69,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param array $query
      * @return static
      */
-    public function withQueryParams($query)
+    public function withQueryParams(array $query)
     {
         $request = new static;
         $request->parent = &$this;
@@ -86,7 +90,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @throws InvalidArgumentException
      */
-    public function withUploadedFiles($uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles)
     {
         $request = new static;
         $request->parent = &$this;

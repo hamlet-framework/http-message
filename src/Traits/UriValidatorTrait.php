@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message\Traits;
 
@@ -95,9 +95,14 @@ trait UriValidatorTrait
             $valid .= '?';
         }
         $pattern = '#([^' . $valid . ']+|%(?![A-Fa-f0-9]{2}))#';
-        return \preg_replace_callback($pattern, function (array $match): string {
+        $callback = function (array $match): string {
             return \rawurlencode($match[0]);
-        }, $string);
+        };
+        $result = \preg_replace_callback($pattern, $callback, $string);
+        if ($result === null) {
+            throw new InvalidArgumentException('Cannot escape string');
+        }
+        return $result;
     }
 
     protected function normalizeUserInfo($name, $password): string

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -20,10 +20,10 @@ class UploadedFile implements UploadedFileInterface
         \UPLOAD_ERR_EXTENSION,
     ];
 
-    /** @var string */
+    /** @var string|null */
     private $clientFilename;
 
-    /** @var string */
+    /** @var string|null */
     private $clientMediaType;
 
     /** @var int */
@@ -75,6 +75,8 @@ class UploadedFile implements UploadedFileInterface
         if ($this->stream instanceof StreamInterface) {
             return $this->stream;
         }
+
+        assert($this->file !== null);
         $resource = \fopen($this->file, 'r');
         return Stream::fromResource($resource);
     }

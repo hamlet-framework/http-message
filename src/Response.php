@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -7,6 +7,10 @@ use Psr\Http\Message\ResponseInterface;
 
 class Response extends Message implements ResponseInterface
 {
+    /**
+     * @param bool $validate
+     * @return ResponseBuilder
+     */
     protected static function builder(bool $validate)
     {
         $instance = new static;

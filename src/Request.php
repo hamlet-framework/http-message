@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -8,6 +8,10 @@ use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
 {
+    /**
+     * @param bool $validate
+     * @return RequestBuilder
+     */
     protected static function builder(bool $validate)
     {
         $instance = new static;
@@ -45,7 +49,7 @@ class Request extends Message implements RequestInterface
             return $this->properties['requestTarget'] = call_user_func(...$this->generators['requestTarget']);
         }
 
-        /** @var UriInterface */
+        /** @var UriInterface|null */
         $uri = $this->fetch('uri');
 
         if ($uri === null) {

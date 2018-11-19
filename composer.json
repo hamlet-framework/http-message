@@ -1,8 +1,8 @@
 {
   "name": "hamlet-framework/http-message",
-  "type": "framework",
+  "type": "library",
   "description": "Hamlet Framework / HTTP / Request",
-  "keywords": ["framework", "http", "psr", "psr-7"],
+  "keywords": ["framework", "library", "http", "psr", "psr-7"],
   "license": "Apache-2.0",
   "authors": [
     {
@@ -24,9 +24,9 @@
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "dev-master",
-    "phpstan/phpstan": "dev-master",
     "vimeo/psalm": "dev-master",
-    "phake/phake": "dev-master",
+    "phan/phan": "dev-master",
+    "phpstan/phpstan": "dev-master",
     "squizlabs/php_codesniffer": "@stable",
     "phpunit/phpunit": "@stable"
   },

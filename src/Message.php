@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hamlet\Http\Message;
 
@@ -11,6 +11,10 @@ class Message extends Chain implements MessageInterface
 {
     use MessageValidatorTrait;
 
+    /**
+     * @param bool $validate
+     * @return MessageBuilder
+     */
     protected static function builder(bool $validate)
     {
         $instance = new static;
@@ -101,7 +105,7 @@ class Message extends Chain implements MessageInterface
 
     /**
      * @param string $name
-     * @param string|string[]
+     * @param string|string[] $value
      * @return static
      * @throws InvalidArgumentException
      */
@@ -115,7 +119,7 @@ class Message extends Chain implements MessageInterface
 
     /**
      * @param string $name
-     * @param string|string[]
+     * @param string|string[] $value
      * @return static
      * @throws InvalidArgumentException
      */
@@ -153,7 +157,7 @@ class Message extends Chain implements MessageInterface
      * @return static
      * @throws InvalidArgumentException
      */
-    public function withBody($body)
+    public function withBody(StreamInterface $body)
     {
         $message = new static;
         $message->parent = &$this;
@@ -164,11 +168,11 @@ class Message extends Chain implements MessageInterface
     protected function replaceHeader($name, $value): array
     {
         list($values, $names) = $this->headers();
+        $normalizedValue = $this->validateAndNormalizeHeader($name, $value);
         $key = \strtolower($name);
         if (!isset($names[$key])) {
             $names[$key] = $key == 'host' ? 'Host' : $name;
         }
-        $normalizedValue = $this->validateAndNormalizeHeader($name, $value);
         if ($key == 'host') {
             $values = ['Host' => $normalizedValue] + $values;
         } else {
@@ -191,12 +195,12 @@ class Message extends Chain implements MessageInterface
     protected function extendHeader($name, $value): array
     {
         list($values, $names) = $this->headers();
+        $normalizedValue = $this->validateAndNormalizeHeader($name, $value);
         $key = \strtolower($name);
         if (!isset($names[$key])) {
             $names[$key] = $key == 'host' ? 'Host' : $name;
         }
         $normalizedName = $names[$key];
-        $normalizedValue = $this->validateAndNormalizeHeader($name, $value);
         if ($key == 'host') {
             $values = ['Host' => $normalizedValue] + $values;
         } elseif (isset($values[$normalizedName])) {
