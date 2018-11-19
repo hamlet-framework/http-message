@@ -29,7 +29,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
     /** @var int|null */
     private $size;
 
-    /** @var LoggerInterface */
+    /** @var LoggerInterface|null */
     private $logger;
 
     /** @var array Hash of readable and writable stream types */
@@ -127,10 +127,10 @@ class Stream implements StreamInterface, LoggerAwareInterface
 
     public function getSize(): ?int
     {
-        if (null !== $this->size) {
+        if ($this->size !== null) {
             return $this->size;
         }
-        if (!isset($this->stream)) {
+        if ($this->stream === null) {
             return null;
         }
         // Clear the stat cache if the stream has a URI

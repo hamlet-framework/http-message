@@ -121,7 +121,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
     public function getAttributes(): array
     {
-        return $this->fetch('attributes', []);
+        return (array) $this->fetch('attributes', []);
     }
 
     /**
@@ -131,7 +131,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getAttribute($name, $default = null)
     {
-        $attributes = $this->fetch('attributes', []);
+        $attributes = (array) $this->fetch('attributes', []);
         if (\array_key_exists($name, $attributes)) {
             return $attributes[$name];
         }
@@ -163,22 +163,31 @@ class ServerRequest extends Request implements ServerRequestInterface
         return $request;
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return array
+     */
     protected function addAttribute($name, $value)
     {
         if (!\is_string($name)) {
             throw new \InvalidArgumentException('Attribute name must be a string');
         }
-        $attributes = $this->fetch('attributes', []);
+        $attributes = (array) $this->fetch('attributes', []);
         $attributes[$name] = $value;
         return $attributes;
     }
 
+    /**
+     * @param mixed $name
+     * @return array
+     */
     protected function removeAttribute($name)
     {
         if (!\is_string($name)) {
             throw new \InvalidArgumentException('Attribute name must be a string');
         }
-        $attributes = $this->fetch('attributes', []);
+        $attributes = (array) $this->fetch('attributes', []);
         if (\array_key_exists($name, $attributes)) {
             unset($attributes[$name]);
         }

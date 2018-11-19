@@ -129,17 +129,17 @@ class UploadedFile implements UploadedFileInterface
      * @author Michael Dowling and contributors to guzzlehttp/psr7
      *
      * @param StreamInterface $source Stream to read from
-     * @param StreamInterface $dest Stream to write to
+     * @param StreamInterface $destination Stream to write to
      * @param int $maxLen Maximum number of bytes to read. Pass -1
      *                                to read the entire stream
      *
      * @throws RuntimeException on error
      */
-    private function copyToStream(StreamInterface $source, StreamInterface $dest, $maxLen = -1)
+    private function copyToStream(StreamInterface $source, StreamInterface $destination, $maxLen = -1)
     {
         if ($maxLen === -1) {
             while (!$source->eof()) {
-                if (!$dest->write($source->read(1048576))) {
+                if (!$destination->write($source->read(1048576))) {
                     break;
                 }
             }
@@ -152,7 +152,7 @@ class UploadedFile implements UploadedFileInterface
                 break;
             }
             $bytes += $len;
-            $dest->write($buf);
+            $destination->write($buf);
             if ($bytes === $maxLen) {
                 break;
             }

@@ -8,6 +8,7 @@ use Psr\Http\Message\UploadedFileInterface;
 
 trait MessageValidatorTrait
 {
+    /** @var array<int,string> */
     protected static $REASON_PHRASES = [
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -247,6 +248,7 @@ trait MessageValidatorTrait
 
     public function validateAttributes(array $attributes): array
     {
+        /** @noinspection PhpUnusedLocalVariableInspection */
         foreach ($attributes as $name => &$_) {
             if (!\is_string($name)) {
                 throw new InvalidArgumentException('Attribute names must be strings');

@@ -70,13 +70,13 @@ class Uri extends Chain implements UriInterface
 
     public function getScheme(): string
     {
-        return $this->fetch('scheme', '');
+        return (string) $this->fetch('scheme', '');
     }
 
     public function getAuthority(): string
     {
         if (\array_key_exists('authority', $this->properties)) {
-            return $this->properties['authority'];
+            return (string) $this->properties['authority'];
         }
 
         $host = $this->getHost();
@@ -106,12 +106,12 @@ class Uri extends Chain implements UriInterface
 
     public function getUserInfo(): string
     {
-        return $this->fetch('userInfo', '');
+        return (string) $this->fetch('userInfo', '');
     }
 
     public function getHost(): string
     {
-        return $this->fetch('host', '');
+        return (string) $this->fetch('host', '');
     }
 
     public function getPort(): ?int
@@ -126,19 +126,19 @@ class Uri extends Chain implements UriInterface
         return $this->properties['filteredPort'] = ($port === $standardPort) ? null : $port;
     }
 
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->fetch('path', null);
     }
 
     public function getQuery(): string
     {
-        return $this->fetch('query', '');
+        return (string) $this->fetch('query', '');
     }
 
     public function getFragment(): string
     {
-        return $this->fetch('fragment', '');
+        return (string) $this->fetch('fragment', '');
     }
 
     /**

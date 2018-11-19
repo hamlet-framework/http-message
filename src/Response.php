@@ -40,7 +40,7 @@ class Response extends Message implements ResponseInterface
 
     public function getProtocolVersion(): string
     {
-        return $this->fetch('protocolVersion', '1.1');
+        return (string) $this->fetch('protocolVersion', '1.1');
     }
 
     public function getStatusCode(): int
@@ -65,6 +65,7 @@ class Response extends Message implements ResponseInterface
 
     public function getReasonPhrase(): string
     {
+        /** @noinspection PhpUnusedLocalVariableInspection */
         list($_, $reason) = $this->fetch('status', [200, 'OK']);
         return $reason;
     }

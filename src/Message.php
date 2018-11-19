@@ -74,6 +74,7 @@ class Message extends Chain implements MessageInterface
      */
     public function hasHeader($name): bool
     {
+        /** @noinspection PhpUnusedLocalVariableInspection */
         list($_, $names) = $this->enhancedHeaders();
         return \array_key_exists(\strtolower($name), $names);
     }
@@ -165,6 +166,11 @@ class Message extends Chain implements MessageInterface
         return $message;
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return array
+     */
     protected function replaceHeader($name, $value): array
     {
         list($values, $names) = $this->headers();
@@ -215,6 +221,7 @@ class Message extends Chain implements MessageInterface
     {
         list($values, $names) = $this->fetch('headers', [[], []]);
         if ($names === null) {
+            /** @noinspection PhpUnusedLocalVariableInspection */
             foreach ($values as $name => &$_) {
                 $names[\strtolower($name)] = $name;
             }
