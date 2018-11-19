@@ -12,8 +12,8 @@ before_script:
   - composer update
 
 script:
-  - ./vendor/bin/phan
+  - ./vendor/bin/phan --allow-polyfill-parser
   - ./vendor/bin/psalm
-  - ./vendor/bin/phpstan analyse --level 7 src -c phpstan.neon
+  - ./vendor/bin/phpstan analyse --level 7 src
   - ./vendor/bin/phpunit
   - ./vendor/bin/phpcs --standard=PSR2 -n src

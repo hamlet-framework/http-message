@@ -58,12 +58,12 @@ return [
     //
     // This is an incremental step in migrating away from `null_casts_as_any_type`.
     // If `null_casts_as_any_type` is true, this has no effect.
-    'null_casts_as_array' => true,
+    'null_casts_as_array' => false,
 
     // If enabled, allow any array-like type to be cast to null.
     // This is an incremental step in migrating away from `null_casts_as_any_type`.
     // If `null_casts_as_any_type` is true, this has no effect.
-    'array_casts_as_null' => true,
+    'array_casts_as_null' => false,
 
     // If enabled, scalars (int, float, bool, string, null)
     // are treated as if they can cast to each other.
@@ -74,7 +74,7 @@ return [
     // are treated as if they can cast to each other.
     // E.g. `array<int,stdClass>` can cast to `array<string,stdClass>` and vice versa.
     // Normally, a scalar type such as int could only cast to/from int and mixed.
-    'scalar_array_key_cast' => true,
+    'scalar_array_key_cast' => false,
 
     // If this has entries, scalars (int, float, bool, string, null)
     // are allowed to perform the casts listed.
@@ -89,33 +89,33 @@ return [
     // or if **any** type in an invoked expression is not a callable.
     // Setting this to true will introduce numerous false positives
     // (and reveal some bugs).
-    'strict_method_checking' => false,
+    'strict_method_checking' => true,
 
     // If enabled, Phan will warn if **any** type in the argument's type
     // cannot be cast to a type in the parameter's expected type.
     // Setting this to true will introduce numerous false positives
     // (and reveal some bugs).
-    'strict_param_checking' => false,
+    'strict_param_checking' => true,
 
     // If enabled, Phan will warn if **any** type in the return value's type
     // cannot be cast to a type in the declared return type.
     // Setting this to true will introduce numerous false positives
     // (and reveal some bugs).
-    'strict_return_checking' => false,
+    'strict_return_checking' => true,
 
     // If true, seemingly undeclared variables in the global
     // scope will be ignored.
     //
     // This is useful for projects with complicated cross-file
     // globals that you have no hope of fixing.
-    'ignore_undeclared_variables_in_global_scope' => true,
+    'ignore_undeclared_variables_in_global_scope' => false,
 
     // Set this to false to emit `PhanUndeclaredFunction` issues for internal functions that Phan has signatures for,
     // but aren't available in the codebase, or the internal functions used to run Phan
     // (may lead to false positives if an extension isn't loaded)
     //
     // If this is true(default), then Phan will not warn.
-    'ignore_undeclared_functions_with_known_signatures' => true,
+    'ignore_undeclared_functions_with_known_signatures' => false,
 
     // Backwards Compatibility Checking. This is slow
     // and expensive, but you should consider running
@@ -128,12 +128,12 @@ return [
     // [php7cc (no longer maintained)](https://github.com/sstalle/php7cc)
     // and [php7mar](https://github.com/Alexia/php7mar),
     // which have different backwards compatibility checks.
-    'backward_compatibility_checks' => false,
+    'backward_compatibility_checks' => true,
 
     // If true, check to make sure the return type declared
     // in the doc-block (if any) matches the return type
     // declared in the method signature.
-    'check_docblock_signature_return_type_match' => false,
+    'check_docblock_signature_return_type_match' => true,
 
     // If true, make narrowed types from phpdoc params override
     // the real types from the signature, when real types exist.
@@ -198,7 +198,7 @@ return [
     // `dead_code_detection` will also enable unused variable detection.
     //
     // This has a few known false positives, e.g. for loops or branches.
-    'unused_variable_detection' => false,
+    'unused_variable_detection' => true,
 
     // If true, this run a quick version of checks that takes less
     // time at the cost of not running as thorough
