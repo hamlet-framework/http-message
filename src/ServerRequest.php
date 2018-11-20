@@ -7,12 +7,82 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ServerRequest extends Request implements ServerRequestInterface
 {
+    /** @var array|null */
+    protected $serverParams = null;
+
+    /** @var callable|null */
+    protected $serverParamsGenerator = null;
+
+    /** @var array|null */
+    protected $cookieParams;
+
+    /** @var callable|null */
+    protected $cookieParamsGenerator = null;
+
+    /** @var array|null */
+    protected $queryParams = null;
+
+    /** @var callable|null */
+    protected $queryParamsGenerator = null;
+
+    /** @var array|null */
+    protected $uploadedFiles = null;
+
+    /** @var callable|null */
+    protected $uploadedFilesGenerator = null;
+
+    /** @var object|array|null */
+    protected $parsedBody = null;
+
+    /** @var bool */
+    protected $parsedBodySet = false;
+
+    /** @var callable|null */
+    protected $parsedBodyGenerator = null;
+
+    /** @var array|null */
+    protected $attributes = null;
+
+    /** @var callable|null */
+    protected $attributesGenerator = null;
+
     /**
      * @return ServerRequestBuilder
      */
     public static function validatingBuilder()
     {
-        return new class(self::constructor(), true) extends ServerRequestBuilder {};
+        $instance = new ServerRequest();
+        $constructor = function (
+            $protocolVersion,
+            $headers,
+            $body,
+            $requestTarget,
+            $method,
+            $uri,
+            $serverParams,
+            $cookieParams,
+            $queryParams,
+            $uploadedFiles,
+            $parsedBody,
+            $parsedBodySet,
+            $attributes
+        ) use ($instance): ServerRequest {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers         = $headers;
+            $instance->body            = $body;
+            $instance->requestTarget   = $requestTarget;
+            $instance->method          = $method;
+            $instance->uri             = $uri;
+            $instance->serverParams    = $serverParams;
+            $instance->cookieParams    = $cookieParams;
+            $instance->queryParams     = $queryParams;
+            $instance->uploadedFiles   = $uploadedFiles;
+            $instance->parsedBody      = $parsedBody;
+            $instance->parsedBodySet   = $parsedBodySet;
+            $instance->attributes      = $attributes;
+            return $instance;
+        };
+        return new class($constructor, true) extends ServerRequestBuilder {};
     }
 
     /**
@@ -20,17 +90,64 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public static function nonValidatingBuilder()
     {
-        return new class(self::constructor(), false) extends ServerRequestBuilder {};
+        $instance = new ServerRequest();
+        $constructor = function (
+            $protocolVersion,
+            $headers,
+            $body,
+            $requestTarget,
+            $method,
+            $uri,
+            $serverParams,
+            $cookieParams,
+            $queryParams,
+            $uploadedFiles,
+            $parsedBody,
+            $parsedBodySet,
+            $attributes
+        ) use ($instance): ServerRequest {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers         = $headers;
+            $instance->body            = $body;
+            $instance->requestTarget   = $requestTarget;
+            $instance->method          = $method;
+            $instance->uri             = $uri;
+            $instance->serverParams    = $serverParams;
+            $instance->cookieParams    = $cookieParams;
+            $instance->queryParams     = $queryParams;
+            $instance->uploadedFiles   = $uploadedFiles;
+            $instance->parsedBody      = $parsedBody;
+            $instance->parsedBodySet   = $parsedBodySet;
+            $instance->attributes      = $attributes;
+            return $instance;
+        };
+        return new class($constructor, false) extends ServerRequestBuilder {};
     }
 
     public function getServerParams(): array
     {
-        return $this->fetch('serverParams', []);
+        if (!isset($this->serverParams)) {
+            if (isset($this->serverParamsGenerator)) {
+                $this->serverParams = ($this->serverParamsGenerator)();
+                $this->serverParamsGenerator = null;
+            } else {
+                $this->serverParams = [];
+            }
+        }
+        return $this->serverParams;
     }
 
     public function getCookieParams(): array
     {
-        return $this->fetch('cookieParams', []);
+        if (!isset($this->cookieParams)) {
+            if (isset($this->cookieParamsGenerator)) {
+                $this->cookieParams = ($this->cookieParamsGenerator)();
+                $this->cookieParamsGenerator = null;
+            } else {
+                $this->cookieParams = [];
+            }
+        }
+        return $this->cookieParams;
     }
 
     /**
@@ -39,15 +156,23 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withCookieParams(array $cookies)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['cookieParams'] = [[&$this, 'validateCookieParams'], &$cookies];
-        return $request;
+        $copy = clone $this;
+        $copy->cookieParams = $this->validateCookieParams($cookies);
+        $copy->cookieParamsGenerator = null;
+        return $copy;
     }
 
     public function getQueryParams(): array
     {
-        return $this->fetch('queryParams', []);
+        if (!isset($this->queryParams)) {
+            if (isset($this->queryParamsGenerator)) {
+                $this->queryParams = ($this->queryParamsGenerator)();
+                $this->queryParamsGenerator = null;
+            } else {
+                $this->queryParams = [];
+            }
+        }
+        return $this->queryParams;
     }
 
     /**
@@ -56,10 +181,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withQueryParams(array $query)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['queryParams'] = [[&$this, 'validateQueryParams'], &$query];
-        return $request;
+        $copy = clone $this;
+        $copy->queryParams = $this->validateQueryParams($query);
+        $copy->queryParamsGenerator = null;
+        return $copy;
     }
 
     /**
@@ -67,7 +192,15 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getUploadedFiles(): array
     {
-        return $this->fetch('uploadedFiles', []);
+        if (!isset($this->uploadedFiles)) {
+            if (isset($this->uploadedFilesGenerator)) {
+                $this->uploadedFiles = ($this->uploadedFilesGenerator)();
+                $this->uploadedFilesGenerator = null;
+            } else {
+                $this->uploadedFiles = [];
+            }
+        }
+        return $this->uploadedFiles;
     }
 
     /**
@@ -77,10 +210,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['uploadedFiles'] = [[&$this, 'validateUploadedFiles'], &$uploadedFiles];
-        return $request;
+        $copy = clone $this;
+        $copy->uploadedFiles = $this->validateUploadedFiles($uploadedFiles);
+        $copy->uploadedFilesGenerator = null;
+        return $copy;
     }
 
     /**
@@ -88,7 +221,13 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getParsedBody()
     {
-        return $this->fetch('parsedBody');
+        if (!$this->parsedBodySet) {
+            if ($this->parsedBodyGenerator) {
+                $this->parsedBody = ($this->parsedBodyGenerator)();
+            }
+            $this->parsedBodySet = true;
+        }
+        return $this->parsedBody;
     }
 
     /**
@@ -98,15 +237,24 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['parsedBody'] = [[&$this, 'validateParsedBody'], &$data];
-        return $request;
+        $copy = clone $this;
+        $copy->parsedBody = $this->validateParsedBody($data);
+        $copy->parsedBodySet = true;
+        $copy->parsedBodyGenerator = null;
+        return $copy;
     }
 
     public function getAttributes(): array
     {
-        return (array) $this->fetch('attributes', []);
+        if (!isset($this->attributes)) {
+            if (isset($this->attributesGenerator)) {
+                $this->attributes = ($this->attributesGenerator)();
+                $this->attributesGenerator = null;
+            } else {
+                $this->attributes = [];
+            }
+        }
+        return $this->attributes;
     }
 
     /**
@@ -116,7 +264,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getAttribute($name, $default = null)
     {
-        $attributes = (array) $this->fetch('attributes', []);
+        $attributes = $this->getAttributes();
         if (\array_key_exists($name, $attributes)) {
             return $attributes[$name];
         }
@@ -130,10 +278,15 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withAttribute($name, $value)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['attributes'] = [[&$this, 'addAttribute'], &$name, &$value];
-        return $request;
+        $this->validateAttributeName($name);
+
+        $attributes = $this->getAttributes();
+        $attributes[$name] = $value;
+
+        $copy = clone $this;
+        $copy->attributes = $this->validateAttributes($attributes);
+        $copy->attributesGenerator = null;
+        return $copy;
     }
 
     /**
@@ -142,40 +295,17 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withoutAttribute($name)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['attributes'] = [[&$this, 'removeAttribute'], &$name];
-        return $request;
-    }
+        $this->validateAttributeName($name);
 
-    /**
-     * @param mixed $name
-     * @param mixed $value
-     * @return array
-     */
-    protected function addAttribute($name, $value)
-    {
-        if (!\is_string($name)) {
-            throw new \InvalidArgumentException('Attribute name must be a string');
+        $attributes = $this->getAttributes();
+        if (!\array_key_exists($name, $attributes)) {
+            return $this;
         }
-        $attributes = (array) $this->fetch('attributes', []);
-        $attributes[$name] = $value;
-        return $attributes;
-    }
+        unset($attributes[$name]);
 
-    /**
-     * @param mixed $name
-     * @return array
-     */
-    protected function removeAttribute($name)
-    {
-        if (!\is_string($name)) {
-            throw new \InvalidArgumentException('Attribute name must be a string');
-        }
-        $attributes = (array) $this->fetch('attributes', []);
-        if (\array_key_exists($name, $attributes)) {
-            unset($attributes[$name]);
-        }
-        return $attributes;
+        $copy = clone $this;
+        $copy->attributes = $attributes;
+        $copy->attributesGenerator = null;
+        return $copy;
     }
 }

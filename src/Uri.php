@@ -6,23 +6,83 @@ use Hamlet\Http\Message\Traits\UriValidatorTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 
-class Uri extends Chain implements UriInterface
+class Uri implements UriInterface
 {
     private const STANDARD_PORTS = [
-        'http'  =>  80,
+        'http'  => 80,
         'https' => 443
     ];
 
     use UriValidatorTrait;
 
+    /** @var string */
+    private $scheme = '';
+
+    /** @var string|null */
+    private $authority = null;
+
+    /** @var string */
+    private $userInfo = '';
+
+    /** @var string */
+    private $host = '';
+
+    /** @var int|null */
+    private $port = null;
+
+    /** @var string */
+    private $path = '';
+
+    /** @var string */
+    private $query = '';
+
+    /** @var string */
+    private $fragment = '';
+
+    /** @var string|null */
+    private $literal = null;
+
+    private function __construct()
+    {
+    }
+
     public static function validatingBuilder(): UriBuilder
     {
-        return new class(self::constructor(), true) extends UriBuilder {};
+        return self::builder(true);
     }
 
     public static function nonValidatingBuilder(): UriBuilder
     {
-        return new class(self::constructor(), false) extends UriBuilder {};
+        return self::builder(false);
+    }
+
+    private static function builder(bool $validate = true): UriBuilder
+    {
+        $instance = new self;
+        $constructor = function (
+            string $scheme,
+            string $userInfo,
+            string $host,
+            ?int $port,
+            string $path,
+            string $query,
+            string $fragment
+        ) use ($instance): Uri {
+            $instance->scheme   = $scheme;
+            $instance->userInfo = $userInfo;
+            $instance->host     = $host;
+            $instance->port     = $port;
+            $instance->path     = $path;
+            $instance->query    = $query;
+            $instance->fragment = $fragment;
+            return $instance;
+        };
+        return new class($constructor, $validate) extends UriBuilder {};
+    }
+
+    public static function empty(): Uri
+    {
+        return new self;
     }
 
     /**
@@ -32,102 +92,91 @@ class Uri extends Chain implements UriInterface
     public static function parse($uri): Uri
     {
         if (!\is_string($uri)) {
-            throw new InvalidArgumentException('URI must be a string');
+            throw new InvalidArgumentException('URI needs to be a string');
         }
         $parts = \parse_url($uri);
         if ($parts === false) {
-            throw new InvalidArgumentException('Unable to parse URI: "'. $uri . '"');
+            throw new \InvalidArgumentException('Unable to parse URI: "'. $uri . '"');
         }
 
         $instance = new self;
-        $instance->properties = [
-            'scheme'    => isset($parts['scheme'])   ? $instance->normalizeScheme($parts['scheme']) : '',
-            'host'     => isset($parts['host'])     ? $instance->normalizeHost($parts['host']) : '',
-            'port'     => isset($parts['port'])     ? $instance->normalizePort($parts['port']) : null,
-            'path'     => isset($parts['path'])     ? $instance->normalizePath($parts['path']) : '',
-            'query'    => isset($parts['query'])    ? $instance->normalizeQuery($parts['query']) : '',
-            'fragment' => isset($parts['fragment']) ? $instance->normalizeFragment($parts['fragment']) : ''
-        ];
+        $instance->scheme   = isset($parts['scheme'])   ? $instance->normalizeScheme($parts['scheme']) : '';
+        $instance->host     = isset($parts['host'])     ? $instance->normalizeHost($parts['host']) : '';
+        $instance->port     = isset($parts['port'])     ? $instance->normalizePort($parts['port']) : null;
+        $instance->path     = isset($parts['path'])     ? $instance->normalizePath($parts['path']) : '';
+        $instance->query    = isset($parts['query'])    ? $instance->normalizeQuery($parts['query']) : '';
+        $instance->fragment = isset($parts['fragment']) ? $instance->normalizeFragment($parts['fragment']) : '';
 
-        $userInfo = $parts['user'] ?? '';
+        $instance->userInfo = $parts['user'] ?? '';
         if (isset($parts['pass'])) {
-            $userInfo .= ':' . $parts['pass'];
+            $instance->userInfo .= ':' . $parts['pass'];
         }
-        $instance->properties['userInfo'] = $userInfo;
+
         return $instance;
     }
 
     public function getScheme(): string
     {
-        return $this->fetch('scheme', '');
+        return $this->scheme;
     }
 
     public function getAuthority(): string
     {
-        if (\array_key_exists('authority', $this->properties)) {
-            return $this->properties['authority'];
-        }
-
-        $host = $this->getHost();
-
-        if ($host === '') {
-            $authority = '';
-        } else {
-            $port = $this->getPort();
-            $userInfo = $this->getUserInfo();
-            if ($port) {
-                if ($userInfo) {
-                    $authority = $userInfo . '@' . $host . ':' . $port;
-                } else {
-                    $authority = $host . ':' . $port;
-                }
+        if ($this->authority === null) {
+            if ($this->host === '') {
+                return $this->authority = '';
             } else {
-                if ($userInfo) {
-                    $authority = $userInfo . '@' . $host;
+                $standardPort = self::STANDARD_PORTS[$this->scheme] ?? null;
+                if ($this->port && $this->port !== $standardPort) {
+                    if ($this->userInfo) {
+                        $this->authority = $this->userInfo . '@' . $this->host . ':' . $this->port;
+                    } else {
+                        $this->authority = $this->host . ':' . $this->port;
+                    }
                 } else {
-                    $authority = $host;
+                    if ($this->userInfo) {
+                        $this->authority = $this->userInfo . '@' . $this->host;
+                    } else {
+                        $this->authority = $this->host;
+                    }
                 }
             }
         }
-
-        return $this->properties['authority'] = $authority;
+        return $this->authority;
     }
 
     public function getUserInfo(): string
     {
-        return $this->fetch('userInfo', '');
+        return $this->userInfo;
     }
 
     public function getHost(): string
     {
-        return $this->fetch('host', '');
+        return $this->host;
     }
 
     public function getPort(): ?int
     {
-        if (\array_key_exists('filteredPort', $this->properties)) {
-            return $this->properties['filteredPort'];
+        $standardPort = self::STANDARD_PORTS[$this->scheme] ?? null;
+        if ($this->port === $standardPort) {
+            return null;
         }
-
-        $standardPort = self::STANDARD_PORTS[$this->fetch('scheme')] ?? null;
-        $port = $this->fetch('port');
-
-        return $this->properties['filteredPort'] = ($port === $standardPort) ? null : $port;
+        return $this->port;
     }
 
     public function getPath(): string
     {
-        return $this->fetch('path', '');
+        return $this->path;
     }
 
     public function getQuery(): string
     {
-        return $this->fetch('query', '');
+        return $this->query;
     }
 
     public function getFragment(): string
     {
-        return $this->fetch('fragment', '');
+        return $this->fragment;
     }
 
     /**
@@ -137,10 +186,20 @@ class Uri extends Chain implements UriInterface
      */
     public function withScheme($scheme): self
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['scheme'] = [[&$this, 'normalizeScheme'], $scheme];
-        return $uri;
+        if ($scheme === $this->scheme) {
+            return $this;
+        }
+
+        $scheme = $this->normalizeScheme($scheme);
+        if ($this->scheme === $scheme) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->scheme = $scheme;
+        $copy->authority = null;
+        $copy->literal = null;
+        return $copy;
     }
 
     /**
@@ -150,10 +209,16 @@ class Uri extends Chain implements UriInterface
      */
     public function withUserInfo($user, $password = null)
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['userInfo'] = [[&$this, 'normalizeUserInfo'], &$user, $password];
-        return $uri;
+        $userInfo = $this->normalizeUserInfo($user, $password);
+        if ($this->userInfo === $userInfo) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->userInfo = $userInfo;
+        $copy->authority = null;
+        $copy->literal = null;
+        return $copy;
     }
 
     /**
@@ -163,10 +228,20 @@ class Uri extends Chain implements UriInterface
      */
     public function withHost($host): self
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['host'] = [[&$this, 'normalizeHost'], &$host];
-        return $uri;
+        if ($this->host === $host) {
+            return $this;
+        }
+
+        $normalizedHost = $this->normalizeHost($host);
+        if ($this->host === $normalizedHost) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->host = $normalizedHost;
+        $copy->authority = null;
+        $copy->literal = null;
+        return $copy;
     }
 
     /**
@@ -176,10 +251,20 @@ class Uri extends Chain implements UriInterface
      */
     public function withPort($port)
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['port'] = [[&$this, 'normalizePort'], &$port];
-        return $uri;
+        if ($this->port === $port) {
+            return $this;
+        }
+
+        $normalizedPort = $this->normalizePort($port);
+        if ($this->port === $normalizedPort) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->port = $normalizedPort;
+        $copy->authority = null;
+        $copy->literal = null;
+        return $copy;
     }
 
     /**
@@ -189,10 +274,19 @@ class Uri extends Chain implements UriInterface
      */
     public function withPath($path)
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['path'] = [[&$this, 'normalizePath'], &$path];
-        return $uri;
+        if ($this->path === $path) {
+            return $this;
+        }
+
+        $normalizedPath = $this->normalizePath($path);
+        if ($this->path === $normalizedPath) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->path = $normalizedPath;
+        $copy->literal = null;
+        return $copy;
     }
 
     /**
@@ -202,10 +296,19 @@ class Uri extends Chain implements UriInterface
      */
     public function withQuery($query)
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['query'] = [[&$this, 'normalizeQuery'], &$query];
-        return $uri;
+        if ($this->query === $query) {
+            return $this;
+        }
+
+        $normalizedQuery = $this->normalizeQuery($query);
+        if ($this->query === $normalizedQuery) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->query = $normalizedQuery;
+        $copy->literal = null;
+        return $copy;
     }
 
     /**
@@ -214,54 +317,56 @@ class Uri extends Chain implements UriInterface
      */
     public function withFragment($fragment)
     {
-        $uri = new static;
-        $uri->parent = &$this;
-        $uri->generators['fragment'] = [[&$this, 'normalizeFragment'], &$fragment];
-        return $uri;
+        if ($this->fragment === $fragment) {
+            return $this;
+        }
+
+        $normalizedFragment = $this->normalizeFragment($fragment);
+        if ($this->fragment === $normalizedFragment) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->fragment = $normalizedFragment;
+        $copy->literal = null;
+        return $copy;
     }
 
     public function __toString(): string
     {
-        if (\array_key_exists('literal', $this->properties)) {
-            return $this->properties['literal'];
-        }
-
-        $literal = '';
-        $scheme = $this->getScheme();
-
-        if ($scheme !== '') {
-            $literal .= $scheme . ':';
-        }
-
-        $authority = $this->getAuthority();
-        if ($authority !== '') {
-            $literal .= '//' . $authority;
-        }
-
-        $path = $this->getPath();
-        if ($path !== '') {
-            if ($path[0] !== '/') {
-                if ($authority !== '') {
-                    $path = '/' . $path;
-                }
-            } elseif (isset($path[1]) && $path[1] === '/') {
-                if ($authority === '') {
-                    $path = '/' . \ltrim($path, '/');
-                }
+        if (!isset($this->literal)) {
+            $literal = '';
+            if ($this->scheme !== '') {
+                $literal .= $this->scheme . ':';
             }
-            $literal .= $path;
-        }
 
-        $query = $this->getQuery();
-        if ($query !== '') {
-            $literal .= '?' . $query;
-        }
+            $authority = $this->getAuthority();
+            if ($authority !== '') {
+                $literal .= '//' . $authority;
+            }
 
-        $fragment = $this->getFragment();
-        if ($fragment !== '') {
-            $literal .= '#' . $fragment;
-        }
+            if ($this->path !== '') {
+                $path = $this->path;
+                if ($path[0] !== '/') {
+                    if ($authority !== '') {
+                        $path = '/' . $path;
+                    }
+                } elseif (isset($path[1]) && $path[1] === '/') {
+                    if ($authority === '') {
+                        $path = '/' . \ltrim($path, '/');
+                    }
+                }
+                $literal .= $path;
+            }
+            if ($this->query !== '') {
+                $literal .= '?' . $this->query;
+            }
+            if ($this->fragment !== '') {
+                $literal .= '#' . $this->fragment;
+            }
 
-        return $this->properties['literal'] = $literal;
+            $this->literal = $literal;
+        }
+        return $this->literal;
     }
 }

@@ -6,6 +6,12 @@ use Psr\Http\Message\ResponseInterface;
 
 class ResponseBuilder extends MessageBuilder
 {
+    /** @var int|null */
+    protected $statusCode;
+
+    /** @var string|null */
+    protected $reasonPhrase;
+
     /**
      * @param int $code
      * @param string $reason
@@ -13,7 +19,16 @@ class ResponseBuilder extends MessageBuilder
      */
     public function withStatus(int $code, string $reason = '')
     {
-        $this->properties['status'] = $this->validate ? $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reason) : [$code, $reason];
+        if ($this->validate) {
+            list($normalizedStatusCode, $normalizedReasonPhrase) = $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reason);
+            $this->statusCode = $normalizedStatusCode;
+            $this->reasonPhrase = $normalizedReasonPhrase;
+        } else {
+            $this->statusCode = $code;
+            if (!empty($reason)) {
+                $this->reasonPhrase = $reason;
+            }
+        }
         return $this;
     }
 
@@ -22,6 +37,6 @@ class ResponseBuilder extends MessageBuilder
      */
     public function build()
     {
-        return ($this->constructor)($this->properties, $this->generators);
+        return ($this->constructor)($this->protocolVersion, $this->headers, $this->body, $this->statusCode, $this->reasonPhrase);
     }
 }

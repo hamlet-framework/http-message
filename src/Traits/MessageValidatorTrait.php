@@ -93,12 +93,7 @@ trait MessageValidatorTrait
         return $version;
     }
 
-    /**
-     * @param mixed $name
-     * @param mixed $value
-     * @return string[]
-     */
-    protected function validateAndNormalizeHeader($name, $value): array
+    protected function validateHeaderName($name): string
     {
         if (!\is_string($name)) {
             throw new InvalidArgumentException('Header name must be a string');
@@ -106,7 +101,16 @@ trait MessageValidatorTrait
         if (!\preg_match('/^[a-zA-Z0-9\'`#$%&*+.^_|~!-]+$/', $name)) {
             throw new InvalidArgumentException('Invalid header name: "' . $name . '"');
         }
+        return $name;
+    }
 
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return string[]
+     */
+    protected function validateHeaderValue($name, $value): array
+    {
         if (\is_array($value) && empty($value)) {
             throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
         }
@@ -114,7 +118,7 @@ trait MessageValidatorTrait
         $values = \is_array($value) ? $value : [$value];
         $normalizedValues = [];
 
-        if (\strtolower($name) == 'host') {
+        if ($name == 'Host') {
             if (count($values) !== 1) {
                 throw new InvalidArgumentException('Host header must have a single value');
             }
@@ -287,5 +291,17 @@ trait MessageValidatorTrait
             }
         }
         return $attributes;
+    }
+
+    /**
+     * @param mixed $name
+     * @return string
+     */
+    public function validateAttributeName($name): string
+    {
+        if (!\is_string($name)) {
+            throw new InvalidArgumentException('Attribute name must be a string');
+        }
+        return $name;
     }
 }

@@ -7,12 +7,30 @@ use Psr\Http\Message\ResponseInterface;
 
 class Response extends Message implements ResponseInterface
 {
+    /** @var int|null */
+    protected $statusCode = null;
+
+    /** @var callable|null */
+    protected $statusCodeGenerator = null;
+
+    /** @var string|null */
+    protected $reasonPhrase = null;
+
     /**
      * @return ResponseBuilder
      */
     public static function validatingBuilder()
     {
-        return new class(self::constructor(), true) extends ResponseBuilder {};
+        $instance = new Response;
+        $constructor = function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            $instance->statusCode = $statusCode;
+            $instance->reasonPhrase = $reasonPhrase;
+            return $instance;
+        };
+        return new class($constructor, true) extends ResponseBuilder {};
     }
 
     /**
@@ -20,18 +38,42 @@ class Response extends Message implements ResponseInterface
      */
     public static function nonValidatingBuilder()
     {
-        return new class(self::constructor(), false) extends ResponseBuilder {};
+        $instance = new Response;
+        $constructor = function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            $instance->statusCode = $statusCode;
+            $instance->reasonPhrase = $reasonPhrase;
+            return $instance;
+        };
+        return new class($constructor, false) extends ResponseBuilder {};
     }
 
     public function getProtocolVersion(): string
     {
-        return $this->fetch('protocolVersion', '1.1');
+        if (!isset($this->protocolVersion)) {
+            if (isset($this->protocolVersionGenerator)) {
+                $this->protocolVersion = ($this->protocolVersionGenerator)();
+                $this->protocolVersionGenerator = null;
+            } else {
+                $this->protocolVersion = '1.1';
+            }
+        }
+        return $this->protocolVersion;
     }
 
     public function getStatusCode(): int
     {
-        list($code) = $this->fetch('status', [200, 'OK']);
-        return $code;
+        if (!isset($this->statusCode)) {
+            if (isset($this->statusCodeGenerator)) {
+                $this->statusCode = ($this->statusCodeGenerator)();
+                $this->statusCodeGenerator = null;
+            } else {
+                $this->statusCode = 200;
+            }
+        }
+        return $this->statusCode;
     }
 
     /**
@@ -42,16 +84,24 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        $response = new static;
-        $response->parent = &$this;
-        $response->generators['status'] = [[&$this, 'validateAndNormalizeStatusCodeAndReasonPhrase'], &$code, &$reasonPhrase];
-        return $response;
+        if ($this->getStatusCode() === $code) {
+            return $this;
+        }
+
+        list($normalizedStatusCode, $normalizedReasonPhrase) = $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reasonPhrase);
+        $copy = clone $this;
+        $copy->statusCode = $normalizedStatusCode;
+        $copy->reasonPhrase = $normalizedReasonPhrase;
+        $copy->statusCodeGenerator = null;
+        return $copy;
     }
 
     public function getReasonPhrase(): string
     {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        list($_, $reason) = $this->fetch('status', [200, 'OK']);
-        return $reason;
+        if (!isset($this->reasonPhrase)) {
+            $statusCode = $this->getStatusCode();
+            $this->reasonPhrase = self::$REASON_PHRASES[$statusCode] ?? '';
+        }
+        return $this->reasonPhrase;
     }
 }

@@ -6,13 +6,34 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ServerRequestBuilder extends RequestBuilder
 {
+    /** @var array|null */
+    protected $serverParams = null;
+
+    /** @var array|null */
+    protected $cookieParams = null;
+
+    /** @var array|null */
+    protected $queryParams = null;
+
+    /** @var array|null */
+    protected $uploadedFiles = null;
+
+    /** @var object|array|null */
+    protected $parsedBody = null;
+
+    /** @var bool */
+    protected $parsedBodySet = false;
+
+    /** @var array|null */
+    protected $attributes = null;
+
     /**
      * @param array $serverParams
      * @return static
      */
     public function withServerParams(array $serverParams)
     {
-        $this->properties['serverParams'] = $serverParams;
+        $this->serverParams = $serverParams;
         return $this;
     }
 
@@ -22,7 +43,7 @@ class ServerRequestBuilder extends RequestBuilder
      */
     public function withCookieParams(array $cookieParams)
     {
-        $this->properties['cookieParams'] = $this->validate ? $this->validateCookieParams($cookieParams) : $cookieParams;
+        $this->cookieParams = $this->validate ? $this->validateCookieParams($cookieParams) : $cookieParams;
         return $this;
     }
 
@@ -32,7 +53,7 @@ class ServerRequestBuilder extends RequestBuilder
      */
     public function withQueryParams(array $queryParams)
     {
-        $this->properties['queryParams'] = $this->validate ? $this->validateQueryParams($queryParams) : $queryParams;
+        $this->queryParams = $this->validate ? $this->validateQueryParams($queryParams) : $queryParams;
         return $this;
     }
 
@@ -42,7 +63,7 @@ class ServerRequestBuilder extends RequestBuilder
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        $this->properties['uploadedFiles'] = $this->validate ? $this->validateUploadedFiles($uploadedFiles) : $uploadedFiles;
+        $this->uploadedFiles = $this->validate ? $this->validateUploadedFiles($uploadedFiles) : $uploadedFiles;
         return $this;
     }
 
@@ -52,7 +73,8 @@ class ServerRequestBuilder extends RequestBuilder
      */
     public function withParsedBody($body)
     {
-        $this->properties['parsedBody'] = $this->validate ? $this->validateParsedBody($body) : $body;
+        $this->parsedBody = $this->validate ? $this->validateParsedBody($body) : $body;
+        $this->parsedBodySet = true;
         return $this;
     }
 
@@ -62,7 +84,7 @@ class ServerRequestBuilder extends RequestBuilder
      */
     public function withAttributes(array $attributes)
     {
-        $this->properties['attributes'] = $this->validate ? $this->validateAttributes($attributes) : $attributes;
+        $this->attributes = $this->validate ? $this->validateAttributes($attributes) : $attributes;
         return $this;
     }
 
@@ -71,6 +93,20 @@ class ServerRequestBuilder extends RequestBuilder
      */
     public function build()
     {
-        return ($this->constructor)($this->properties, $this->generators);
+        return ($this->constructor)(
+            $this->protocolVersion,
+            $this->headers,
+            $this->body,
+            $this->requestTarget,
+            $this->method,
+            $this->uri,
+            $this->serverParams,
+            $this->cookieParams,
+            $this->queryParams,
+            $this->uploadedFiles,
+            $this->parsedBody,
+            $this->parsedBodySet,
+            $this->attributes
+        );
     }
 }

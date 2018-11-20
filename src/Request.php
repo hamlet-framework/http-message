@@ -8,12 +8,37 @@ use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
 {
+    /** @var string|null */
+    protected $requestTarget = null;
+
+    /** @var string|null */
+    protected $method = null;
+
+    /** @var callable|null */
+    protected $methodGenerator = null;
+
+    /** @var UriInterface|null */
+    protected $uri = null;
+
+    /** @var callable|null */
+    protected $uriGenerator = null;
+
     /**
      * @return RequestBuilder
      */
     public static function validatingBuilder()
     {
-        return new class(self::constructor(), true) extends RequestBuilder {};
+        $instance = new Request;
+        $constructor = function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            $instance->requestTarget = $requestTarget;
+            $instance->method = $method;
+            $instance->uri = $uri;
+            return $instance;
+        };
+        return new class($constructor, true) extends RequestBuilder {};
     }
 
     /**
@@ -21,43 +46,57 @@ class Request extends Message implements RequestInterface
      */
     public static function nonValidatingBuilder()
     {
-        return new class(self::constructor(), false) extends RequestBuilder {};
+        $instance = new Request;
+        $constructor = function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            $instance->requestTarget = $requestTarget;
+            $instance->method = $method;
+            $instance->uri = $uri;
+            return $instance;
+        };
+        return new class($constructor, false) extends RequestBuilder {};
+    }
+
+    public function withoutHeader($name)
+    {
+        $headers = $this->getHeaders();
+        $normalizedName = $this->normalizeHeaderName($name);
+
+        if (!isset($headers[$normalizedName])) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        unset($copy->headers[$normalizedName]);
+        if ($normalizedName == 'Host') {
+            $this->addHostHeader($copy);
+        }
+        return $copy;
     }
 
     public function getRequestTarget(): string
     {
-        if (\array_key_exists('requestTarget', $this->properties)) {
-            return $this->properties['requestTarget'];
-        }
-
-        if (\array_key_exists('requestTarget', $this->generators)) {
-            return $this->properties['requestTarget'] = call_user_func(...$this->generators['requestTarget']);
-        }
-
-        /** @var UriInterface|null */
-        $uri = $this->fetch('uri');
-
-        if ($uri === null) {
-            $requestTarget = '/';
-        } else {
+        if (!isset($this->requestTarget)) {
+            $uri = $this->getUri();
             $path = $uri->getPath();
             $query = $uri->getQuery();
             if ($path === '') {
                 if ($query === '') {
-                    $requestTarget = '/';
+                    $this->requestTarget = '/';
                 } else {
-                    $requestTarget = '/?' . $query;
+                    $this->requestTarget = '/?' . $query;
                 }
             } else {
                 if ($query === '') {
-                    $requestTarget = $path;
+                    $this->requestTarget = $path;
                 } else {
-                    $requestTarget = $path . '?' . $query;
+                    $this->requestTarget = $path . '?' . $query;
                 }
             }
         }
-
-        return $this->properties['requestTarget'] = $requestTarget;
+        return $this->requestTarget;
     }
 
     /**
@@ -66,28 +105,13 @@ class Request extends Message implements RequestInterface
      */
     public function withRequestTarget($requestTarget)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['requestTarget'] = [[&$this, 'replaceRequestTarget'], &$requestTarget];
-        return $request;
-    }
+        if ($this->getRequestTarget() === $requestTarget) {
+            return $this;
+        }
 
-    public function getMethod(): string
-    {
-        return $this->fetch('method', 'GET');
-    }
-
-    /**
-     * @param string $method
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public function withMethod($method)
-    {
-        $request = new static;
-        $request->parent = &$this;
-        $request->generators['method'] = [[&$this, 'replaceMethod'], &$method];
-        return $request;
+        $copy = clone $this;
+        $copy->requestTarget = $this->validateRequestTarget($requestTarget);
+        return $copy;
     }
 
     /**
@@ -95,11 +119,15 @@ class Request extends Message implements RequestInterface
      */
     public function getUri()
     {
-        $uri = $this->fetch('uri');
-        if ($uri !== null) {
-            return $uri;
+        if (!isset($this->uri)) {
+            if (isset($this->uriGenerator)) {
+                $this->uri = ($this->uriGenerator)();
+                $this->uriGenerator = null;
+            } else {
+                $this->uri = Uri::empty();
+            }
         }
-        return $this->properties['uri'] = Uri::empty();
+        return $this->uri;
     }
 
     /**
@@ -109,30 +137,60 @@ class Request extends Message implements RequestInterface
      */
     public function withUri(UriInterface $uri, $preserveHost = false)
     {
-        $request = new static;
-        $request->parent = &$this;
-        $request->properties['uri'] = &$uri;
-        if (!$preserveHost) {
-            $request->generators['headers'] = [[&$this, 'removeHeader'], 'host'];
+        $copy = clone $this;
+        $copy->uri = $uri;
+        $copy->uriGenerator = null;
+        $headers = $copy->getHeaders();
+        if (!isset($headers['Host']) || !$preserveHost) {
+            $this->addHostHeader($copy);
         }
-        return $request;
+        return $copy;
+    }
+
+    public function getMethod(): string
+    {
+        if (!isset($this->method)) {
+            if (isset($this->methodGenerator)) {
+                $this->method = ($this->methodGenerator)();
+                $this->methodGenerator = null;
+            } else {
+                $this->method = 'GET';
+            }
+        }
+        return $this->method;
     }
 
     /**
-     * @param mixed $requestTarget
-     * @return string
+     * @param string $method
+     * @return static
+     * @throws InvalidArgumentException
      */
-    protected function replaceRequestTarget($requestTarget)
+    public function withMethod($method)
     {
-        return $this->validateRequestTarget($requestTarget);
+        if ($this->getMethod() === $method) {
+            return $this;
+        }
+
+        $copy = clone $this;
+        $copy->method = $this->validateMethod($method);
+        $copy->methodGenerator = null;
+        return $copy;
     }
 
-    /**
-     * @param mixed $method
-     * @return string
-     */
-    protected function replaceMethod($method)
+    private function addHostHeader(Request &$request)
     {
-        return $this->validateMethod($method);
+        $headers = $this->getHeaders();
+        $uri = $request->getUri();
+        $host = $uri->getHost();
+        if ($host !== '') {
+            $port = $uri->getPort();
+            $hostWithPort = $port ? $host . ':' . $port : $host;
+            if (isset($headers['Host'])) {
+                $request->headers['Host'] = [$hostWithPort];
+            } else {
+                $request->headers = ['Host' => [$hostWithPort]] + $headers;
+                $request->headerNames = ['host' => 'Host'];
+            }
+        }
     }
 }

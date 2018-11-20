@@ -12,14 +12,5 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <MixedArgument errorLevel="suppress"/>
-        <MixedArrayAccess errorLevel="suppress"/>
-        <MixedArrayOffset errorLevel="suppress"/>
-        <MixedAssignment errorLevel="suppress"/>
-        <MixedInferredReturnType errorLevel="suppress"/>
-        <MixedOperand errorLevel="suppress"/>
-        <MixedReturnStatement errorLevel="suppress"/>
-        <PropertyNotSetInConstructor errorLevel="suppress"/>
-        <RedundantConditionGivenDocblockType errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

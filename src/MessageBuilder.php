@@ -16,11 +16,14 @@ abstract class MessageBuilder
     /** @var bool */
     protected $validate;
 
-    /** @var array */
-    protected $properties = [];
+    /** @var string|null */
+    protected $protocolVersion = null;
 
-    /** @var array */
-    protected $generators = [];
+    /** @var array|null */
+    protected $headers = null;
+
+    /** @var StreamInterface|null */
+    protected $body = null;
 
     public function __construct(callable $constructor, bool $validate)
     {
@@ -34,7 +37,7 @@ abstract class MessageBuilder
      */
     public function withProtocolVersion(string $version)
     {
-        $this->properties['protocolVersion'] = $this->validate ? $this->validateProtocolVersion($version) : $version;
+        $this->protocolVersion = $this->validate ? $this->validateProtocolVersion($version) : $version;
         return $this;
     }
 
@@ -45,22 +48,26 @@ abstract class MessageBuilder
     public function withHeaders(array $headers)
     {
         if ($this->validate) {
-            $names = [];
             $values = [];
+            $names = [];
             foreach ($headers as $name => &$value) {
                 $key = \strtolower($name);
-                if (!isset($names[$key])) {
-                    $names[$key] = $key == 'host' ? 'Host' : $name;
+                if ($key === 'host') {
+                    $normalizedName = 'Host';
+                } elseif (isset($names[$key])) {
+                    $normalizedName = $names[$key];
+                } else {
+                    $normalizedName = $name;
+                    $names[$key] = $name;
                 }
-                $normalizedName = $names[$key];
-                $normalizedValue = $this->validateAndNormalizeHeader($name, $value);
+                $normalizedValue = $this->validateHeaderValue($normalizedName, $value);
                 if (\array_key_exists($normalizedName, $values)) {
                     $values[$normalizedName] = array_merge($values[$normalizedName], $normalizedValue);
                 } else {
                     $values[$normalizedName] = $normalizedValue;
                 }
             }
-            if (\array_key_exists('host', $names)) {
+            if (isset($values['Host'])) {
                 reset($values);
                 if (key($values) != 'Host') {
                     $host = $values['Host'];
@@ -68,9 +75,9 @@ abstract class MessageBuilder
                     $values = ['Host' => $host] + $values;
                 }
             }
-            $this->properties['headers'] = [$values, $names];
+            $this->headers = $values;
         } else {
-            $this->properties['headers'] = [$headers, null];
+            $this->headers = $headers;
         }
         return $this;
     }
@@ -81,7 +88,7 @@ abstract class MessageBuilder
      */
     public function withBody(StreamInterface $body)
     {
-        $this->properties['body'] = $this->validate ? $this->validateBody($body) : $body;
+        $this->body = $this->validate ? $this->validateBody($body) : $body;
         return $this;
     }
 
@@ -90,6 +97,6 @@ abstract class MessageBuilder
      */
     public function build()
     {
-        return ($this->constructor)($this->properties, $this->generators);
+        return ($this->constructor)($this->protocolVersion, $this->headers, $this->body);
     }
 }

@@ -7,13 +7,22 @@ use Psr\Http\Message\UriInterface;
 
 class RequestBuilder extends MessageBuilder
 {
+    /** @var string|null */
+    protected $requestTarget = null;
+
+    /** @var string|null */
+    protected $method = null;
+
+    /** @var UriInterface|null */
+    protected $uri = null;
+
     /**
      * @param string $target
      * @return static
      */
     public function withRequestTarget(string $target)
     {
-        $this->properties['requestTarget'] = $this->validate ? $this->validateRequestTarget($target) : $target;
+        $this->requestTarget = $this->validate ? $this->validateRequestTarget($target) : $target;
         return $this;
     }
 
@@ -23,7 +32,7 @@ class RequestBuilder extends MessageBuilder
      */
     public function withMethod(string $method)
     {
-        $this->properties['method'] = $this->validate ? $this->validateMethod($method) : $method;
+        $this->method = $this->validate ? $this->validateMethod($method) : $method;
         return $this;
     }
 
@@ -33,7 +42,7 @@ class RequestBuilder extends MessageBuilder
      */
     public function withUri(UriInterface $uri)
     {
-        $this->properties['uri'] = $uri;
+        $this->uri = $uri;
         return $this;
     }
 
@@ -42,6 +51,13 @@ class RequestBuilder extends MessageBuilder
      */
     public function build()
     {
-        return ($this->constructor)($this->properties, $this->generators);
+        return ($this->constructor)(
+            $this->protocolVersion,
+            $this->headers,
+            $this->body,
+            $this->requestTarget,
+            $this->method,
+            $this->uri
+        );
     }
 }
