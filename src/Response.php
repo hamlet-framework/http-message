@@ -7,13 +7,20 @@ use Psr\Http\Message\ResponseInterface;
 
 class Response extends Message implements ResponseInterface
 {
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     protected $statusCode = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():int|null
+     */
     protected $statusCodeGenerator = null;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $reasonPhrase = null;
 
     /**

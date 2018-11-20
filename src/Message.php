@@ -11,25 +11,42 @@ class Message implements MessageInterface
 {
     use MessageValidatorTrait;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $protocolVersion = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():string|null
+     */
     protected $protocolVersionGenerator = null;
 
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $headers = null;
 
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $headerNames = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():array<string,array<string>>|null
+     */
     protected $headersGenerator = null;
 
-    /** @var StreamInterface|null */
+    /**
+     * @var StreamInterface|null
+     */
     protected $body = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():StreamInterface|null
+     */
     protected $bodyGenerator = null;
 
     protected function __construct()

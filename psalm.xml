@@ -12,5 +12,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <MissingClosureParamType errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

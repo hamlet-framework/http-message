@@ -44,6 +44,6 @@ Please note, that with non-validating builders you need to know what you're doin
 
 ## Outstanding tasks
 
-- Finish unit testing
+- Fix Psalm warnings and add proper types everywhere
 - Integrate with Travis CI
-- Add benchmark project `hamlet-framework/http-message-benchmark`
+- Add benchmark project `hamlet-framework/http-message-spec`

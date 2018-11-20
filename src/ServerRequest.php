@@ -7,43 +7,73 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ServerRequest extends Request implements ServerRequestInterface
 {
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $serverParams = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():array|null
+     */
     protected $serverParamsGenerator = null;
 
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $cookieParams;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():array|null
+     */
     protected $cookieParamsGenerator = null;
 
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $queryParams = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():array|null
+     */
     protected $queryParamsGenerator = null;
 
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $uploadedFiles = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():array|null
+     */
     protected $uploadedFilesGenerator = null;
 
-    /** @var object|array|null */
+    /**
+     * @var array|object|null
+     */
     protected $parsedBody = null;
 
     /** @var bool */
     protected $parsedBodySet = false;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var (callable():array|object|null)|null
+     */
     protected $parsedBodyGenerator = null;
 
-    /** @var array|null */
+    /**
+     * @var array|null
+     */
     protected $attributes = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():array|null
+     */
     protected $attributesGenerator = null;
 
     /**

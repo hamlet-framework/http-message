@@ -8,19 +8,31 @@ use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
 {
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $requestTarget = null;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $method = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():string|null
+     */
     protected $methodGenerator = null;
 
-    /** @var UriInterface|null */
+    /**
+     * @var UriInterface|null
+     */
     protected $uri = null;
 
-    /** @var callable|null */
+    /**
+     * @var callable|null
+     * @psalm-var callable():UriInterface|null
+     */
     protected $uriGenerator = null;
 
     /**

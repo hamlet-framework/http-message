@@ -210,6 +210,7 @@ trait MessageValidatorTrait
      * @param mixed $code
      * @param mixed $phrase
      * @return array
+     * @psalm-return array{0:int,1:string}
      */
     protected function validateAndNormalizeStatusCodeAndReasonPhrase($code, $phrase): array
     {
