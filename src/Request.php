@@ -4,6 +4,7 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
@@ -41,7 +42,14 @@ class Request extends Message implements RequestInterface
     public static function validatingBuilder()
     {
         $instance = new Request;
-        $constructor = function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
+        $constructor = function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body,
+            ?string $requestTarget,
+            ?string $method,
+            ?UriInterface $uri
+        ) use ($instance): Request {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;
@@ -59,7 +67,14 @@ class Request extends Message implements RequestInterface
     public static function nonValidatingBuilder()
     {
         $instance = new Request;
-        $constructor = function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
+        $constructor = function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body,
+            ?string $requestTarget,
+            ?string $method,
+            ?UriInterface $uri
+        ) use ($instance): Request {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;

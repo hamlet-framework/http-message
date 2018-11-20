@@ -12,6 +12,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <MissingClosureParamType errorLevel="suppress"/>
+        <RedundantConditionGivenDocblockType errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

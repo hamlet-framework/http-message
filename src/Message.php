@@ -24,11 +24,13 @@ class Message implements MessageInterface
 
     /**
      * @var array|null
+     * @var array<string,array<int,string>>|null
      */
     protected $headers = null;
 
     /**
      * @var array|null
+     * @psalm-var array<string,string>|null
      */
     protected $headerNames = null;
 
@@ -67,7 +69,11 @@ class Message implements MessageInterface
     public static function validatingBuilder()
     {
         $instance = new Message;
-        $constructor = function ($protocolVersion, $headers, $body) use ($instance): Message {
+        $constructor = function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body
+        ) use ($instance): Message {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;
@@ -82,7 +88,11 @@ class Message implements MessageInterface
     public static function nonValidatingBuilder()
     {
         $instance = new Message;
-        $constructor = function ($protocolVersion, $headers, $body) use ($instance): Message {
+        $constructor = function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body
+        ) use ($instance): Message {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;
@@ -118,6 +128,7 @@ class Message implements MessageInterface
 
     /**
      * @return string[][]
+     * @psalm-return array<string,array<int,string>>
      */
     public function getHeaders(): array
     {

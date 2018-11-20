@@ -4,6 +4,7 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class Response extends Message implements ResponseInterface
 {
@@ -29,7 +30,13 @@ class Response extends Message implements ResponseInterface
     public static function validatingBuilder()
     {
         $instance = new Response;
-        $constructor = function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
+        $constructor = function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body,
+            ?int $statusCode,
+            ?string $reasonPhrase
+        ) use ($instance): Response {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;
@@ -46,7 +53,13 @@ class Response extends Message implements ResponseInterface
     public static function nonValidatingBuilder()
     {
         $instance = new Response;
-        $constructor = function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
+        $constructor = function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body,
+            ?int $statusCode,
+            ?string $reasonPhrase
+        ) use ($instance): Response {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;

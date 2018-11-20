@@ -93,6 +93,10 @@ trait MessageValidatorTrait
         return $version;
     }
 
+    /**
+     * @param mixed $name
+     * @return string
+     */
     protected function validateHeaderName($name): string
     {
         if (!\is_string($name)) {
@@ -122,7 +126,6 @@ trait MessageValidatorTrait
             if (count($values) !== 1) {
                 throw new InvalidArgumentException('Host header must have a single value');
             }
-            $values = [\strtolower(\array_shift($values))];
         }
 
         foreach ($values as $value) {
@@ -132,6 +135,9 @@ trait MessageValidatorTrait
                 }
                 if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', $value)) {
                     throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+                }
+                if ($name == 'Host') {
+                    $value = \strtolower($value);
                 }
                 $normalizedValues[] = \trim($value, " \t");
             } elseif (\is_int($value)) {
