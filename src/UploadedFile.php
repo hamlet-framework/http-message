@@ -41,10 +41,14 @@ class UploadedFile implements UploadedFileInterface
     /** @var null|StreamInterface */
     private $stream;
 
+    private function __construct()
+    {
+    }
+
     public static function builder(): UploadedFileBuilder
     {
         $instance = new static;
-        $constructor = function (?string $path, ?StreamInterface $stream, int $size, int $errorStatus, ?string $clientFileName, ?string $clientMediaType) use ($instance) {
+        $constructor = function (?string $path, ?StreamInterface $stream, int $size, int $errorStatus, ?string $clientFileName, ?string $clientMediaType) use ($instance): UploadedFile {
             $instance->file = $path;
             $instance->stream = $stream;
             $instance->size = $size;
@@ -78,6 +82,9 @@ class UploadedFile implements UploadedFileInterface
 
         assert($this->file !== null);
         $resource = \fopen($this->file, 'r');
+        if ($resource === false) {
+            throw new RuntimeException('Cannot open file "' . $this->file . ' for reading');
+        }
         return Stream::fromResource($resource);
     }
 
@@ -94,7 +101,11 @@ class UploadedFile implements UploadedFileInterface
             if ($stream->isSeekable()) {
                 $stream->rewind();
             }
-            $this->copyToStream($stream, Stream::fromResource(\fopen($targetPath, 'w')));
+            $target = \fopen($targetPath, 'w');
+            if ($target === false) {
+                throw new RuntimeException('Cannot open file "' . $targetPath . ' for writing');
+            }
+            $this->copyToStream($stream, Stream::fromResource($target));
             $this->moved = true;
         }
         if (!$this->moved) {
@@ -123,19 +134,14 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * Copy the contents of a stream into another stream until the given number
-     * of bytes have been read.
-     *
      * @author Michael Dowling and contributors to guzzlehttp/psr7
-     *
      * @param StreamInterface $source Stream to read from
      * @param StreamInterface $destination Stream to write to
-     * @param int $maxLen Maximum number of bytes to read. Pass -1
-     *                                to read the entire stream
-     *
+     * @param int $maxLen Maximum number of bytes to read. Pass -1 to read the entire stream
+     * @return void
      * @throws RuntimeException on error
      */
-    private function copyToStream(StreamInterface $source, StreamInterface $destination, $maxLen = -1)
+    private function copyToStream(StreamInterface $source, StreamInterface $destination, $maxLen = -1): void
     {
         if ($maxLen === -1) {
             while (!$source->eof()) {

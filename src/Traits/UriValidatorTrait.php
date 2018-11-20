@@ -105,6 +105,11 @@ trait UriValidatorTrait
         return $result;
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $password
+     * @return string
+     */
     protected function normalizeUserInfo($name, $password): string
     {
         if (!\is_string($name)) {

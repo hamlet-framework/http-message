@@ -8,26 +8,11 @@ use Psr\Http\Message\ResponseInterface;
 class Response extends Message implements ResponseInterface
 {
     /**
-     * @param bool $validate
-     * @return ResponseBuilder
-     */
-    protected static function builder(bool $validate)
-    {
-        $instance = new static;
-        $constructor = function (array &$properties, array &$generators) use ($instance) {
-            $instance->properties = $properties;
-            $instance->generators = $generators;
-            return $instance;
-        };
-        return new class($constructor, $validate) extends ResponseBuilder {};
-    }
-
-    /**
      * @return ResponseBuilder
      */
     public static function validatingBuilder()
     {
-        return self::builder(true);
+        return new class(self::constructor(), true) extends ResponseBuilder {};
     }
 
     /**
@@ -35,12 +20,12 @@ class Response extends Message implements ResponseInterface
      */
     public static function nonValidatingBuilder()
     {
-        return self::builder(false);
+        return new class(self::constructor(), false) extends ResponseBuilder {};
     }
 
     public function getProtocolVersion(): string
     {
-        return (string) $this->fetch('protocolVersion', '1.1');
+        return $this->fetch('protocolVersion', '1.1');
     }
 
     public function getStatusCode(): int
@@ -59,7 +44,7 @@ class Response extends Message implements ResponseInterface
     {
         $response = new static;
         $response->parent = &$this;
-        $response->properties['status'] = $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reasonPhrase);
+        $response->generators['status'] = [[&$this, 'validateAndNormalizeStatusCodeAndReasonPhrase'], &$code, &$reasonPhrase];
         return $response;
     }
 

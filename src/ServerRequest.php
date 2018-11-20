@@ -8,26 +8,11 @@ use Psr\Http\Message\ServerRequestInterface;
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /**
-     * @param bool $validate
-     * @return ServerRequestBuilder
-     */
-    protected static function builder(bool $validate)
-    {
-        $instance = new static;
-        $constructor = function (array &$properties, array &$generators) use ($instance) {
-            $instance->properties = $properties;
-            $instance->generators = $generators;
-            return $instance;
-        };
-        return new class($constructor, $validate) extends ServerRequestBuilder {};
-    }
-
-    /**
      * @return ServerRequestBuilder
      */
     public static function validatingBuilder()
     {
-        return self::builder(true);
+        return new class(self::constructor(), true) extends ServerRequestBuilder {};
     }
 
     /**
@@ -35,7 +20,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public static function nonValidatingBuilder()
     {
-        return self::builder(false);
+        return new class(self::constructor(), false) extends ServerRequestBuilder {};
     }
 
     public function getServerParams(): array

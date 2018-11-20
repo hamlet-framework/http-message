@@ -2,6 +2,8 @@
 
 namespace Hamlet\Http\Message;
 
+use Closure;
+
 abstract class Chain
 {
     /** @var static|null */
@@ -17,9 +19,29 @@ abstract class Chain
     {
     }
 
+    /**
+     * @return static
+     */
     public static function empty()
     {
         return new static;
+    }
+
+    protected static function constructor(): callable
+    {
+        $instance = new static;
+        $constructor =
+            /**
+             * @param array $properties
+             * @param array $generators
+             * @return static
+             */
+            function (array &$properties, array &$generators) use ($instance) {
+                $instance->properties = $properties;
+                $instance->generators = $generators;
+                return $instance;
+            };
+        return $constructor;
     }
 
     /**

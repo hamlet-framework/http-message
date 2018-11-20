@@ -57,6 +57,10 @@ class Stream implements StreamInterface, LoggerAwareInterface
         return static::fromString('');
     }
 
+    /**
+     * @param resource $resource
+     * @return StreamInterface
+     */
     public static function fromResource($resource): StreamInterface
     {
         if (!\is_resource($resource)) {
@@ -138,10 +142,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
             \clearstatcache(true, $this->uri);
         }
         $stats = \fstat($this->stream);
-        if ($stats === false) {
-            throw new RuntimeException('Cannot retrieve stream information');
-        }
-        if (isset($stats['size'])) {
+        if ($stats !== false && isset($stats['size'])) {
             $this->size = (int) $stats['size'];
             return $this->size;
         }

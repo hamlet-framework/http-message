@@ -6,32 +6,18 @@ use Hamlet\Http\Message\Traits\MessageValidatorTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 class Message extends Chain implements MessageInterface
 {
     use MessageValidatorTrait;
 
     /**
-     * @param bool $validate
-     * @return MessageBuilder
-     */
-    protected static function builder(bool $validate)
-    {
-        $instance = new static;
-        $constructor = function (array &$properties, array &$generators) use ($instance) {
-            $instance->properties = $properties;
-            $instance->generators = $generators;
-            return $instance;
-        };
-        return new class($constructor, $validate) extends MessageBuilder {};
-    }
-
-    /**
      * @return MessageBuilder
      */
     public static function validatingBuilder()
     {
-        return self::builder(true);
+        return new class(self::constructor(), true) extends MessageBuilder {};
     }
 
     /**
@@ -39,7 +25,7 @@ class Message extends Chain implements MessageInterface
      */
     public static function nonValidatingBuilder()
     {
-        return self::builder(false);
+        return new class(self::constructor(), false) extends MessageBuilder {};
     }
 
     public function getProtocolVersion(): string
@@ -76,7 +62,7 @@ class Message extends Chain implements MessageInterface
     {
         /** @noinspection PhpUnusedLocalVariableInspection */
         list($_, $names) = $this->enhancedHeaders();
-        return \array_key_exists(\strtolower($name), $names);
+        return \array_key_exists(\strtolower($name), (array) $names);
     }
 
     /**
@@ -187,6 +173,10 @@ class Message extends Chain implements MessageInterface
         return [$values, $names];
     }
 
+    /**
+     * @param mixed $name
+     * @return array
+     */
     protected function removeHeader($name): array
     {
         list($values, $names) = $this->headers();
@@ -198,6 +188,11 @@ class Message extends Chain implements MessageInterface
         return [$values, $names];
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * @return array
+     */
     protected function extendHeader($name, $value): array
     {
         list($values, $names) = $this->headers();
@@ -241,6 +236,7 @@ class Message extends Chain implements MessageInterface
             return $this->properties['enhancedHeaders'] = [$values, $names];
         }
 
+        /** @var UriInterface|null $uri */
         $uri = $this->fetch('uri');
         if ($uri === null) {
             return $this->properties['enhancedHeaders'] = [$values, $names];

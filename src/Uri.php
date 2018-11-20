@@ -17,23 +17,12 @@ class Uri extends Chain implements UriInterface
 
     public static function validatingBuilder(): UriBuilder
     {
-        return self::builder(true);
+        return new class(self::constructor(), true) extends UriBuilder {};
     }
 
     public static function nonValidatingBuilder(): UriBuilder
     {
-        return self::builder(false);
-    }
-
-    private static function builder(bool $validate = true): UriBuilder
-    {
-        $instance = new static;
-        $constructor = function (array $properties, array $generators) use ($instance): Uri {
-            $instance->properties = $properties;
-            $instance->generators = $generators;
-            return $instance;
-        };
-        return new class($constructor, $validate) extends UriBuilder {};
+        return new class(self::constructor(), false) extends UriBuilder {};
     }
 
     /**
@@ -70,13 +59,13 @@ class Uri extends Chain implements UriInterface
 
     public function getScheme(): string
     {
-        return (string) $this->fetch('scheme', '');
+        return $this->fetch('scheme', '');
     }
 
     public function getAuthority(): string
     {
         if (\array_key_exists('authority', $this->properties)) {
-            return (string) $this->properties['authority'];
+            return $this->properties['authority'];
         }
 
         $host = $this->getHost();
@@ -106,12 +95,12 @@ class Uri extends Chain implements UriInterface
 
     public function getUserInfo(): string
     {
-        return (string) $this->fetch('userInfo', '');
+        return $this->fetch('userInfo', '');
     }
 
     public function getHost(): string
     {
-        return (string) $this->fetch('host', '');
+        return $this->fetch('host', '');
     }
 
     public function getPort(): ?int
@@ -126,19 +115,19 @@ class Uri extends Chain implements UriInterface
         return $this->properties['filteredPort'] = ($port === $standardPort) ? null : $port;
     }
 
-    public function getPath(): ?string
+    public function getPath(): string
     {
-        return $this->fetch('path', null);
+        return $this->fetch('path', '');
     }
 
     public function getQuery(): string
     {
-        return (string) $this->fetch('query', '');
+        return $this->fetch('query', '');
     }
 
     public function getFragment(): string
     {
-        return (string) $this->fetch('fragment', '');
+        return $this->fetch('fragment', '');
     }
 
     /**

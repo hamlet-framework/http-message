@@ -122,21 +122,28 @@ trait MessageValidatorTrait
         }
 
         foreach ($values as $value) {
-            if (!\is_string($value) && !\is_int($value)) {
+            if (\is_string($value)) {
+                if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
+                    throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+                }
+                if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', $value)) {
+                    throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
+                }
+                $normalizedValues[] = \trim($value, " \t");
+            } elseif (\is_int($value)) {
+                $normalizedValues[] = (string) $value;
+            } else {
                 throw new InvalidArgumentException('Header values must be strings');
             }
-            if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", (string) $value)) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-            if (preg_match('/[^\x09\x0a\x0d\x20-\x7E\x80-\xFE]/', (string) $value)) {
-                throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
-            }
-            $normalizedValues[] = \trim((string) $value, " \t");
         }
 
         return $normalizedValues;
     }
 
+    /**
+     * @param mixed $target
+     * @return string
+     */
     protected function validateRequestTarget($target): string
     {
         if (!\is_string($target)) {
@@ -148,6 +155,10 @@ trait MessageValidatorTrait
         return $target;
     }
 
+    /**
+     * @param mixed $method
+     * @return string
+     */
     protected function validateMethod($method): string
     {
         if (!\is_string($method)) {
@@ -159,6 +170,10 @@ trait MessageValidatorTrait
         return $method;
     }
 
+    /**
+     * @param mixed $uploadedFiles
+     * @return array
+     */
     protected function validateUploadedFiles($uploadedFiles): array
     {
         if (!\is_array($uploadedFiles)) {
@@ -175,6 +190,10 @@ trait MessageValidatorTrait
         return $uploadedFiles;
     }
 
+    /**
+     * @param mixed $body
+     * @return StreamInterface
+     */
     protected function validateBody($body): StreamInterface
     {
         if (!($body instanceof StreamInterface)) {
@@ -183,6 +202,11 @@ trait MessageValidatorTrait
         return $body;
     }
 
+    /**
+     * @param mixed $code
+     * @param mixed $phrase
+     * @return array
+     */
     protected function validateAndNormalizeStatusCodeAndReasonPhrase($code, $phrase): array
     {
         if (!\is_int($code)) {
@@ -212,6 +236,10 @@ trait MessageValidatorTrait
         return $body;
     }
 
+    /**
+     * @param mixed $queryParams
+     * @return array
+     */
     protected function validateQueryParams($queryParams): array
     {
         if (!\is_array($queryParams)) {
@@ -233,6 +261,10 @@ trait MessageValidatorTrait
         return $validatedParams;
     }
 
+    /**
+     * @param mixed $cookieParams
+     * @return array
+     */
     public function validateCookieParams($cookieParams): array
     {
         if (!\is_array($cookieParams)) {

@@ -9,26 +9,11 @@ use Psr\Http\Message\UriInterface;
 class Request extends Message implements RequestInterface
 {
     /**
-     * @param bool $validate
-     * @return RequestBuilder
-     */
-    protected static function builder(bool $validate)
-    {
-        $instance = new static;
-        $constructor = function (array &$properties, array &$generators) use ($instance) {
-            $instance->properties = $properties;
-            $instance->generators = $generators;
-            return $instance;
-        };
-        return new class($constructor, $validate) extends RequestBuilder {};
-    }
-
-    /**
      * @return RequestBuilder
      */
     public static function validatingBuilder()
     {
-        return self::builder(true);
+        return new class(self::constructor(), true) extends RequestBuilder {};
     }
 
     /**
@@ -36,7 +21,7 @@ class Request extends Message implements RequestInterface
      */
     public static function nonValidatingBuilder()
     {
-        return self::builder(false);
+        return new class(self::constructor(), false) extends RequestBuilder {};
     }
 
     public function getRequestTarget(): string
@@ -133,11 +118,19 @@ class Request extends Message implements RequestInterface
         return $request;
     }
 
+    /**
+     * @param mixed $requestTarget
+     * @return string
+     */
     protected function replaceRequestTarget($requestTarget)
     {
         return $this->validateRequestTarget($requestTarget);
     }
 
+    /**
+     * @param mixed $method
+     * @return string
+     */
     protected function replaceMethod($method)
     {
         return $this->validateMethod($method);
