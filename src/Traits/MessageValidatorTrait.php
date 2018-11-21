@@ -111,7 +111,7 @@ trait MessageValidatorTrait
     /**
      * @param mixed $name
      * @param mixed $value
-     * @return string[]
+     * @return array<int,string>
      */
     protected function validateHeaderValue($name, $value): array
     {
@@ -128,6 +128,9 @@ trait MessageValidatorTrait
             }
         }
 
+        /**
+         * @psalm-suppress MixedAssignment
+         */
         foreach ($values as $value) {
             if (\is_string($value)) {
                 if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
@@ -182,13 +185,17 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $uploadedFiles
-     * @return array
+     * @return array<string,mixed>
+     * @psalm-suppress MixedTypeCoercion
      */
     protected function validateUploadedFiles($uploadedFiles): array
     {
         if (!\is_array($uploadedFiles)) {
             throw new InvalidArgumentException('Uploaded files must be an array');
         }
+        /**
+         * @psalm-suppress MixedAssignment
+         */
         foreach ($uploadedFiles as $item) {
             if (\is_array($item)) {
                 $this->validateUploadedFiles($item);
@@ -230,7 +237,7 @@ trait MessageValidatorTrait
             throw new InvalidArgumentException('Reason phrase must be a string');
         }
         if ($phrase === '') {
-            $phrase = self::$REASON_PHRASES[$code] ?? '';
+            $phrase = (string) (self::$REASON_PHRASES[$code] ?? '');
         }
         return [$code, $phrase];
     }
@@ -249,7 +256,7 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $queryParams
-     * @return array
+     * @return array<string|int,mixed> QueryParams
      */
     protected function validateQueryParams($queryParams): array
     {
@@ -257,6 +264,9 @@ trait MessageValidatorTrait
             throw new InvalidArgumentException('Query params must be an array');
         }
         $validatedParams = [];
+        /**
+         * @psalm-suppress MixedAssignment
+         */
         foreach ($queryParams as $key => $value) {
             if (!\is_string($key) && !\is_int($key)) {
                 throw new InvalidArgumentException('Keys in query params must be strings or integers');
@@ -274,13 +284,15 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $cookieParams
-     * @return array
+     * @return array<string,string>
+     * @psalm-suppress MixedTypeCoercion
      */
     public function validateCookieParams($cookieParams): array
     {
         if (!\is_array($cookieParams)) {
             throw new InvalidArgumentException('Cookie params must be an array');
         }
+        /** @psalm-suppress MixedAssignment */
         foreach ($cookieParams as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new InvalidArgumentException('Cookie params must be an array<string,string>');
@@ -289,9 +301,17 @@ trait MessageValidatorTrait
         return $cookieParams;
     }
 
+    /**
+     * @param array $attributes
+     * @return array<string,mixed>
+     * @psalm-suppress MixedTypeCoercion
+     */
     public function validateAttributes(array $attributes): array
     {
-        /** @noinspection PhpUnusedLocalVariableInspection */
+        /**
+         * @noinspection PhpUnusedLocalVariableInspection
+         * @psalm-suppress MixedAssignment
+         */
         foreach ($attributes as $name => &$_) {
             if (!\is_string($name)) {
                 throw new InvalidArgumentException('Attribute names must be strings');

@@ -2,62 +2,29 @@
 
 namespace Hamlet\Http\Message;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\UriInterface;
+use Hamlet\Http\Message\Traits\RequestBuilderTrait;
 
-class RequestBuilder extends MessageBuilder
+abstract class RequestBuilder
 {
-    /** @var string|null */
-    protected $requestTarget = null;
-
-    /** @var string|null */
-    protected $method = null;
-
-    /** @var UriInterface|null */
-    protected $uri = null;
+    use RequestBuilderTrait;
 
     /**
-     * @param string $target
-     * @return static
+     * @var callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null):Request
      */
-    public function withRequestTarget(string $target)
+    protected $constructor;
+
+    /**
+     * @param callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null):Request $constructor
+     * @param bool $validate
+     */
+    public function __construct(callable $constructor, bool $validate)
     {
-        $this->requestTarget = $this->validate ? $this->validateRequestTarget($target) : $target;
-        return $this;
+        $this->constructor = $constructor;
+        $this->validate = $validate;
     }
 
-    /**
-     * @param string $method
-     * @return static
-     */
-    public function withMethod(string $method)
+    public function build(): Request
     {
-        $this->method = $this->validate ? $this->validateMethod($method) : $method;
-        return $this;
-    }
-
-    /**
-     * @param UriInterface $uri
-     * @return static
-     */
-    public function withUri(UriInterface $uri)
-    {
-        $this->uri = $uri;
-        return $this;
-    }
-
-    /**
-     * @return RequestInterface
-     */
-    public function build()
-    {
-        return ($this->constructor)(
-            $this->protocolVersion,
-            $this->headers,
-            $this->body,
-            $this->requestTarget,
-            $this->method,
-            $this->uri
-        );
+        return ($this->constructor)($this->protocolVersion, $this->headers, $this->body, $this->requestTarget, $this->method, $this->uri);
     }
 }

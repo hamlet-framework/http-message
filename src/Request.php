@@ -36,53 +36,40 @@ class Request extends Message implements RequestInterface
      */
     protected $uriGenerator = null;
 
-    /**
-     * @return RequestBuilder
-     */
-    public static function validatingBuilder()
+    private static function requestConstructor(): callable
     {
         $instance = new Request;
-        $constructor = function (
-            ?string $protocolVersion,
-            ?array $headers,
-            ?StreamInterface $body,
-            ?string $requestTarget,
-            ?string $method,
-            ?UriInterface $uri
-        ) use ($instance): Request {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            $instance->requestTarget = $requestTarget;
-            $instance->method = $method;
-            $instance->uri = $uri;
-            return $instance;
-        };
+        return
+            /**
+             * @param string|null                          $protocolVersion
+             * @param array<string,array<int,string>>|null $headers
+             * @param StreamInterface|null                 $body
+             * @param string|null                          $requestTarget
+             * @param string|null                          $method
+             * @param UriInterface|null                    $uri
+             *
+             * @return Request
+             */
+            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
+                $instance->protocolVersion = $protocolVersion;
+                $instance->headers = $headers;
+                $instance->body = $body;
+                $instance->requestTarget = $requestTarget;
+                $instance->method = $method;
+                $instance->uri = $uri;
+                return $instance;
+            };
+    }
+
+    public static function validatingRequestBuilder(): RequestBuilder
+    {
+        $constructor = self::requestConstructor();
         return new class($constructor, true) extends RequestBuilder {};
     }
 
-    /**
-     * @return RequestBuilder
-     */
-    public static function nonValidatingBuilder()
+    public static function nonValidatingRequestBuilder(): RequestBuilder
     {
-        $instance = new Request;
-        $constructor = function (
-            ?string $protocolVersion,
-            ?array $headers,
-            ?StreamInterface $body,
-            ?string $requestTarget,
-            ?string $method,
-            ?UriInterface $uri
-        ) use ($instance): Request {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            $instance->requestTarget = $requestTarget;
-            $instance->method = $method;
-            $instance->uri = $uri;
-            return $instance;
-        };
+        $constructor = self::requestConstructor();
         return new class($constructor, false) extends RequestBuilder {};
     }
 
@@ -96,6 +83,7 @@ class Request extends Message implements RequestInterface
         }
 
         $copy = clone $this;
+        assert($copy->headers !== null);
         unset($copy->headers[$normalizedName]);
         if ($normalizedName == 'Host') {
             $this->addHostHeader($copy);
@@ -204,7 +192,7 @@ class Request extends Message implements RequestInterface
         return $copy;
     }
 
-    private function addHostHeader(Request &$request)
+    private function addHostHeader(Request &$request): void
     {
         $headers = $this->getHeaders();
         $uri = $request->getUri();

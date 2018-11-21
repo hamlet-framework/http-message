@@ -7,27 +7,44 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class UploadedFileBuilder
 {
-    /** @var callable */
+    /**
+     * @var callable(string|null,\Psr\Http\Message\StreamInterface|null,int|null,int|null,string|null,string|null):UploadedFile
+     */
     private $constructor;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     private $path;
 
-    /** @var StreamInterface|null */
+    /**
+     * @var StreamInterface|null
+     */
     private $stream;
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     private $size;
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     private $errorStatus;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     private $clientFileName;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     private $clientMediaType;
 
+    /**
+     * @param callable(string|null,\Psr\Http\Message\StreamInterface|null,int|null,int|null,string|null,string|null):UploadedFile $constructor
+     */
     public function __construct(callable $constructor)
     {
         $this->constructor = $constructor;
@@ -100,6 +117,7 @@ abstract class UploadedFileBuilder
         if ($this->errorStatus !== null) {
             throw new InvalidArgumentException('Error status already specified.');
         }
+        /** @psalm-suppress MixedArgument */
         if (!\in_array($status, UploadedFile::ERROR_STATUSES)) {
             throw new InvalidArgumentException('Unknown error status "' . $status . '" set.');
         }

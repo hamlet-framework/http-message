@@ -12,25 +12,25 @@ use RuntimeException;
 class Stream implements StreamInterface, LoggerAwareInterface
 {
     /** @var resource|null */
-    private $stream;
+    private $stream = null;
 
     /** @var bool */
-    private $seekable;
+    private $seekable = false;
 
     /** @var bool */
-    private $readable;
+    private $readable = false;
 
     /** @var bool */
-    private $writable;
+    private $writable = false;
 
     /** @var array|mixed|null|void */
-    private $uri;
+    private $uri = null;
 
     /** @var int|null */
-    private $size;
+    private $size = null;
 
     /** @var LoggerInterface|null */
-    private $logger;
+    private $logger = null;
 
     /** @var array Hash of readable and writable stream types */
     private static $readWriteHash = [
@@ -60,6 +60,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
     /**
      * @param resource $resource
      * @return StreamInterface
+     * @psalm-suppress MixedArrayOffset
      */
     public static function fromResource($resource): StreamInterface
     {
@@ -69,7 +70,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
         $instance = new static;
         $instance->stream = $resource;
         $meta = \stream_get_meta_data($instance->stream);
-        $instance->seekable = $meta['seekable'];
+        $instance->seekable = (bool) $meta['seekable'];
         $instance->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
         $instance->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
         $instance->uri = $instance->getMetadata('uri');
@@ -138,7 +139,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
             return null;
         }
         // Clear the stat cache if the stream has a URI
-        if ($this->uri) {
+        if ($this->uri && \is_string($this->uri)) {
             \clearstatcache(true, $this->uri);
         }
         $stats = \fstat($this->stream);
@@ -155,6 +156,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
             throw new RuntimeException('No resource');
         }
         $result = \ftell($this->stream);
+        /** @psalm-suppress TypeDoesNotContainType */
         if ($result === false) {
             throw new RuntimeException('Unable to determine stream position');
         }

@@ -24,49 +24,38 @@ class Response extends Message implements ResponseInterface
      */
     protected $reasonPhrase = null;
 
-    /**
-     * @return ResponseBuilder
-     */
-    public static function validatingBuilder()
+    private static function responseConstructor(): callable
     {
         $instance = new Response;
-        $constructor = function (
-            ?string $protocolVersion,
-            ?array $headers,
-            ?StreamInterface $body,
-            ?int $statusCode,
-            ?string $reasonPhrase
-        ) use ($instance): Response {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            $instance->statusCode = $statusCode;
-            $instance->reasonPhrase = $reasonPhrase;
-            return $instance;
-        };
+        return
+            /**
+             * @param string|null                          $protocolVersion
+             * @param array<string,array<int,string>>|null $headers
+             * @param StreamInterface|null                 $body
+             * @param int|null                             $statusCode
+             * @param string|null                          $reasonPhrase
+             *
+             * @return Response
+             */
+            function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
+                $instance->protocolVersion = $protocolVersion;
+                $instance->headers = $headers;
+                $instance->body = $body;
+                $instance->statusCode = $statusCode;
+                $instance->reasonPhrase = $reasonPhrase;
+                return $instance;
+            };
+    }
+
+    public static function validatingResponseBuilder(): ResponseBuilder
+    {
+        $constructor = self::responseConstructor();
         return new class($constructor, true) extends ResponseBuilder {};
     }
 
-    /**
-     * @return ResponseBuilder
-     */
-    public static function nonValidatingBuilder()
+    public static function nonValidatingResponseBuilder(): ResponseBuilder
     {
-        $instance = new Response;
-        $constructor = function (
-            ?string $protocolVersion,
-            ?array $headers,
-            ?StreamInterface $body,
-            ?int $statusCode,
-            ?string $reasonPhrase
-        ) use ($instance): Response {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            $instance->statusCode = $statusCode;
-            $instance->reasonPhrase = $reasonPhrase;
-            return $instance;
-        };
+        $constructor = self::responseConstructor();
         return new class($constructor, false) extends ResponseBuilder {};
     }
 

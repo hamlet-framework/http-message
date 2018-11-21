@@ -24,9 +24,7 @@
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "dev-master",
-    "phpstan/phpstan": "dev-master",
     "vimeo/psalm": "dev-master",
-    "squizlabs/php_codesniffer": "@stable",
     "phpunit/phpunit": "@stable"
   },
   "autoload": {

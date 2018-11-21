@@ -36,7 +36,7 @@ class Message implements MessageInterface
 
     /**
      * @var callable|null
-     * @psalm-var callable():array<string,array<string>>|null
+     * @psalm-var callable():array<string,array<int,string>>|null
      */
     protected $headersGenerator = null;
 
@@ -63,41 +63,34 @@ class Message implements MessageInterface
         return new static;
     }
 
-    /**
-     * @return MessageBuilder
-     */
-    public static function validatingBuilder()
+    private static function messageConstructor(): callable
     {
         $instance = new Message;
-        $constructor = function (
-            ?string $protocolVersion,
-            ?array $headers,
-            ?StreamInterface $body
-        ) use ($instance): Message {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            return $instance;
-        };
+        return
+            /**
+             * @param string|null                          $protocolVersion
+             * @param array<string,array<int,string>>|null $headers
+             * @param StreamInterface|null                 $body
+             *
+             * @return Message
+             */
+            function ($protocolVersion, $headers, $body) use ($instance): Message {
+                $instance->protocolVersion = $protocolVersion;
+                $instance->headers = $headers;
+                $instance->body = $body;
+                return $instance;
+            };
+    }
+
+    public static function validatingMessageBuilder(): MessageBuilder
+    {
+        $constructor = self::messageConstructor();
         return new class($constructor, true) extends MessageBuilder {};
     }
 
-    /**
-     * @return MessageBuilder
-     */
-    public static function nonValidatingBuilder()
+    public static function nonValidatingMessageBuilder(): MessageBuilder
     {
-        $instance = new Message;
-        $constructor = function (
-            ?string $protocolVersion,
-            ?array $headers,
-            ?StreamInterface $body
-        ) use ($instance): Message {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            return $instance;
-        };
+        $constructor = self::messageConstructor();
         return new class($constructor, false) extends MessageBuilder {};
     }
 
@@ -231,6 +224,7 @@ class Message implements MessageInterface
         }
 
         $copy = clone $this;
+        assert($copy->headers !== null);
         unset($copy->headers[$normalizedName]);
         return $copy;
     }
@@ -261,10 +255,15 @@ class Message implements MessageInterface
         return $copy;
     }
 
-    protected function normalizeHeaderName($name)
+    /**
+     * @param mixed $name
+     * @return string
+     */
+    protected function normalizeHeaderName($name): string
     {
         if (!isset($this->headerNames)) {
             $this->headerNames = [];
+            /** @noinspection PhpUnusedLocalVariableInspection */
             foreach ($this->getHeaders() as $n => &$_) {
                 $k = \strtolower($n);
                 if (!isset($this->headerNames[$k])) {
@@ -272,7 +271,7 @@ class Message implements MessageInterface
                 }
             }
         }
-        $this->validateHeaderName($name);
+        $name = $this->validateHeaderName($name);
         $key = \strtolower($name);
         if ($key === 'host') {
             return 'Host';

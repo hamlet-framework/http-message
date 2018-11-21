@@ -8,33 +8,55 @@ abstract class UriBuilder
 {
     use UriValidatorTrait;
 
-    /** @var callable */
+    /**
+     * @var callable(string,string,string,int|null,string,string,string):Uri
+     */
     private $constructor;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $validate;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $scheme = '';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $userInfo = '';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $host = '';
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     private $port = null;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $path = '';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $query = '';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $fragment = '';
 
+    /**
+     * @param callable(string,string,string,int|null,string,string,string):Uri $constructor
+     * @param bool $validate
+     */
     public function __construct(callable $constructor, bool $validate)
     {
         $this->constructor = $constructor;

@@ -107,9 +107,9 @@ class Uri implements UriInterface
         $instance->query    = isset($parts['query'])    ? $instance->normalizeQuery($parts['query']) : '';
         $instance->fragment = isset($parts['fragment']) ? $instance->normalizeFragment($parts['fragment']) : '';
 
-        $instance->userInfo = $parts['user'] ?? '';
+        $instance->userInfo = (string) ($parts['user'] ?? '');
         if (isset($parts['pass'])) {
-            $instance->userInfo .= ':' . $parts['pass'];
+            $instance->userInfo .= ':' . ((string) $parts['pass']);
         }
 
         return $instance;

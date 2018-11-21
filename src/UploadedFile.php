@@ -6,6 +6,9 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class UploadedFile implements UploadedFileInterface
 {
     /** @var int[] */

@@ -2,40 +2,28 @@
 
 namespace Hamlet\Http\Message;
 
-use Psr\Http\Message\ResponseInterface;
+use Hamlet\Http\Message\Traits\ResponseBuilderTrait;
 
-class ResponseBuilder extends MessageBuilder
+abstract class ResponseBuilder
 {
-    /** @var int|null */
-    protected $statusCode;
-
-    /** @var string|null */
-    protected $reasonPhrase;
+    use ResponseBuilderTrait;
 
     /**
-     * @param int $code
-     * @param string $reason
-     * @return static
+     * @var callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,int|null,string|null):Response
      */
-    public function withStatus(int $code, string $reason = '')
+    protected $constructor;
+
+    /**
+     * @param callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,int|null,string|null):Response $constructor
+     * @param bool $validate
+     */
+    public function __construct(callable $constructor, bool $validate)
     {
-        if ($this->validate) {
-            list($normalizedStatusCode, $normalizedReasonPhrase) = $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reason);
-            $this->statusCode = $normalizedStatusCode;
-            $this->reasonPhrase = $normalizedReasonPhrase;
-        } else {
-            $this->statusCode = $code;
-            if (!empty($reason)) {
-                $this->reasonPhrase = $reason;
-            }
-        }
-        return $this;
+        $this->constructor = $constructor;
+        $this->validate = $validate;
     }
 
-    /**
-     * @return ResponseInterface
-     */
-    public function build()
+    public function build(): Response
     {
         return ($this->constructor)($this->protocolVersion, $this->headers, $this->body, $this->statusCode, $this->reasonPhrase);
     }

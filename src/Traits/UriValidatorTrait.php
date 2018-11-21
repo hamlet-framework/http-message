@@ -95,9 +95,16 @@ trait UriValidatorTrait
             $valid .= '?';
         }
         $pattern = '#([^' . $valid . ']+|%(?![A-Fa-f0-9]{2}))#';
-        $callback = function (array $match): string {
-            return \rawurlencode($match[0]);
-        };
+
+        $callback =
+            /**
+             * @param array<int,string> $match
+             * @return string
+             */
+            function (array $match): string {
+                return \rawurlencode($match[0]);
+            };
+
         $result = \preg_replace_callback($pattern, $callback, $string);
         if ($result === null) {
             throw new InvalidArgumentException('Cannot escape string');

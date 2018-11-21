@@ -50,7 +50,7 @@ class ServerRequestTest extends TestCase
     {
         $body = new \stdClass();
 
-        $request = ServerRequest::nonValidatingBuilder()
+        $request = ServerRequest::nonValidatingServerRequestBuilder()
             ->withParsedBody($body)
             ->build();
 
