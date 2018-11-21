@@ -9,14 +9,10 @@ abstract class ServerRequestBuilder
     use ServerRequestBuilderTrait;
 
     /**
-     * @var callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array|null,array|null,array|null,array|null,array|object|null,bool,array|null):ServerRequest
+     * @var callable
      */
     protected $constructor;
 
-    /**
-     * @param callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array|null,array|null,array|null,array|null,array|object|null,bool,array|null):ServerRequest $constructor
-     * @param bool $validate
-     */
     public function __construct(callable $constructor, bool $validate)
     {
         $this->constructor = $constructor;

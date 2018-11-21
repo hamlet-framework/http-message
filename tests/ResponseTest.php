@@ -34,7 +34,7 @@ class ResponseTest extends TestCase
 
     public function test_non_validating_builder_sets_values()
     {
-        $response = Response::nonValidatingResponseBuilder()
+        $response = Response::nonValidatingBuilder()
             ->withStatus(200, 'OK')
             ->build();
 

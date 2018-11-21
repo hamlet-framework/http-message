@@ -21,7 +21,6 @@ class Request extends Message implements RequestInterface
 
     /**
      * @var callable|null
-     * @psalm-var callable():string|null
      */
     protected $methodGenerator = null;
 
@@ -32,42 +31,36 @@ class Request extends Message implements RequestInterface
 
     /**
      * @var callable|null
-     * @psalm-var callable():UriInterface|null
      */
     protected $uriGenerator = null;
 
     private static function requestConstructor(): callable
     {
         $instance = new Request;
-        return
-            /**
-             * @param string|null                          $protocolVersion
-             * @param array<string,array<int,string>>|null $headers
-             * @param StreamInterface|null                 $body
-             * @param string|null                          $requestTarget
-             * @param string|null                          $method
-             * @param UriInterface|null                    $uri
-             *
-             * @return Request
-             */
-            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
-                $instance->protocolVersion = $protocolVersion;
-                $instance->headers = $headers;
-                $instance->body = $body;
-                $instance->requestTarget = $requestTarget;
-                $instance->method = $method;
-                $instance->uri = $uri;
-                return $instance;
-            };
+        return function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            $instance->requestTarget = $requestTarget;
+            $instance->method = $method;
+            $instance->uri = $uri;
+            return $instance;
+        };
     }
 
-    public static function validatingRequestBuilder(): RequestBuilder
+    /**
+     * @return RequestBuilder
+     */
+    public static function validatingBuilder()
     {
         $constructor = self::requestConstructor();
         return new class($constructor, true) extends RequestBuilder {};
     }
 
-    public static function nonValidatingRequestBuilder(): RequestBuilder
+    /**
+     * @return RequestBuilder
+     */
+    public static function nonValidatingBuilder()
     {
         $constructor = self::requestConstructor();
         return new class($constructor, false) extends RequestBuilder {};

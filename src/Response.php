@@ -15,7 +15,6 @@ class Response extends Message implements ResponseInterface
 
     /**
      * @var callable|null
-     * @psalm-var callable():int|null
      */
     protected $statusCodeGenerator = null;
 
@@ -27,33 +26,29 @@ class Response extends Message implements ResponseInterface
     private static function responseConstructor(): callable
     {
         $instance = new Response;
-        return
-            /**
-             * @param string|null                          $protocolVersion
-             * @param array<string,array<int,string>>|null $headers
-             * @param StreamInterface|null                 $body
-             * @param int|null                             $statusCode
-             * @param string|null                          $reasonPhrase
-             *
-             * @return Response
-             */
-            function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
-                $instance->protocolVersion = $protocolVersion;
-                $instance->headers = $headers;
-                $instance->body = $body;
-                $instance->statusCode = $statusCode;
-                $instance->reasonPhrase = $reasonPhrase;
-                return $instance;
-            };
+        return function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            $instance->statusCode = $statusCode;
+            $instance->reasonPhrase = $reasonPhrase;
+            return $instance;
+        };
     }
 
-    public static function validatingResponseBuilder(): ResponseBuilder
+    /**
+     * @return ResponseBuilder
+     */
+    public static function validatingBuilder()
     {
         $constructor = self::responseConstructor();
         return new class($constructor, true) extends ResponseBuilder {};
     }
 
-    public static function nonValidatingResponseBuilder(): ResponseBuilder
+    /**
+     * @return ResponseBuilder
+     */
+    public static function nonValidatingBuilder()
     {
         $constructor = self::responseConstructor();
         return new class($constructor, false) extends ResponseBuilder {};

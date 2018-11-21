@@ -31,7 +31,7 @@ class MessageTest extends TestCase
             'Host' => ['example.com']
         ];
 
-        $message = Message::nonValidatingMessageBuilder()
+        $message = Message::nonValidatingBuilder()
             ->withProtocolVersion('1.1')
             ->withBody($body)
             ->withHeaders($headers)
@@ -49,7 +49,7 @@ class MessageTest extends TestCase
             'host' => 'www.example.net'
         ];
 
-        $message = Message::validatingMessageBuilder()
+        $message = Message::validatingBuilder()
             ->withHeaders($headers)
             ->build();
 

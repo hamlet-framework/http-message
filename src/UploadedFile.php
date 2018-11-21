@@ -6,9 +6,6 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
-/**
- * @psalm-suppress PropertyNotSetInConstructor
- */
 class UploadedFile implements UploadedFileInterface
 {
     /** @var int[] */
@@ -51,7 +48,7 @@ class UploadedFile implements UploadedFileInterface
     public static function builder(): UploadedFileBuilder
     {
         $instance = new static;
-        $constructor = function (?string $path, ?StreamInterface $stream, int $size, int $errorStatus, ?string $clientFileName, ?string $clientMediaType) use ($instance): UploadedFile {
+        $constructor = function ($path, $stream, $size, $errorStatus, $clientFileName, $clientMediaType) use ($instance): UploadedFile {
             $instance->file = $path;
             $instance->stream = $stream;
             $instance->size = $size;

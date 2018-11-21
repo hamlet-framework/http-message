@@ -17,26 +17,22 @@ class Message implements MessageInterface
     protected $protocolVersion = null;
 
     /**
-     * @var callable|null
-     * @psalm-var callable():string|null
+     * @var callable():string|null
      */
     protected $protocolVersionGenerator = null;
 
     /**
-     * @var array|null
-     * @var array<string,array<int,string>>|null
+     * @var array<string,array<string>>|null
      */
     protected $headers = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,string>|null
+     * @var array<string,string>|null
      */
     protected $headerNames = null;
 
     /**
-     * @var callable|null
-     * @psalm-var callable():array<string,array<int,string>>|null
+     * @var callable():array<string,array<string>>|null
      */
     protected $headersGenerator = null;
 
@@ -46,8 +42,7 @@ class Message implements MessageInterface
     protected $body = null;
 
     /**
-     * @var callable|null
-     * @psalm-var callable():StreamInterface|null
+     * @var callable():StreamInterface|null
      */
     protected $bodyGenerator = null;
 
@@ -66,29 +61,27 @@ class Message implements MessageInterface
     private static function messageConstructor(): callable
     {
         $instance = new Message;
-        return
-            /**
-             * @param string|null                          $protocolVersion
-             * @param array<string,array<int,string>>|null $headers
-             * @param StreamInterface|null                 $body
-             *
-             * @return Message
-             */
-            function ($protocolVersion, $headers, $body) use ($instance): Message {
-                $instance->protocolVersion = $protocolVersion;
-                $instance->headers = $headers;
-                $instance->body = $body;
-                return $instance;
-            };
+        return function ($protocolVersion, $headers, $body) use ($instance): Message {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers = $headers;
+            $instance->body = $body;
+            return $instance;
+        };
     }
 
-    public static function validatingMessageBuilder(): MessageBuilder
+    /**
+     * @return MessageBuilder
+     */
+    public static function validatingBuilder()
     {
         $constructor = self::messageConstructor();
         return new class($constructor, true) extends MessageBuilder {};
     }
 
-    public static function nonValidatingMessageBuilder(): MessageBuilder
+    /**
+     * @return MessageBuilder
+     */
+    public static function nonValidatingBuilder()
     {
         $constructor = self::messageConstructor();
         return new class($constructor, false) extends MessageBuilder {};
@@ -120,8 +113,7 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return string[][]
-     * @psalm-return array<string,array<int,string>>
+     * @return array<string,array<int,string>>
      */
     public function getHeaders(): array
     {

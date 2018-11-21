@@ -60,7 +60,6 @@ class Stream implements StreamInterface, LoggerAwareInterface
     /**
      * @param resource $resource
      * @return StreamInterface
-     * @psalm-suppress MixedArrayOffset
      */
     public static function fromResource($resource): StreamInterface
     {
@@ -156,7 +155,6 @@ class Stream implements StreamInterface, LoggerAwareInterface
             throw new RuntimeException('No resource');
         }
         $result = \ftell($this->stream);
-        /** @psalm-suppress TypeDoesNotContainType */
         if ($result === false) {
             throw new RuntimeException('Unable to determine stream position');
         }

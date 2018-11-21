@@ -4,12 +4,7 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
 
-/**
- * @psalm-type ParsedBody=array|object|null
- */
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /**
@@ -80,49 +75,37 @@ class ServerRequest extends Request implements ServerRequestInterface
     private static function serverRequestConstructor(): callable
     {
         $instance = new ServerRequest;
-        return
-            /**
-             * @param string|null                          $protocolVersion
-             * @param array<string,array<int,string>>|null $headers
-             * @param StreamInterface|null                 $body
-             * @param string|null                          $requestTarget
-             * @param string|null                          $method
-             * @param UriInterface|null                    $uri
-             * @param array<string,string>|null            $serverParams
-             * @param array<string,string>|null            $cookieParams
-             * @param array<string|int,mixed>|null         $queryParams
-             * @param array<string,mixed>|null             $uploadedFiles
-             * @param array|object|null                    $parsedBody
-             * @param bool                                 $parsedBodySet
-             * @param array<string,mixed>                  $attributes
-             *
-             * @return ServerRequest
-             */
-            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri, $serverParams, $cookieParams, $queryParams, $uploadedFiles, $parsedBody, $parsedBodySet, $attributes) use ($instance): ServerRequest {
-                $instance->protocolVersion = $protocolVersion;
-                $instance->headers         = $headers;
-                $instance->body            = $body;
-                $instance->requestTarget   = $requestTarget;
-                $instance->method          = $method;
-                $instance->uri             = $uri;
-                $instance->serverParams    = $serverParams;
-                $instance->cookieParams    = $cookieParams;
-                $instance->queryParams     = $queryParams;
-                $instance->uploadedFiles   = $uploadedFiles;
-                $instance->parsedBody      = $parsedBody;
-                $instance->parsedBodySet   = $parsedBodySet;
-                $instance->attributes      = $attributes;
-                return $instance;
-            };
+        return function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri, $serverParams, $cookieParams, $queryParams, $uploadedFiles, $parsedBody, $parsedBodySet, $attributes) use ($instance): ServerRequest {
+            $instance->protocolVersion = $protocolVersion;
+            $instance->headers         = $headers;
+            $instance->body            = $body;
+            $instance->requestTarget   = $requestTarget;
+            $instance->method          = $method;
+            $instance->uri             = $uri;
+            $instance->serverParams    = $serverParams;
+            $instance->cookieParams    = $cookieParams;
+            $instance->queryParams     = $queryParams;
+            $instance->uploadedFiles   = $uploadedFiles;
+            $instance->parsedBody      = $parsedBody;
+            $instance->parsedBodySet   = $parsedBodySet;
+            $instance->attributes      = $attributes;
+            return $instance;
+        };
     }
 
-    public static function validatingServerRequestBuilder(): ServerRequestBuilder
+    /**
+     * @return ServerRequestBuilder
+     */
+    public static function validatingBuilder()
     {
         $constructor = self::serverRequestConstructor();
         return new class($constructor, true) extends ServerRequestBuilder {};
     }
 
-    public static function nonValidatingServerRequestBuilder(): ServerRequestBuilder
+    /**
+     * @return ServerRequestBuilder
+     */
+    public static function nonValidatingBuilder()
     {
         $constructor = self::serverRequestConstructor();
         return new class($constructor, false) extends ServerRequestBuilder {};
@@ -288,7 +271,6 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->validateAttributeName($name);
 
         $attributes = $this->getAttributes();
-        /** @psalm-suppress MixedAssignment */
         $attributes[$name] = $value;
 
         $copy = clone $this;
@@ -312,7 +294,6 @@ class ServerRequest extends Request implements ServerRequestInterface
         unset($attributes[$name]);
 
         $copy = clone $this;
-        /** @psalm-suppress MixedTypeCoercion */
         $copy->attributes = $attributes;
         $copy->attributesGenerator = null;
         return $copy;

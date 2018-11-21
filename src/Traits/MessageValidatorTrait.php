@@ -128,9 +128,6 @@ trait MessageValidatorTrait
             }
         }
 
-        /**
-         * @psalm-suppress MixedAssignment
-         */
         foreach ($values as $value) {
             if (\is_string($value)) {
                 if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
@@ -186,16 +183,12 @@ trait MessageValidatorTrait
     /**
      * @param mixed $uploadedFiles
      * @return array<string,mixed>
-     * @psalm-suppress MixedTypeCoercion
      */
     protected function validateUploadedFiles($uploadedFiles): array
     {
         if (!\is_array($uploadedFiles)) {
             throw new InvalidArgumentException('Uploaded files must be an array');
         }
-        /**
-         * @psalm-suppress MixedAssignment
-         */
         foreach ($uploadedFiles as $item) {
             if (\is_array($item)) {
                 $this->validateUploadedFiles($item);
@@ -223,7 +216,6 @@ trait MessageValidatorTrait
      * @param mixed $code
      * @param mixed $phrase
      * @return array
-     * @psalm-return array{0:int,1:string}
      */
     protected function validateAndNormalizeStatusCodeAndReasonPhrase($code, $phrase): array
     {
@@ -256,7 +248,7 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $queryParams
-     * @return array<string|int,mixed> QueryParams
+     * @return array<string|int,string|mixed> QueryParams
      */
     protected function validateQueryParams($queryParams): array
     {
@@ -264,9 +256,6 @@ trait MessageValidatorTrait
             throw new InvalidArgumentException('Query params must be an array');
         }
         $validatedParams = [];
-        /**
-         * @psalm-suppress MixedAssignment
-         */
         foreach ($queryParams as $key => $value) {
             if (!\is_string($key) && !\is_int($key)) {
                 throw new InvalidArgumentException('Keys in query params must be strings or integers');
@@ -285,14 +274,12 @@ trait MessageValidatorTrait
     /**
      * @param mixed $cookieParams
      * @return array<string,string>
-     * @psalm-suppress MixedTypeCoercion
      */
     public function validateCookieParams($cookieParams): array
     {
         if (!\is_array($cookieParams)) {
             throw new InvalidArgumentException('Cookie params must be an array');
         }
-        /** @psalm-suppress MixedAssignment */
         foreach ($cookieParams as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new InvalidArgumentException('Cookie params must be an array<string,string>');
@@ -304,13 +291,11 @@ trait MessageValidatorTrait
     /**
      * @param array $attributes
      * @return array<string,mixed>
-     * @psalm-suppress MixedTypeCoercion
      */
     public function validateAttributes(array $attributes): array
     {
         /**
          * @noinspection PhpUnusedLocalVariableInspection
-         * @psalm-suppress MixedAssignment
          */
         foreach ($attributes as $name => &$_) {
             if (!\is_string($name)) {

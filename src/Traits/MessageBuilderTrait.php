@@ -69,7 +69,6 @@ trait MessageBuilderTrait
             }
             $this->headers = $values;
         } else {
-            /** @psalm-suppress MixedTypeCoercion */
             $this->headers = $headers;
         }
         return $this;

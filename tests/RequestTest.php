@@ -40,7 +40,7 @@ class RequestTest extends TestCase
     {
         $uri = Uri::parse('http://example.com');
 
-        $request = Request::nonValidatingRequestBuilder()
+        $request = Request::nonValidatingBuilder()
             ->withRequestTarget('*')
             ->withMethod('PUT')
             ->withUri($uri)
