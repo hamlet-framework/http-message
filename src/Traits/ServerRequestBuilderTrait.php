@@ -33,7 +33,7 @@ trait ServerRequestBuilderTrait
      */
     public function withServerParams(array $serverParams)
     {
-        $this->serverParams = $serverParams;
+        $this->serverParams = $this->validate ? $this->validateServerParams($serverParams) : $serverParams;
         return $this;
     }
 

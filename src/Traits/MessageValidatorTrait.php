@@ -272,11 +272,31 @@ trait MessageValidatorTrait
     }
 
     /**
+     * @param mixed $serverParams
+     * @return array<string,string>
+     */
+    public function validateServerParams($serverParams): array
+    {
+        $validatedParams = [];
+        if (!\is_array($serverParams)) {
+            throw new InvalidArgumentException('Server params must be an array');
+        }
+        foreach ($serverParams as $key => $value) {
+            if (!\is_string($key) || !\is_string($value)) {
+                throw new InvalidArgumentException('Server params must be an array<string,string>');
+            }
+            $validatedParams[$key] = $value;
+        }
+        return $validatedParams;
+    }
+
+    /**
      * @param mixed $cookieParams
      * @return array<string,string>
      */
     public function validateCookieParams($cookieParams): array
     {
+        $validatedParams = [];
         if (!\is_array($cookieParams)) {
             throw new InvalidArgumentException('Cookie params must be an array');
         }
@@ -284,8 +304,9 @@ trait MessageValidatorTrait
             if (!\is_string($key) || !\is_string($value)) {
                 throw new InvalidArgumentException('Cookie params must be an array<string,string>');
             }
+            $validatedParams[$key] = $value;
         }
-        return $cookieParams;
+        return $validatedParams;
     }
 
     /**
@@ -294,15 +315,14 @@ trait MessageValidatorTrait
      */
     public function validateAttributes(array $attributes): array
     {
-        /**
-         * @noinspection PhpUnusedLocalVariableInspection
-         */
-        foreach ($attributes as $name => &$_) {
+        $validatedAttributes = [];
+        foreach ($attributes as $name => &$value) {
             if (!\is_string($name)) {
                 throw new InvalidArgumentException('Attribute names must be strings');
             }
+            $validatedAttributes[$name] = $value;
         }
-        return $attributes;
+        return $validatedAttributes;
     }
 
     /**
