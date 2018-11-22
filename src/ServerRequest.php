@@ -13,7 +13,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $serverParams = null;
 
     /**
-     * @var callable():array<string,string>|null
+     * @var (callable():array<string,string>)|null
      */
     protected $serverParamsGenerator = null;
 
@@ -23,7 +23,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $cookieParams;
 
     /**
-     * @var callable():array<string,string>|null
+     * @var (callable():array<string,string>)|null
      */
     protected $cookieParamsGenerator = null;
 
@@ -33,7 +33,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $queryParams = null;
 
     /**
-     * @var callable():array<string|int,mixed>|null
+     * @var (callable():array<string|int,mixed>)|null
      */
     protected $queryParamsGenerator = null;
 
@@ -43,7 +43,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $uploadedFiles = null;
 
     /**
-     * @var callable():array<string,mixed>|null
+     * @var (callable():array<string,mixed>)|null
      */
     protected $uploadedFilesGenerator = null;
 
@@ -58,7 +58,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $parsedBodySet = false;
 
     /**
-     * @var callable():(array|object|null)|null
+     * @var (callable():array|object|null)|null
      */
     protected $parsedBodyGenerator = null;
 
@@ -68,7 +68,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $attributes = null;
 
     /**
-     * @var callable():array<string,mixed>|null
+     * @var (callable():array<string,mixed>)|null
      */
     protected $attributesGenerator = null;
 
@@ -232,7 +232,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * @return array
+     * @return array<string,mixed>
      */
     public function getAttributes(): array
     {

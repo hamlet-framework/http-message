@@ -31,15 +31,13 @@ trait MessageBuilderTrait
     }
 
     /**
-     * @param array<string,string|array<string>> $headers
+     * @param array $headers
      * @return static
      */
     public function withHeaders(array $headers)
     {
         if ($this->validate) {
-            /** @var array<string,array<int,string>> $values */
             $values = [];
-            /** @var array<string,string> $names */
             $names = [];
             foreach ($headers as $name => &$value) {
                 $name = $this->validateHeaderName($name);
