@@ -4,7 +4,6 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
@@ -20,7 +19,7 @@ class Request extends Message implements RequestInterface
     protected $method = null;
 
     /**
-     * @var callable|null
+     * @var (callable():string)|null
      */
     protected $methodGenerator = null;
 
@@ -30,7 +29,7 @@ class Request extends Message implements RequestInterface
     protected $uri = null;
 
     /**
-     * @var callable|null
+     * @var (callable():UriInterface)|null
      */
     protected $uriGenerator = null;
 

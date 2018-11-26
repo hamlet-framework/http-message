@@ -17,7 +17,7 @@ class Message implements MessageInterface
     protected $protocolVersion = null;
 
     /**
-     * @var callable():string|null
+     * @var (callable():string)|null
      */
     protected $protocolVersionGenerator = null;
 
@@ -32,7 +32,7 @@ class Message implements MessageInterface
     protected $headerNames = null;
 
     /**
-     * @var callable():array<string,array<string>>|null
+     * @var (callable():array<string,array<string>>)|null
      */
     protected $headersGenerator = null;
 
@@ -42,7 +42,7 @@ class Message implements MessageInterface
     protected $body = null;
 
     /**
-     * @var callable():StreamInterface|null
+     * @var (callable():StreamInterface)|null
      */
     protected $bodyGenerator = null;
 

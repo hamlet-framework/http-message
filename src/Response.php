@@ -4,7 +4,6 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 
 class Response extends Message implements ResponseInterface
 {
@@ -14,7 +13,7 @@ class Response extends Message implements ResponseInterface
     protected $statusCode = null;
 
     /**
-     * @var callable|null
+     * @var (callable():int)|null
      */
     protected $statusCodeGenerator = null;
 
