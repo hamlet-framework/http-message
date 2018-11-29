@@ -57,7 +57,8 @@ class UploadedFile implements UploadedFileInterface
             $instance->clientMediaType = $clientMediaType;
             return $instance;
         };
-        return new class($constructor) extends UploadedFileBuilder {};
+        return new class($constructor) extends UploadedFileBuilder {
+        };
     }
 
     /**

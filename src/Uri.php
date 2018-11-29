@@ -77,7 +77,8 @@ class Uri implements UriInterface
             $instance->fragment = $fragment;
             return $instance;
         };
-        return new class($constructor, $validate) extends UriBuilder {};
+        return new class($constructor, $validate) extends UriBuilder {
+        };
     }
 
     public static function empty(): Uri

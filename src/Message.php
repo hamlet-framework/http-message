@@ -75,7 +75,8 @@ class Message implements MessageInterface
     public static function validatingBuilder()
     {
         $constructor = self::messageConstructor();
-        return new class($constructor, true) extends MessageBuilder {};
+        return new class($constructor, true) extends MessageBuilder {
+        };
     }
 
     /**
@@ -84,7 +85,8 @@ class Message implements MessageInterface
     public static function nonValidatingBuilder()
     {
         $constructor = self::messageConstructor();
-        return new class($constructor, false) extends MessageBuilder {};
+        return new class($constructor, false) extends MessageBuilder {
+        };
     }
 
     public function getProtocolVersion(): string

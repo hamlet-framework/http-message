@@ -99,7 +99,8 @@ class ServerRequest extends Request implements ServerRequestInterface
     public static function validatingBuilder()
     {
         $constructor = self::serverRequestConstructor();
-        return new class($constructor, true) extends ServerRequestBuilder {};
+        return new class($constructor, true) extends ServerRequestBuilder {
+        };
     }
 
     /**
@@ -108,7 +109,8 @@ class ServerRequest extends Request implements ServerRequestInterface
     public static function nonValidatingBuilder()
     {
         $constructor = self::serverRequestConstructor();
-        return new class($constructor, false) extends ServerRequestBuilder {};
+        return new class($constructor, false) extends ServerRequestBuilder {
+        };
     }
 
     public function getServerParams(): array

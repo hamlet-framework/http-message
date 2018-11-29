@@ -53,7 +53,8 @@ class Request extends Message implements RequestInterface
     public static function validatingBuilder()
     {
         $constructor = self::requestConstructor();
-        return new class($constructor, true) extends RequestBuilder {};
+        return new class($constructor, true) extends RequestBuilder {
+        };
     }
 
     /**
@@ -62,7 +63,8 @@ class Request extends Message implements RequestInterface
     public static function nonValidatingBuilder()
     {
         $constructor = self::requestConstructor();
-        return new class($constructor, false) extends RequestBuilder {};
+        return new class($constructor, false) extends RequestBuilder {
+        };
     }
 
     public function withoutHeader($name)

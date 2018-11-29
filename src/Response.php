@@ -41,7 +41,8 @@ class Response extends Message implements ResponseInterface
     public static function validatingBuilder()
     {
         $constructor = self::responseConstructor();
-        return new class($constructor, true) extends ResponseBuilder {};
+        return new class($constructor, true) extends ResponseBuilder {
+        };
     }
 
     /**
@@ -50,7 +51,8 @@ class Response extends Message implements ResponseInterface
     public static function nonValidatingBuilder()
     {
         $constructor = self::responseConstructor();
-        return new class($constructor, false) extends ResponseBuilder {};
+        return new class($constructor, false) extends ResponseBuilder {
+        };
     }
 
     public function getProtocolVersion(): string
