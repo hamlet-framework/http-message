@@ -58,7 +58,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $parsedBodySet = false;
 
     /**
-     * @var (callable():array|object|null)|null
+     * @var (callable():(array|object|null))|null
      */
     protected $parsedBodyGenerator = null;
 

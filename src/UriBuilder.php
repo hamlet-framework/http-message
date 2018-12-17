@@ -9,7 +9,7 @@ abstract class UriBuilder
     use UriValidatorTrait;
 
     /**
-     * @var callable
+     * @var callable(string,string,string,int|null,string,string,string):Uri
      */
     private $constructor;
 
@@ -53,6 +53,10 @@ abstract class UriBuilder
      */
     private $fragment = '';
 
+    /**
+     * @param callable(string,string,string,int|null,string,string,string):Uri $constructor
+     * @param bool $validate
+     */
     public function __construct(callable $constructor, bool $validate)
     {
         $this->constructor = $constructor;

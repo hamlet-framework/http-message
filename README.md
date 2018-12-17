@@ -46,3 +46,5 @@ Please note, that with non-validating builders you need to know what you're doin
 
 - Generally not interested in bending the code the pacify static analysers
 - Integrate with Travis CI at one point
+- Adapt tests from https://github.com/Sporkmonger/Addressable/blob/master/spec/addressable/uri_spec.rb
+
