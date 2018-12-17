@@ -61,7 +61,11 @@ class Message implements MessageInterface
     private static function messageConstructor(): callable
     {
         $instance = new Message;
-        return function ($protocolVersion, $headers, $body) use ($instance): Message {
+        return function (
+            ?string $protocolVersion,
+            ?array $headers,
+            ?StreamInterface $body
+        ) use ($instance): Message {
             $instance->protocolVersion = $protocolVersion;
             $instance->headers = $headers;
             $instance->body = $body;
