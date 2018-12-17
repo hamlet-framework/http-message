@@ -9,10 +9,14 @@ abstract class ResponseBuilder
     use ResponseBuilderTrait;
 
     /**
-     * @var callable
+     * @var callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,int|null,string|null):Response
      */
     protected $constructor;
 
+    /**
+     * @param callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,int|null,string|null):Response $constructor
+     * @param bool $validate
+     */
     public function __construct(callable $constructor, bool $validate)
     {
         $this->constructor = $constructor;
