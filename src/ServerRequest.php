@@ -4,6 +4,8 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 class ServerRequest extends Request implements ServerRequestInterface
 {
@@ -75,22 +77,53 @@ class ServerRequest extends Request implements ServerRequestInterface
     private static function serverRequestConstructor(): callable
     {
         $instance = new ServerRequest;
-        return function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri, $serverParams, $cookieParams, $queryParams, $uploadedFiles, $parsedBody, $parsedBodySet, $attributes) use ($instance): ServerRequest {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers         = $headers;
-            $instance->body            = $body;
-            $instance->requestTarget   = $requestTarget;
-            $instance->method          = $method;
-            $instance->uri             = $uri;
-            $instance->serverParams    = $serverParams;
-            $instance->cookieParams    = $cookieParams;
-            $instance->queryParams     = $queryParams;
-            $instance->uploadedFiles   = $uploadedFiles;
-            $instance->parsedBody      = $parsedBody;
-            $instance->parsedBodySet   = $parsedBodySet;
-            $instance->attributes      = $attributes;
-            return $instance;
-        };
+        return
+            /**
+             * @param string|null                      $protocolVersion
+             * @param array<string,array<string>>|null $headers
+             * @param StreamInterface|null             $body
+             * @param string|null                      $requestTarget
+             * @param string|null                      $method
+             * @param UriInterface|null                $uri
+             * @param array<string,string>|null        $serverParams
+             * @param array<string,string>|null        $cookieParams
+             * @param array<string|int,mixed>|null     $queryParams
+             * @param array<string,mixed>|null         $uploadedFiles
+             * @param array|object|null                $parsedBody
+             * @param bool                             $parsedBodySet
+             * @param array<string,mixed>|null         $attributes
+             * @return ServerRequest
+             */
+            function (
+                ?string $protocolVersion,
+                ?array $headers,
+                ?StreamInterface $body,
+                ?string $requestTarget,
+                ?string $method,
+                ?UriInterface $uri,
+                ?array $serverParams,
+                ?array $cookieParams,
+                ?array $queryParams,
+                ?array $uploadedFiles,
+                $parsedBody,
+                bool $parsedBodySet,
+                ?array $attributes
+            ) use ($instance): ServerRequest {
+                $instance->protocolVersion = $protocolVersion;
+                $instance->headers         = $headers;
+                $instance->body            = $body;
+                $instance->requestTarget   = $requestTarget;
+                $instance->method          = $method;
+                $instance->uri             = $uri;
+                $instance->serverParams    = $serverParams;
+                $instance->cookieParams    = $cookieParams;
+                $instance->queryParams     = $queryParams;
+                $instance->uploadedFiles   = $uploadedFiles;
+                $instance->parsedBody      = $parsedBody;
+                $instance->parsedBodySet   = $parsedBodySet;
+                $instance->attributes      = $attributes;
+                return $instance;
+            };
     }
 
     /**

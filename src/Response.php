@@ -4,6 +4,7 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class Response extends Message implements ResponseInterface
 {
@@ -25,14 +26,29 @@ class Response extends Message implements ResponseInterface
     private static function responseConstructor(): callable
     {
         $instance = new Response;
-        return function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            $instance->statusCode = $statusCode;
-            $instance->reasonPhrase = $reasonPhrase;
-            return $instance;
-        };
+        return
+            /**
+             * @param string|null                      $protocolVersion
+             * @param array<string,array<string>>|null $headers
+             * @param StreamInterface|null             $body
+             * @param int|null                         $statusCode
+             * @param string|null                      $reasonPhrase
+             * @return Response
+             */
+            function (
+                ?string $protocolVersion,
+                ?array $headers,
+                ?StreamInterface $body,
+                ?int $statusCode,
+                ?string $reasonPhrase
+            ) use ($instance): Response {
+                $instance->protocolVersion = $protocolVersion;
+                $instance->headers = $headers;
+                $instance->body = $body;
+                $instance->statusCode = $statusCode;
+                $instance->reasonPhrase = $reasonPhrase;
+                return $instance;
+            };
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
@@ -36,15 +37,32 @@ class Request extends Message implements RequestInterface
     private static function requestConstructor(): callable
     {
         $instance = new Request;
-        return function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
-            $instance->protocolVersion = $protocolVersion;
-            $instance->headers = $headers;
-            $instance->body = $body;
-            $instance->requestTarget = $requestTarget;
-            $instance->method = $method;
-            $instance->uri = $uri;
-            return $instance;
-        };
+        return
+            /**
+             * @param string|null                      $protocolVersion
+             * @param array<string,array<string>>|null $headers
+             * @param StreamInterface|null             $body
+             * @param string|null                      $requestTarget
+             * @param string|null                      $method
+             * @param UriInterface|null                $uri
+             * @return Request
+             */
+            function (
+                ?string $protocolVersion,
+                ?array $headers,
+                ?StreamInterface $body,
+                ?string $requestTarget,
+                ?string $method,
+                ?UriInterface $uri
+            ) use ($instance): Request {
+                $instance->protocolVersion = $protocolVersion;
+                $instance->headers = $headers;
+                $instance->body = $body;
+                $instance->requestTarget = $requestTarget;
+                $instance->method = $method;
+                $instance->uri = $uri;
+                return $instance;
+            };
     }
 
     /**
