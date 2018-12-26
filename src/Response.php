@@ -53,6 +53,7 @@ class Response extends Message implements ResponseInterface
 
     /**
      * @return ResponseBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function validatingBuilder()
     {
@@ -63,6 +64,7 @@ class Response extends Message implements ResponseInterface
 
     /**
      * @return ResponseBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function nonValidatingBuilder()
     {

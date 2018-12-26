@@ -8,7 +8,6 @@ use RuntimeException;
 
 class UploadedFile implements UploadedFileInterface
 {
-    /** @var int[] */
     public const ERROR_STATUSES = [
         \UPLOAD_ERR_OK,
         \UPLOAD_ERR_INI_SIZE,
@@ -27,7 +26,7 @@ class UploadedFile implements UploadedFileInterface
     private $clientMediaType;
 
     /** @var int */
-    private $error;
+    private $error = UPLOAD_ERR_NO_FILE;
 
     /** @var string|null */
     private $file;

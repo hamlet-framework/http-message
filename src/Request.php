@@ -67,6 +67,7 @@ class Request extends Message implements RequestInterface
 
     /**
      * @return RequestBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function validatingBuilder()
     {
@@ -77,6 +78,7 @@ class Request extends Message implements RequestInterface
 
     /**
      * @return RequestBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function nonValidatingBuilder()
     {

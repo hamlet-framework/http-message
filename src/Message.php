@@ -82,6 +82,7 @@ class Message implements MessageInterface
 
     /**
      * @return MessageBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function validatingBuilder()
     {
@@ -92,6 +93,7 @@ class Message implements MessageInterface
 
     /**
      * @return MessageBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function nonValidatingBuilder()
     {
@@ -126,7 +128,7 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return array<string,array<int,string>>
+     * @return array<string,array<string>>
      */
     public function getHeaders(): array
     {

@@ -128,6 +128,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
     /**
      * @return ServerRequestBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function validatingBuilder()
     {
@@ -138,6 +139,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
     /**
      * @return ServerRequestBuilder
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function nonValidatingBuilder()
     {
@@ -306,6 +308,7 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->validateAttributeName($name);
 
         $attributes = $this->getAttributes();
+        /** @psalm-suppress MixedAssignment */
         $attributes[$name] = $value;
 
         $copy = clone $this;

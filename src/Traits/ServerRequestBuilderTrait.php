@@ -15,7 +15,7 @@ trait ServerRequestBuilderTrait
     /** @var array<string|int,mixed>|null */
     protected $queryParams = null;
 
-    /** @var array|null */
+    /** @var array<string,mixed>|null */
     protected $uploadedFiles = null;
 
     /** @var object|array|null */

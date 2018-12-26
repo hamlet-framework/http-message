@@ -189,6 +189,7 @@ trait MessageValidatorTrait
         if (!\is_array($uploadedFiles)) {
             throw new InvalidArgumentException('Uploaded files must be an array');
         }
+        /** @psalm-suppress MixedAssignment */
         foreach ($uploadedFiles as $item) {
             if (\is_array($item)) {
                 $this->validateUploadedFiles($item);
@@ -257,6 +258,7 @@ trait MessageValidatorTrait
             throw new InvalidArgumentException('Query params must be an array');
         }
         $validatedParams = [];
+        /** @psalm-suppress MixedAssignment */
         foreach ($queryParams as $key => $value) {
             if (!\is_string($key) && !\is_int($key)) {
                 throw new InvalidArgumentException('Keys in query params must be strings or integers');
@@ -282,6 +284,7 @@ trait MessageValidatorTrait
         if (!\is_array($serverParams)) {
             throw new InvalidArgumentException('Server params must be an array');
         }
+        /** @psalm-suppress MixedAssignment */
         foreach ($serverParams as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new InvalidArgumentException('Server params must be an array<string,string>');
@@ -301,6 +304,7 @@ trait MessageValidatorTrait
         if (!\is_array($cookieParams)) {
             throw new InvalidArgumentException('Cookie params must be an array');
         }
+        /** @psalm-suppress MixedAssignment */
         foreach ($cookieParams as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new InvalidArgumentException('Cookie params must be an array<string,string>');
@@ -317,6 +321,7 @@ trait MessageValidatorTrait
     public function validateAttributes(array $attributes): array
     {
         $validatedAttributes = [];
+        /** @psalm-suppress MixedAssignment */
         foreach ($attributes as $name => &$value) {
             if (!\is_string($name)) {
                 throw new InvalidArgumentException('Attribute names must be strings');

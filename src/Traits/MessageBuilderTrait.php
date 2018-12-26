@@ -31,7 +31,7 @@ trait MessageBuilderTrait
     }
 
     /**
-     * @param array $headers
+     * @param array<string,string|array<string>> $headers
      * @return static
      */
     public function withHeaders(array $headers)
