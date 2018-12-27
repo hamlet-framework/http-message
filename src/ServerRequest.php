@@ -96,18 +96,18 @@ class ServerRequest extends Request implements ServerRequestInterface
              */
             function (
                 ?string $protocolVersion,
-                ?array $headers,
+                $headers,
                 ?StreamInterface $body,
                 ?string $requestTarget,
                 ?string $method,
                 ?UriInterface $uri,
-                ?array $serverParams,
-                ?array $cookieParams,
-                ?array $queryParams,
-                ?array $uploadedFiles,
+                $serverParams,
+                $cookieParams,
+                $queryParams,
+                $uploadedFiles,
                 $parsedBody,
                 bool $parsedBodySet,
-                ?array $attributes
+                $attributes
             ) use ($instance): ServerRequest {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers         = $headers;

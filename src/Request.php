@@ -49,7 +49,7 @@ class Request extends Message implements RequestInterface
              */
             function (
                 ?string $protocolVersion,
-                ?array $headers,
+                $headers,
                 ?StreamInterface $body,
                 ?string $requestTarget,
                 ?string $method,

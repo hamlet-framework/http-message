@@ -9,12 +9,12 @@ abstract class RequestBuilder
     use RequestBuilderTrait;
 
     /**
-     * @var callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null):Request
+     * @var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null):Request
      */
     protected $constructor;
 
     /**
-     * @param callable(string|null,array<string,array<int,string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null):Request $constructor
+     * @param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null):Request $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)

@@ -14,7 +14,7 @@ trait MessageBuilderTrait
     /** @var string|null */
     protected $protocolVersion = null;
 
-    /** @var array<string,array<int,string>>|null */
+    /** @var array<string,array<string>>|null */
     protected $headers = null;
 
     /** @var StreamInterface|null */
@@ -65,8 +65,10 @@ trait MessageBuilderTrait
                     $values = ['Host' => $host] + $values;
                 }
             }
+            /** @psalm-suppress MixedTypeCoercion */
             $this->headers = $values;
         } else {
+            /** @psalm-suppress InvalidPropertyAssignmentValue */
             $this->headers = $headers;
         }
         return $this;

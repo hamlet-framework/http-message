@@ -128,6 +128,7 @@ trait MessageValidatorTrait
             }
         }
 
+        /** @psalm-suppress MixedAssignment */
         foreach ($values as $value) {
             if (\is_string($value)) {
                 if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
@@ -189,16 +190,20 @@ trait MessageValidatorTrait
         if (!\is_array($uploadedFiles)) {
             throw new InvalidArgumentException('Uploaded files must be an array');
         }
+        $result = [];
         /** @psalm-suppress MixedAssignment */
-        foreach ($uploadedFiles as $item) {
+        foreach ($uploadedFiles as $key => $item) {
+            if (!\is_string($key)) {
+                throw new InvalidArgumentException('Uploaded file keys need to be strings');
+            }
             if (\is_array($item)) {
-                $this->validateUploadedFiles($item);
+                $result[$key] = $this->validateUploadedFiles($item);
+            } else if ($item instanceof UploadedFileInterface) {
+                $result[$key] = $item;
             }
-            if (!($item instanceof UploadedFileInterface)) {
-                throw new InvalidArgumentException('Uploaded files must implement UploadedFileInterface');
-            }
+            throw new InvalidArgumentException('Uploaded files must implement UploadedFileInterface');
         }
-        return $uploadedFiles;
+        return $result;
     }
 
     /**

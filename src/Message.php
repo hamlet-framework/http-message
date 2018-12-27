@@ -70,7 +70,7 @@ class Message implements MessageInterface
              */
             function (
                 ?string $protocolVersion,
-                ?array $headers,
+                $headers,
                 ?StreamInterface $body
             ) use ($instance): Message {
                 $instance->protocolVersion = $protocolVersion;

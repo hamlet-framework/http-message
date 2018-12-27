@@ -37,7 +37,7 @@ class Response extends Message implements ResponseInterface
              */
             function (
                 ?string $protocolVersion,
-                ?array $headers,
+                $headers,
                 ?StreamInterface $body,
                 ?int $statusCode,
                 ?string $reasonPhrase
