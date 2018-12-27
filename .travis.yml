@@ -7,7 +7,8 @@ php:
   - nightly
 
 before_script:
-  - composer update --prefer-dist
+  - composer clear-cache
+  - composer update
 
 script:
   - ./vendor/bin/phpunit --testdox
