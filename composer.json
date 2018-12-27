@@ -26,9 +26,9 @@
     "hamlet-framework/http-message-spec": "dev-master",
     "phpunit/phpunit": "@stable",
     "squizlabs/php_codesniffer": "@stable",
-    "vimeo/psalm": "dev-master",
-    "phan/phan": "dev-master",
-    "phpstan/phpstan": "dev-master"
+    "vimeo/psalm": "@stable",
+    "phan/phan": "@stable",
+    "phpstan/phpstan": "@stable"
   },
   "autoload": {
     "psr-4": {
