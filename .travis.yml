@@ -2,8 +2,6 @@ language: php
 sudo: false
 
 php:
-  - '7.0'
-  - '7.1'
   - '7.2'
   - '7.3'
   - nightly
@@ -16,4 +14,3 @@ script:
   - ./vendor/bin/phpcs --standard=PSR2 -n src
   - ./vendor/bin/psalm
   - ./vendor/bin/phpstan analyse --level 7 src
-
