@@ -2,9 +2,6 @@
 
 # Hamlet / HTTP / Request
 
-
-[[]]
-
 This library generally provides you with three ways of creating objects.
 
 ## Step-wise adjustments
