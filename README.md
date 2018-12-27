@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hamlet-framework/http-message.svg?branch=master)](https://travis-ci.org/hamlet-framework/http-message)]
+[![Build Status](https://travis-ci.org/hamlet-framework/http-message.svg?branch=master)](https://travis-ci.org/hamlet-framework/http-message)
 
 # Hamlet / HTTP / Request
 
@@ -49,7 +49,5 @@ Please note, that with non-validating builders you need to know what you're doin
 
 ## Outstanding tasks
 
-- Generally not interested in bending the code the pacify static analysers
-- Integrate with Travis CI at one point
 - Adapt tests from https://github.com/Sporkmonger/Addressable/blob/master/spec/addressable/uri_spec.rb
 
