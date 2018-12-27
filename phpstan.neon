@@ -1,0 +1,5 @@
+parameters:
+  ignoreErrors:
+    -
+      message: '#Property .* does not accept array.*#'
+      path: %currentWorkingDirectory%/src/Traits/MessageBuilderTrait.php
