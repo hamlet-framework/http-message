@@ -1,4 +1,3 @@
 parameters:
   ignoreErrors:
     - '#Property .* does not accept array.*#'
-    - "#Casting to .* something that's already .*#"
