@@ -1,3 +1,4 @@
 parameters:
   ignoreErrors:
     - '#Property .* does not accept array.*#'
+    - '#Result of && is always false\.#'
