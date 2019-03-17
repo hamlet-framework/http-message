@@ -98,6 +98,7 @@ class UploadedFile implements UploadedFileInterface
     public function moveTo($targetPath): void
     {
         $this->validateActive();
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!\is_string($targetPath) || empty($targetPath)) {
             throw new \InvalidArgumentException('Invalid path provided for move operation; must be a non-empty string');
         }

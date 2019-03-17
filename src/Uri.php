@@ -92,6 +92,7 @@ class Uri implements UriInterface
      */
     public static function parse($uri): Uri
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!\is_string($uri)) {
             throw new InvalidArgumentException('URI needs to be a string');
         }

@@ -265,7 +265,10 @@ trait MessageValidatorTrait
         $validatedParams = [];
         /** @psalm-suppress MixedAssignment */
         foreach ($queryParams as $key => $value) {
-            /** @psalm-suppress RedundantCondition */
+            /**
+             * @psalm-suppress RedundantCondition
+             * @psalm-suppress TypeDoesNotContainType
+             */
             if (!\is_string($key) && !\is_int($key)) {
                 throw new InvalidArgumentException('Keys in query params must be strings or integers');
             }

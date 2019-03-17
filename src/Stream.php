@@ -63,6 +63,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
      */
     public static function fromResource($resource): StreamInterface
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!\is_resource($resource)) {
             throw new InvalidArgumentException('Invalid resource provided');
         }
@@ -224,6 +225,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
         if (!isset($this->stream)) {
             throw new RuntimeException('Unable to read stream contents');
         }
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!\is_int($length) || $length < 0) {
             throw new InvalidArgumentException('Length must be a non-negative number');
         }

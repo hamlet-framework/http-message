@@ -56,6 +56,7 @@ abstract class UploadedFileBuilder
      */
     public function withResource($resource)
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!\is_resource($resource)) {
             throw new InvalidArgumentException('Invalid resource provided');
         }
