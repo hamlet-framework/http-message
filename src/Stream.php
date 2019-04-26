@@ -32,7 +32,10 @@ class Stream implements StreamInterface, LoggerAwareInterface
     /** @var LoggerInterface|null */
     private $logger = null;
 
-    /** @var array Hash of readable and writable stream types */
+    /**
+     * @var array Hash of readable and writable stream types
+     * @psalm-var array{read:array<string,bool>,write:array<string,bool>}
+     */
     private static $readWriteHash = [
         'read' => [
             'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,

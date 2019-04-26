@@ -98,13 +98,14 @@ trait UriValidatorTrait
 
         $callback =
             /**
-             * @param array<int,string> $match
+             * @param array{0:string} $match
              * @return string
              */
             function (array $match): string {
                 return \rawurlencode($match[0]);
             };
 
+        /** @psalm-suppress MixedTypeCoercion */
         $result = \preg_replace_callback($pattern, $callback, $string);
         if ($result === null) {
             throw new InvalidArgumentException('Cannot escape string');
