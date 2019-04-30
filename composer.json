@@ -20,7 +20,8 @@
   },
   "require": {
     "php": "^7.2",
-    "psr/http-message": "@stable"
+    "psr/http-message": "@stable",
+    "hamlet-framework/cast": "dev-master"
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "dev-master",

@@ -2,6 +2,7 @@
 
 namespace Hamlet\Http\Message;
 
+use function Hamlet\Cast\_string;
 use Hamlet\Http\Message\Spec\Traits\DataProviderTrait;
 use Hamlet\Http\Message\Spec\Traits\MessageTestTrait;
 use Hamlet\Http\Message\Spec\Traits\RequestTestTrait;
@@ -55,5 +56,14 @@ class ServerRequestTest extends TestCase
             ->build();
 
         Assert::assertSame($body, $request->getParsedBody());
+    }
+
+    public function test_get_query_param_with_type()
+    {
+        $request = ServerRequest::nonValidatingBuilder()
+            ->build();
+
+        $param = $request->getQueryParam('name', _string(), 'Anatoly');
+        Assert::assertEquals('Anatoly', $param);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Hamlet\Http\Message;
 
+use Hamlet\Cast\Type;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -197,6 +198,26 @@ class ServerRequest extends Request implements ServerRequestInterface
             }
         }
         return $this->queryParams;
+    }
+
+    /**
+     * @template T
+     * @template Q
+     * @param string $name
+     * @param Type $type
+     * @psalm-param Type<T> $type
+     * @param mixed $default
+     * @psalm-param T $default
+     * @return mixed
+     * @psalm-return T
+     */
+    public function getQueryParam(string $name, Type $type, $default)
+    {
+        $params = $this->getQueryParams();
+        if (isset($params[$name])) {
+            return $type->castOrFail($params[$name]);
+        }
+        return $default;
     }
 
     /**
