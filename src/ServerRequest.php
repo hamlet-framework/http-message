@@ -215,7 +215,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     {
         $params = $this->getQueryParams();
         if (isset($params[$name])) {
-            return $type->castOrFail($params[$name]);
+            return $type->cast($params[$name]);
         }
         return $default;
     }
