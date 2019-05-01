@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/hamlet-framework/http-message.svg?branch=master)](https://travis-ci.org/hamlet-framework/http-message)
+# Hamlet / HTTP / Message
 
-# Hamlet / HTTP / Request
+[![Build Status](https://travis-ci.org/hamlet-framework/http-message.svg?branch=master)](https://travis-ci.org/hamlet-framework/http-message)
 
 This library generally provides you with three ways of creating objects.
 
