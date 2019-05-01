@@ -21,15 +21,14 @@
   "require": {
     "php": "^7",
     "psr/http-message": "@stable",
-    "hamlet-framework/type": "dev-master"
+    "hamlet-framework/type": "@stable"
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "dev-master",
     "phpunit/phpunit": "^6 || ^7",
     "squizlabs/php_codesniffer": "@stable",
     "vimeo/psalm": "@stable",
-    "phan/phan": "@stable",
-    "phpstan/phpstan": "@stable"
+    "phan/phan": "@stable"
   },
   "autoload": {
     "psr-4": {
