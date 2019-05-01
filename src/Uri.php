@@ -11,7 +11,7 @@ use function parse_url;
 
 class Uri implements UriInterface
 {
-    private const STANDARD_PORTS = [
+    const STANDARD_PORTS = [
         'http'  => 80,
         'https' => 443
     ];

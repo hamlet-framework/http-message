@@ -8,7 +8,7 @@ use RuntimeException;
 
 class UploadedFile implements UploadedFileInterface
 {
-    public const ERROR_STATUSES = [
+    const ERROR_STATUSES = [
         \UPLOAD_ERR_OK,
         \UPLOAD_ERR_INI_SIZE,
         \UPLOAD_ERR_FORM_SIZE,
