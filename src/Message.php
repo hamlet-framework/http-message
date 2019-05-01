@@ -75,9 +75,9 @@ class Message implements MessageInterface
              * @return Message
              */
             function (
-                ?string $protocolVersion,
+                $protocolVersion,
                 $headers,
-                ?StreamInterface $body
+                $body
             ) use ($instance): Message {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;

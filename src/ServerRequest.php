@@ -104,7 +104,7 @@ class ServerRequest extends Request implements ServerRequestInterface
              * @psalm-param array<string,string>|null        $cookieParams
              * @param array|null                             $queryParams
              * @psalm-param array<string|int,mixed>|null     $queryParams
-             * @para array|null                              $uploadedFiles
+             * @param array|null                             $uploadedFiles
              * @psalm-param array<string,mixed>|null         $uploadedFiles
              * @param array|object|null                      $parsedBody
              * @param bool                                   $parsedBodySet
@@ -113,12 +113,12 @@ class ServerRequest extends Request implements ServerRequestInterface
              * @return ServerRequest
              */
             function (
-                ?string $protocolVersion,
+                $protocolVersion,
                 $headers,
-                ?StreamInterface $body,
-                ?string $requestTarget,
-                ?string $method,
-                ?UriInterface $uri,
+                $body,
+                $requestTarget,
+                $method,
+                $uri,
                 $serverParams,
                 $cookieParams,
                 $queryParams,

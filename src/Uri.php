@@ -62,24 +62,36 @@ class Uri implements UriInterface
     private static function builder(bool $validate = true): UriBuilder
     {
         $instance = new self;
-        $constructor = function (
-            string $scheme,
-            string $userInfo,
-            string $host,
-            ?int $port,
-            string $path,
-            string $query,
-            string $fragment
-        ) use ($instance): Uri {
-            $instance->scheme   = $scheme;
-            $instance->userInfo = $userInfo;
-            $instance->host     = $host;
-            $instance->port     = $port;
-            $instance->path     = $path;
-            $instance->query    = $query;
-            $instance->fragment = $fragment;
-            return $instance;
-        };
+
+        $constructor =
+            /**
+             * @param string   $scheme
+             * @param string   $userInfo
+             * @param string   $host
+             * @param int|null $port
+             * @param string   $path
+             * @param string   $query
+             * @param string   $fragment
+             * @return Uri
+             */
+            function (
+                string $scheme,
+                string $userInfo,
+                string $host,
+                $port,
+                string $path,
+                string $query,
+                string $fragment
+            ) use ($instance): Uri {
+                $instance->scheme   = $scheme;
+                $instance->userInfo = $userInfo;
+                $instance->host     = $host;
+                $instance->port     = $port;
+                $instance->path     = $path;
+                $instance->query    = $query;
+                $instance->fragment = $fragment;
+                return $instance;
+            };
         return new class($constructor, $validate) extends UriBuilder {
         };
     }

@@ -47,22 +47,32 @@ class UploadedFile implements UploadedFileInterface
     public static function builder(): UploadedFileBuilder
     {
         $instance = new static;
-        $constructor = function (
-            ?string $path,
-            ?StreamInterface $stream,
-            ?int $size,
-            int $errorStatus,
-            ?string $clientFileName,
-            ?string $clientMediaType
-        ) use ($instance): UploadedFile {
-            $instance->file = $path;
-            $instance->stream = $stream;
-            $instance->size = $size;
-            $instance->error = $errorStatus;
-            $instance->clientFilename = $clientFileName;
-            $instance->clientMediaType = $clientMediaType;
-            return $instance;
-        };
+        $constructor =
+            /**
+             * @param string|null          $path
+             * @param StreamInterface|null $stream
+             * @param int|null             $size
+             * @param int                  $errorStatus
+             * @param string|null          $clientFileName
+             * @param string|null          $clientMediaType
+             * @return UploadedFile
+             */
+            function (
+                $path,
+                $stream,
+                $size,
+                int $errorStatus,
+                $clientFileName,
+                $clientMediaType
+            ) use ($instance): UploadedFile {
+                $instance->file = $path;
+                $instance->stream = $stream;
+                $instance->size = $size;
+                $instance->error = $errorStatus;
+                $instance->clientFilename = $clientFileName;
+                $instance->clientMediaType = $clientMediaType;
+                return $instance;
+            };
         return new class($constructor) extends UploadedFileBuilder {
         };
     }

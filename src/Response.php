@@ -38,11 +38,11 @@ class Response extends Message implements ResponseInterface
              * @return Response
              */
             function (
-                ?string $protocolVersion,
+                $protocolVersion,
                 $headers,
-                ?StreamInterface $body,
-                ?int $statusCode,
-                ?string $reasonPhrase
+                $body,
+                $statusCode,
+                $reasonPhrase
             ) use ($instance): Response {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;

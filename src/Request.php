@@ -51,12 +51,12 @@ class Request extends Message implements RequestInterface
              * @return Request
              */
             function (
-                ?string $protocolVersion,
+                $protocolVersion,
                 $headers,
-                ?StreamInterface $body,
-                ?string $requestTarget,
-                ?string $method,
-                ?UriInterface $uri
+                $body,
+                $requestTarget,
+                $method,
+                $uri
             ) use ($instance): Request {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
