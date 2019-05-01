@@ -4,6 +4,9 @@ namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
+use function in_array;
+use function is_resource;
+use function preg_match;
 
 abstract class UploadedFileBuilder
 {
@@ -59,7 +62,7 @@ abstract class UploadedFileBuilder
     public function withResource($resource)
     {
         /** @psalm-suppress DocblockTypeContradiction */
-        if (!\is_resource($resource)) {
+        if (!is_resource($resource)) {
             throw new InvalidArgumentException('Invalid resource provided');
         }
         if ($this->path !== null || $this->stream !== null) {
@@ -121,7 +124,7 @@ abstract class UploadedFileBuilder
             throw new InvalidArgumentException('Error status already specified.');
         }
         /** @psalm-suppress MixedArgument */
-        if (!\in_array($status, UploadedFile::ERROR_STATUSES)) {
+        if (!in_array($status, UploadedFile::ERROR_STATUSES)) {
             throw new InvalidArgumentException('Unknown error status "' . $status . '" set.');
         }
         $this->errorStatus = $status;
@@ -157,7 +160,7 @@ abstract class UploadedFileBuilder
                 throw new InvalidArgumentException('Client media type name already specified.');
             }
             // https://stackoverflow.com/a/48046041/1646086
-            if (!\preg_match('#^\w+/[-.\w]+(?:\+[-.\w]+)?$#', $mediaType)) {
+            if (!preg_match('#^\w+/[-.\w]+(?:\+[-.\w]+)?$#', $mediaType)) {
                 throw new InvalidArgumentException('Invalid media type specified.');
             }
             $this->clientMediaType = $mediaType;

@@ -6,6 +6,7 @@ use Hamlet\Http\Message\Traits\MessageValidatorTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
+use function strtolower;
 
 class Message implements MessageInterface
 {
@@ -199,7 +200,7 @@ class Message implements MessageInterface
         } else {
             $copy->headers[$normalizedName] = $normalizedValue;
         }
-        $copy->headerNames[\strtolower($normalizedName)] = $normalizedName;
+        $copy->headerNames[strtolower($normalizedName)] = $normalizedName;
         return $copy;
     }
 
@@ -219,7 +220,7 @@ class Message implements MessageInterface
             $copy->headers[$normalizedName] = array_merge($copy->headers[$normalizedName], $normalizedValue);
         } else {
             $copy->headers[$normalizedName] = $normalizedValue;
-            $copy->headerNames[\strtolower($normalizedName)] = $normalizedName;
+            $copy->headerNames[strtolower($normalizedName)] = $normalizedName;
         }
         return $copy;
     }
@@ -279,14 +280,14 @@ class Message implements MessageInterface
             $this->headerNames = [];
             /** @noinspection PhpUnusedLocalVariableInspection */
             foreach ($this->getHeaders() as $n => &$_) {
-                $k = \strtolower($n);
+                $k = strtolower($n);
                 if (!isset($this->headerNames[$k])) {
                     $this->headerNames[$k] = $n;
                 }
             }
         }
         $name = $this->validateHeaderName($name);
-        $key = \strtolower($name);
+        $key = strtolower($name);
         if ($key === 'host') {
             return 'Host';
         }

@@ -5,6 +5,14 @@ namespace Hamlet\Http\Message\Traits;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use function is_array;
+use function is_int;
+use function is_null;
+use function is_object;
+use function is_string;
+use function preg_match;
+use function strtolower;
+use function trim;
 
 trait MessageValidatorTrait
 {
@@ -84,10 +92,10 @@ trait MessageValidatorTrait
      */
     protected function validateProtocolVersion($version): string
     {
-        if (!\is_string($version)) {
+        if (!is_string($version)) {
             throw new InvalidArgumentException('Protocol version must be a string');
         }
-        if (!\preg_match('/^(0\.[1-9]\d*|[1-9]\d*(\.\d+)?)$/', $version)) {
+        if (!preg_match('/^(0\.[1-9]\d*|[1-9]\d*(\.\d+)?)$/', $version)) {
             throw new InvalidArgumentException('Invalid protocol version "' . $version . '"');
         }
         return $version;
@@ -99,10 +107,10 @@ trait MessageValidatorTrait
      */
     protected function validateHeaderName($name): string
     {
-        if (!\is_string($name)) {
+        if (!is_string($name)) {
             throw new InvalidArgumentException('Header name must be a string');
         }
-        if (!\preg_match('/^[a-zA-Z0-9\'`#$%&*+.^_|~!-]+$/', $name)) {
+        if (!preg_match('/^[a-zA-Z0-9\'`#$%&*+.^_|~!-]+$/', $name)) {
             throw new InvalidArgumentException('Invalid header name: "' . $name . '"');
         }
         return $name;
@@ -115,11 +123,11 @@ trait MessageValidatorTrait
      */
     protected function validateHeaderValue($name, $value): array
     {
-        if (\is_array($value) && empty($value)) {
+        if (is_array($value) && empty($value)) {
             throw new InvalidArgumentException('Header values must be a string or an array of strings, empty array given.');
         }
 
-        $values = \is_array($value) ? $value : [$value];
+        $values = is_array($value) ? $value : [$value];
         $normalizedValues = [];
 
         if ($name == 'Host') {
@@ -130,7 +138,7 @@ trait MessageValidatorTrait
 
         /** @psalm-suppress MixedAssignment */
         foreach ($values as $value) {
-            if (\is_string($value)) {
+            if (is_string($value)) {
                 if (preg_match("#(?:(?:(?<!\r)\n)|(?:\r(?!\n))|(?:\r\n(?![ \t])))#", $value)) {
                     throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
                 }
@@ -138,10 +146,10 @@ trait MessageValidatorTrait
                     throw new InvalidArgumentException('Header values must be RFC 7230 compatible strings.');
                 }
                 if ($name == 'Host') {
-                    $value = \strtolower($value);
+                    $value = strtolower($value);
                 }
-                $normalizedValues[] = \trim($value, " \t");
-            } elseif (\is_int($value)) {
+                $normalizedValues[] = trim($value, " \t");
+            } elseif (is_int($value)) {
                 $normalizedValues[] = (string) $value;
             } else {
                 throw new InvalidArgumentException('Header values must be strings');
@@ -157,10 +165,10 @@ trait MessageValidatorTrait
      */
     protected function validateRequestTarget($target): string
     {
-        if (!\is_string($target)) {
+        if (!is_string($target)) {
             throw new InvalidArgumentException('Request target must be a string');
         }
-        if (\preg_match('#\s#', $target)) {
+        if (preg_match('#\s#', $target)) {
             throw new InvalidArgumentException('Request target cannot contain whitespace');
         }
         return $target;
@@ -172,10 +180,10 @@ trait MessageValidatorTrait
      */
     protected function validateMethod($method): string
     {
-        if (!\is_string($method)) {
+        if (!is_string($method)) {
             throw new InvalidArgumentException('Method must be a string');
         }
-        if (!\preg_match('/^[a-zA-Z]+$/', $method)) {
+        if (!preg_match('/^[a-zA-Z]+$/', $method)) {
             throw new InvalidArgumentException('Method name must consist of ASCII characters');
         }
         return $method;
@@ -188,16 +196,16 @@ trait MessageValidatorTrait
      */
     protected function validateUploadedFiles($uploadedFiles): array
     {
-        if (!\is_array($uploadedFiles)) {
+        if (!is_array($uploadedFiles)) {
             throw new InvalidArgumentException('Uploaded files must be an array');
         }
         $result = [];
         /** @psalm-suppress MixedAssignment */
         foreach ($uploadedFiles as $key => $item) {
-            if (!\is_string($key)) {
+            if (!is_string($key)) {
                 throw new InvalidArgumentException('Uploaded file keys need to be strings');
             }
-            if (\is_array($item)) {
+            if (is_array($item)) {
                 $result[$key] = $this->validateUploadedFiles($item);
             } else if ($item instanceof UploadedFileInterface) {
                 $result[$key] = $item;
@@ -227,13 +235,13 @@ trait MessageValidatorTrait
      */
     protected function validateAndNormalizeStatusCodeAndReasonPhrase($code, $phrase): array
     {
-        if (!\is_int($code)) {
+        if (!is_int($code)) {
             throw new InvalidArgumentException('Status code must be an integer');
         }
         if ($code < 100 || 599 < $code) {
             throw new InvalidArgumentException('Invalid status code, must be in [100, 599] range');
         }
-        if (!\is_string($phrase)) {
+        if (!is_string($phrase)) {
             throw new InvalidArgumentException('Reason phrase must be a string');
         }
         if ($phrase === '') {
@@ -248,7 +256,7 @@ trait MessageValidatorTrait
      */
     protected function validateParsedBody($body)
     {
-        if (!\is_array($body) && !\is_object($body) && !\is_null($body)) {
+        if (!is_array($body) && !is_object($body) && !is_null($body)) {
             throw new InvalidArgumentException('Parsed body needs be an array, an object or null');
         }
         return $body;
@@ -261,7 +269,7 @@ trait MessageValidatorTrait
      */
     protected function validateQueryParams($queryParams): array
     {
-        if (!\is_array($queryParams)) {
+        if (!is_array($queryParams)) {
             throw new InvalidArgumentException('Query params must be an array');
         }
         $validatedParams = [];
@@ -271,12 +279,12 @@ trait MessageValidatorTrait
              * @psalm-suppress RedundantCondition
              * @psalm-suppress TypeDoesNotContainType
              */
-            if (!\is_string($key) && !\is_int($key)) {
+            if (!is_string($key) && !is_int($key)) {
                 throw new InvalidArgumentException('Keys in query params must be strings or integers');
             }
-            if (\is_string($value)) {
+            if (is_string($value)) {
                 $validatedParams[$key] = $value;
-            } elseif (\is_array($value)) {
+            } elseif (is_array($value)) {
                 $validatedParams[$key] = $this->validateQueryParams($value);
             } else {
                 throw new InvalidArgumentException('Query param values must be strings or other query params');
@@ -293,12 +301,12 @@ trait MessageValidatorTrait
     public function validateServerParams($serverParams): array
     {
         $validatedParams = [];
-        if (!\is_array($serverParams)) {
+        if (!is_array($serverParams)) {
             throw new InvalidArgumentException('Server params must be an array');
         }
         /** @psalm-suppress MixedAssignment */
         foreach ($serverParams as $key => $value) {
-            if (!\is_string($key) || !\is_string($value)) {
+            if (!is_string($key) || !is_string($value)) {
                 throw new InvalidArgumentException('Server params must be an array<string,string>');
             }
             $validatedParams[$key] = $value;
@@ -314,12 +322,12 @@ trait MessageValidatorTrait
     public function validateCookieParams($cookieParams): array
     {
         $validatedParams = [];
-        if (!\is_array($cookieParams)) {
+        if (!is_array($cookieParams)) {
             throw new InvalidArgumentException('Cookie params must be an array');
         }
         /** @psalm-suppress MixedAssignment */
         foreach ($cookieParams as $key => $value) {
-            if (!\is_string($key) || !\is_string($value)) {
+            if (!is_string($key) || !is_string($value)) {
                 throw new InvalidArgumentException('Cookie params must be an array<string,string>');
             }
             $validatedParams[$key] = $value;
@@ -337,7 +345,7 @@ trait MessageValidatorTrait
         $validatedAttributes = [];
         /** @psalm-suppress MixedAssignment */
         foreach ($attributes as $name => &$value) {
-            if (!\is_string($name)) {
+            if (!is_string($name)) {
                 throw new InvalidArgumentException('Attribute names must be strings');
             }
             /** @psalm-suppress MixedAssignment */
@@ -352,7 +360,7 @@ trait MessageValidatorTrait
      */
     public function validateAttributeName($name): string
     {
-        if (!\is_string($name)) {
+        if (!is_string($name)) {
             throw new InvalidArgumentException('Attribute name must be a string');
         }
         return $name;

@@ -3,6 +3,12 @@
 namespace Hamlet\Http\Message\Traits;
 
 use InvalidArgumentException;
+use function is_int;
+use function is_string;
+use function preg_match;
+use function preg_replace_callback;
+use function rawurlencode;
+use function strtolower;
 
 trait UriValidatorTrait
 {
@@ -13,13 +19,13 @@ trait UriValidatorTrait
      */
     protected function normalizeScheme($scheme): string
     {
-        if (!\is_string($scheme)) {
+        if (!is_string($scheme)) {
             throw new InvalidArgumentException('Scheme must be a string');
         }
-        if (!\preg_match('/^[a-zA-Z][-a-zA-Z0-9.+]*$/', $scheme)) {
+        if (!preg_match('/^[a-zA-Z][-a-zA-Z0-9.+]*$/', $scheme)) {
             throw new InvalidArgumentException('Invalid scheme format "' . $scheme . '"');
         }
-        return \strtolower($scheme);
+        return strtolower($scheme);
     }
 
     /**
@@ -28,10 +34,10 @@ trait UriValidatorTrait
      */
     protected function normalizeHost($host): string
     {
-        if (!\is_string($host)) {
+        if (!is_string($host)) {
             throw new InvalidArgumentException('Host must be a string');
         }
-        return \strtolower($host);
+        return strtolower($host);
     }
 
     /**
@@ -43,7 +49,7 @@ trait UriValidatorTrait
         if ($port === null) {
             return null;
         }
-        if (!\is_int($port)) {
+        if (!is_int($port)) {
             throw new InvalidArgumentException('Port must be an integer');
         }
         if ($port < 1 || 0xffff < $port) {
@@ -58,7 +64,7 @@ trait UriValidatorTrait
      */
     protected function normalizePath($path): string
     {
-        if (!\is_string($path)) {
+        if (!is_string($path)) {
             throw new InvalidArgumentException('Path must be a string');
         }
         return $this->escape($path, false);
@@ -70,7 +76,7 @@ trait UriValidatorTrait
      */
     protected function normalizeQuery($query): string
     {
-        if (!\is_string($query)) {
+        if (!is_string($query)) {
             throw new InvalidArgumentException('Query must be a string');
         }
         return $this->escape($query, true);
@@ -82,7 +88,7 @@ trait UriValidatorTrait
      */
     protected function normalizeFragment($fragment): string
     {
-        if (!\is_string($fragment)) {
+        if (!is_string($fragment)) {
             throw new InvalidArgumentException('Fragment must be a string');
         }
         return $this->escape($fragment, true);
@@ -103,11 +109,11 @@ trait UriValidatorTrait
              * @return string
              */
             function (array $match): string {
-                return \rawurlencode($match[0]);
+                return rawurlencode($match[0]);
             };
 
         /** @psalm-suppress MixedTypeCoercion */
-        $result = \preg_replace_callback($pattern, $callback, $string);
+        $result = preg_replace_callback($pattern, $callback, $string);
         if ($result === null) {
             throw new InvalidArgumentException('Cannot escape string');
         }
@@ -121,10 +127,10 @@ trait UriValidatorTrait
      */
     protected function normalizeUserInfo($name, $password): string
     {
-        if (!\is_string($name)) {
+        if (!is_string($name)) {
             throw new InvalidArgumentException('User name must be a string');
         }
-        if ($password !== null && !\is_string($password)) {
+        if ($password !== null && !is_string($password)) {
             throw new InvalidArgumentException('Password must be a string');
         }
         return $password === null || $password === '' ? $name : $name . ':' . $password;

@@ -2,21 +2,35 @@
 
 namespace Hamlet\Http\Message;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
+use function fopen;
+use function is_string;
+use function move_uploaded_file;
+use function rename;
+use function strlen;
+use const UPLOAD_ERR_CANT_WRITE;
+use const UPLOAD_ERR_EXTENSION;
+use const UPLOAD_ERR_FORM_SIZE;
+use const UPLOAD_ERR_INI_SIZE;
+use const UPLOAD_ERR_NO_FILE;
+use const UPLOAD_ERR_NO_TMP_DIR;
+use const UPLOAD_ERR_OK;
+use const UPLOAD_ERR_PARTIAL;
 
 class UploadedFile implements UploadedFileInterface
 {
     const ERROR_STATUSES = [
-        \UPLOAD_ERR_OK,
-        \UPLOAD_ERR_INI_SIZE,
-        \UPLOAD_ERR_FORM_SIZE,
-        \UPLOAD_ERR_PARTIAL,
-        \UPLOAD_ERR_NO_FILE,
-        \UPLOAD_ERR_NO_TMP_DIR,
-        \UPLOAD_ERR_CANT_WRITE,
-        \UPLOAD_ERR_EXTENSION,
+        UPLOAD_ERR_OK,
+        UPLOAD_ERR_INI_SIZE,
+        UPLOAD_ERR_FORM_SIZE,
+        UPLOAD_ERR_PARTIAL,
+        UPLOAD_ERR_NO_FILE,
+        UPLOAD_ERR_NO_TMP_DIR,
+        UPLOAD_ERR_CANT_WRITE,
+        UPLOAD_ERR_EXTENSION,
     ];
 
     /** @var string|null */
@@ -83,7 +97,7 @@ class UploadedFile implements UploadedFileInterface
      */
     private function validateActive()
     {
-        if ($this->error !== \UPLOAD_ERR_OK) {
+        if ($this->error !== UPLOAD_ERR_OK) {
             throw new RuntimeException('Cannot retrieve stream due to upload error');
         }
         if ($this->moved) {
@@ -99,7 +113,7 @@ class UploadedFile implements UploadedFileInterface
         }
 
         assert($this->file !== null);
-        $resource = \fopen($this->file, 'r');
+        $resource = fopen($this->file, 'r');
         if ($resource === false) {
             throw new RuntimeException('Cannot open file "' . $this->file . ' for reading');
         }
@@ -114,17 +128,17 @@ class UploadedFile implements UploadedFileInterface
     {
         $this->validateActive();
         /** @psalm-suppress DocblockTypeContradiction */
-        if (!\is_string($targetPath) || empty($targetPath)) {
-            throw new \InvalidArgumentException('Invalid path provided for move operation; must be a non-empty string');
+        if (!is_string($targetPath) || empty($targetPath)) {
+            throw new InvalidArgumentException('Invalid path provided for move operation; must be a non-empty string');
         }
         if ($this->file !== null) {
-            $this->moved = 'cli' === PHP_SAPI ? \rename($this->file, $targetPath) : \move_uploaded_file($this->file, $targetPath);
+            $this->moved = 'cli' === PHP_SAPI ? rename($this->file, $targetPath) : move_uploaded_file($this->file, $targetPath);
         } else {
             $stream = $this->getStream();
             if ($stream->isSeekable()) {
                 $stream->rewind();
             }
-            $target = \fopen($targetPath, 'w');
+            $target = fopen($targetPath, 'w');
             if ($target === false) {
                 throw new RuntimeException('Cannot open file "' . $targetPath . ' for writing');
             }
@@ -186,7 +200,7 @@ class UploadedFile implements UploadedFileInterface
         $bytes = 0;
         while (!$source->eof()) {
             $buf = $source->read($maxLen - $bytes);
-            if (!($len = \strlen($buf))) {
+            if (!($len = strlen($buf))) {
                 break;
             }
             $bytes += $len;

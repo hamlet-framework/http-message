@@ -3,7 +3,7 @@
   "type": "library",
   "description": "Hamlet Framework / HTTP / Request",
   "keywords": ["request", "response", "message", "stream", "http", "uri", "url", "psr-7"],
-  "license": "MIT",
+  "license": "GPL-2.0",
   "authors": [
     {
       "name": "Vasily Kartashov",
@@ -24,7 +24,7 @@
     "hamlet-framework/type": "@stable"
   },
   "require-dev": {
-    "hamlet-framework/http-message-spec": "dev-master",
+    "hamlet-framework/http-message-spec": "@stable",
     "phpunit/phpunit": "^6 || ^7",
     "squizlabs/php_codesniffer": "@stable",
     "vimeo/psalm": "@stable",

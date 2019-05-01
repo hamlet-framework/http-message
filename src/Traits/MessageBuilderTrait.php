@@ -3,6 +3,8 @@
 namespace Hamlet\Http\Message\Traits;
 
 use Psr\Http\Message\StreamInterface;
+use function array_key_exists;
+use function strtolower;
 
 trait MessageBuilderTrait
 {
@@ -51,7 +53,7 @@ trait MessageBuilderTrait
             $names = [];
             foreach ($headers as $name => &$value) {
                 $name = $this->validateHeaderName($name);
-                $key = \strtolower($name);
+                $key = strtolower($name);
                 if ($key === 'host') {
                     $normalizedName = 'Host';
                 } elseif (isset($names[$key])) {
@@ -61,7 +63,7 @@ trait MessageBuilderTrait
                     $names[$key] = $name;
                 }
                 $normalizedValue = $this->validateHeaderValue($normalizedName, $value);
-                if (\array_key_exists($normalizedName, $values)) {
+                if (array_key_exists($normalizedName, $values)) {
                     $values[$normalizedName] = array_merge($values[$normalizedName], $normalizedValue);
                 } else {
                     $values[$normalizedName] = $normalizedValue;

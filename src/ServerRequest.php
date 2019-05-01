@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use function array_key_exists;
 
 class ServerRequest extends Request implements ServerRequestInterface
 {
@@ -330,7 +331,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     public function getAttribute($name, $default = null)
     {
         $attributes = $this->getAttributes();
-        if (\array_key_exists($name, $attributes)) {
+        if (array_key_exists($name, $attributes)) {
             return $attributes[$name];
         }
         return $default;
@@ -364,7 +365,7 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->validateAttributeName($name);
 
         $attributes = $this->getAttributes();
-        if (!\array_key_exists($name, $attributes)) {
+        if (!array_key_exists($name, $attributes)) {
             return $this;
         }
         unset($attributes[$name]);
