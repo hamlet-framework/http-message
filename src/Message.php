@@ -17,22 +17,26 @@ class Message implements MessageInterface
     protected $protocolVersion = null;
 
     /**
-     * @var (callable():string)|null
+     * @var callable|null
+     * @psalm-var (callable():string)|null
      */
     protected $protocolVersionGenerator = null;
 
     /**
-     * @var array<string,array<string>>|null
+     * @var array|null
+     * @psalm-var array<string,array<string>>|null
      */
     protected $headers = null;
 
     /**
-     * @var array<string,string>|null
+     * @var array|null
+     * @psalm-var array<string,string>|null
      */
     protected $headerNames = null;
 
     /**
-     * @var (callable():array<string,array<string>>)|null
+     * @var callable|null
+     * @psalm-var (callable():array<string,array<string>>)|null
      */
     protected $headersGenerator = null;
 
@@ -42,7 +46,8 @@ class Message implements MessageInterface
     protected $body = null;
 
     /**
-     * @var (callable():StreamInterface)|null
+     * @var callable|null
+     * @psalm-var (callable():StreamInterface)|null
      */
     protected $bodyGenerator = null;
 
@@ -63,9 +68,10 @@ class Message implements MessageInterface
         $instance = new Message;
         return
             /**
-             * @param string|null                      $protocolVersion
-             * @param array<string,array<string>>|null $headers
-             * @param StreamInterface|null             $body
+             * @param string|null                            $protocolVersion
+             * @param array|null                             $headers
+             * @psalm-param array<string,array<string>>|null $headers
+             * @param StreamInterface|null                   $body
              * @return Message
              */
             function (
@@ -128,7 +134,8 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return array<string,array<string>>
+     * @return array
+     * @psalm-return array<string,array<string>>
      */
     public function getHeaders(): array
     {

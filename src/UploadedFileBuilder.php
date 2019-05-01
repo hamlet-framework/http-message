@@ -8,7 +8,8 @@ use Psr\Http\Message\StreamInterface;
 abstract class UploadedFileBuilder
 {
     /**
-     * @var callable(string|null,StreamInterface|null,int|null,int,string|null,string|null):UploadedFile
+     * @var callable
+     * @psalm-var callable(string|null,StreamInterface|null,int|null,int,string|null,string|null):UploadedFile
      */
     private $constructor;
 
@@ -43,7 +44,8 @@ abstract class UploadedFileBuilder
     private $clientMediaType;
 
     /**
-     * @param callable(string|null,StreamInterface|null,int|null,int,string|null,string|null):UploadedFile $constructor
+     * @param callable $constructor
+     * @psalm-param callable(string|null,StreamInterface|null,int|null,int,string|null,string|null):UploadedFile $constructor
      */
     public function __construct(callable $constructor)
     {

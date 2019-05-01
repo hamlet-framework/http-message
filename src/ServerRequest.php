@@ -11,42 +11,50 @@ use Psr\Http\Message\UriInterface;
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /**
-     * @var array<string,string>|null
+     * @var array|null
+     * @psalm-var array<string,string>|null
      */
     protected $serverParams = null;
 
     /**
-     * @var (callable():array<string,string>)|null
+     * @var callable|null
+     * @psalm-var (callable():array<string,string>)|null
      */
     protected $serverParamsGenerator = null;
 
     /**
-     * @var array<string,string>|null
+     * @var array|null
+     * @psalm-var array<string,string>|null
      */
     protected $cookieParams;
 
     /**
-     * @var (callable():array<string,string>)|null
+     * @var callable|null
+     * @psalm-var (callable():array<string,string>)|null
      */
     protected $cookieParamsGenerator = null;
 
     /**
-     * @var array<string|int,mixed>|null
+     * @var array|null
+     * @psalm-var array<string|int,mixed>|null
      */
     protected $queryParams = null;
 
     /**
-     * @var (callable():array<string|int,mixed>)|null
+     * @var callable|null
+     * @psalm-var (callable():array<string|int,mixed>)|null
      */
     protected $queryParamsGenerator = null;
 
     /**
-     * @var array<string,mixed>|null
+     * @var array|null
+     * @psalm-var array<string,mixed>|null
      */
     protected $uploadedFiles = null;
 
     /**
-     * @var (callable():array<string,mixed>)|null
+     * @var callable|null
+     * @psalm-var (callable():array<string,mixed>)|null
      */
     protected $uploadedFilesGenerator = null;
 
@@ -61,17 +69,20 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $parsedBodySet = false;
 
     /**
-     * @var (callable():(array|object|null))|null
+     * @var callable|null
+     * @psalm-var (callable():(array|object|null))|null
      */
     protected $parsedBodyGenerator = null;
 
     /**
-     * @var array<string,mixed>|null
+     * @var array|null
+     * @psalm-var array<string,mixed>|null
      */
     protected $attributes = null;
 
     /**
-     * @var (callable():array<string,mixed>)|null
+     * @var callable|null
+     * @psalm-var (callable():array<string,mixed>)|null
      */
     protected $attributesGenerator = null;
 
@@ -80,19 +91,25 @@ class ServerRequest extends Request implements ServerRequestInterface
         $instance = new ServerRequest;
         return
             /**
-             * @param string|null                      $protocolVersion
-             * @param array<string,array<string>>|null $headers
-             * @param StreamInterface|null             $body
-             * @param string|null                      $requestTarget
-             * @param string|null                      $method
-             * @param UriInterface|null                $uri
-             * @param array<string,string>|null        $serverParams
-             * @param array<string,string>|null        $cookieParams
-             * @param array<string|int,mixed>|null     $queryParams
-             * @param array<string,mixed>|null         $uploadedFiles
-             * @param array|object|null                $parsedBody
-             * @param bool                             $parsedBodySet
-             * @param array<string,mixed>|null         $attributes
+             * @param string|null                            $protocolVersion
+             * @param array|null                             $headers
+             * @psalm-param array<string,array<string>>|null $headers
+             * @param StreamInterface|null                   $body
+             * @param string|null                            $requestTarget
+             * @param string|null                            $method
+             * @param UriInterface|null                      $uri
+             * @param array|null                             $serverParams
+             * @psalm-param array<string,string>|null        $serverParams
+             * @param array|null                             $cookieParams
+             * @psalm-param array<string,string>|null        $cookieParams
+             * @param array|null                             $queryParams
+             * @psalm-param array<string|int,mixed>|null     $queryParams
+             * @para array|null                              $uploadedFiles
+             * @psalm-param array<string,mixed>|null         $uploadedFiles
+             * @param array|object|null                      $parsedBody
+             * @param bool                                   $parsedBodySet
+             * @param array|null                             $attributes
+             * @psalm-param array<string,mixed>|null         $attributes
              * @return ServerRequest
              */
             function (

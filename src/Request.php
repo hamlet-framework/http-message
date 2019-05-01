@@ -20,7 +20,8 @@ class Request extends Message implements RequestInterface
     protected $method = null;
 
     /**
-     * @var (callable():string)|null
+     * @var callable|null
+     * @psalm-var (callable():string)|null
      */
     protected $methodGenerator = null;
 
@@ -30,7 +31,8 @@ class Request extends Message implements RequestInterface
     protected $uri = null;
 
     /**
-     * @var (callable():UriInterface)|null
+     * @var callable|null
+     * @psalm-var (callable():UriInterface)|null
      */
     protected $uriGenerator = null;
 
@@ -39,12 +41,13 @@ class Request extends Message implements RequestInterface
         $instance = new Request;
         return
             /**
-             * @param string|null                      $protocolVersion
-             * @param array<string,array<string>>|null $headers
-             * @param StreamInterface|null             $body
-             * @param string|null                      $requestTarget
-             * @param string|null                      $method
-             * @param UriInterface|null                $uri
+             * @param string|null                            $protocolVersion
+             * @param array|null                             $headers
+             * @psalm-param array<string,array<string>>|null $headers
+             * @param StreamInterface|null                   $body
+             * @param string|null                            $requestTarget
+             * @param string|null                            $method
+             * @param UriInterface|null                      $uri
              * @return Request
              */
             function (
@@ -206,7 +209,11 @@ class Request extends Message implements RequestInterface
         return $copy;
     }
 
-    private function addHostHeader(Request &$request): void
+    /**
+     * @param Request $request
+     * @return void
+     */
+    private function addHostHeader(Request &$request)
     {
         $headers = $this->getHeaders();
         $uri = $request->getUri();

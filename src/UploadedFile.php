@@ -68,9 +68,10 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
+     * @return void
      * @throws RuntimeException if is moved or not ok
      */
-    private function validateActive(): void
+    private function validateActive()
     {
         if ($this->error !== \UPLOAD_ERR_OK) {
             throw new RuntimeException('Cannot retrieve stream due to upload error');
@@ -95,7 +96,11 @@ class UploadedFile implements UploadedFileInterface
         return Stream::fromResource($resource);
     }
 
-    public function moveTo($targetPath): void
+    /**
+     * @param string $targetPath
+     * @return void
+     */
+    public function moveTo($targetPath)
     {
         $this->validateActive();
         /** @psalm-suppress DocblockTypeContradiction */
@@ -121,7 +126,10 @@ class UploadedFile implements UploadedFileInterface
         }
     }
 
-    public function getSize(): ?int
+    /**
+     * @return int|null
+     */
+    public function getSize()
     {
         return $this->size;
     }
@@ -131,12 +139,18 @@ class UploadedFile implements UploadedFileInterface
         return $this->error;
     }
 
-    public function getClientFilename(): ?string
+    /**
+     * @return string|null
+     */
+    public function getClientFilename()
     {
         return $this->clientFilename;
     }
 
-    public function getClientMediaType(): ?string
+    /**
+     * @return string|null
+     */
+    public function getClientMediaType()
     {
         return $this->clientMediaType;
     }
@@ -149,7 +163,7 @@ class UploadedFile implements UploadedFileInterface
      * @return void
      * @throws RuntimeException on error
      */
-    private function copyToStream(StreamInterface $source, StreamInterface $destination, $maxLen = -1): void
+    private function copyToStream(StreamInterface $source, StreamInterface $destination, $maxLen = -1)
     {
         if ($maxLen === -1) {
             while (!$source->eof()) {

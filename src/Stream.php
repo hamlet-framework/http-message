@@ -111,7 +111,10 @@ class Stream implements StreamInterface, LoggerAwareInterface
         }
     }
 
-    public function close(): void
+    /**
+     * @return void
+     */
+    public function close()
     {
         if (isset($this->stream)) {
             if (\is_resource($this->stream)) {
@@ -133,7 +136,10 @@ class Stream implements StreamInterface, LoggerAwareInterface
         return $result;
     }
 
-    public function getSize(): ?int
+    /**
+     * @return int|null
+     */
+    public function getSize()
     {
         if ($this->size !== null) {
             return $this->size;
@@ -178,7 +184,12 @@ class Stream implements StreamInterface, LoggerAwareInterface
         return $this->seekable;
     }
 
-    public function seek($offset, $whence = \SEEK_SET): void
+    /**
+     * @param int $offset
+     * @param int $whence
+     * @return void
+     */
+    public function seek($offset, $whence = \SEEK_SET)
     {
         if (!isset($this->stream)) {
             throw new RuntimeException('Unable to read stream contents');
@@ -191,7 +202,10 @@ class Stream implements StreamInterface, LoggerAwareInterface
         }
     }
 
-    public function rewind(): void
+    /**
+     * @return void
+     */
+    public function rewind()
     {
         $this->seek(0);
     }
@@ -271,7 +285,11 @@ class Stream implements StreamInterface, LoggerAwareInterface
         return isset($meta[$key]) ? $meta[$key] : null;
     }
 
-    public function setLogger(LoggerInterface $logger): void
+    /**
+     * @param LoggerInterface $logger
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

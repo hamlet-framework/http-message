@@ -54,7 +54,8 @@ abstract class UriBuilder
     private $fragment = '';
 
     /**
-     * @param callable(string,string,string,int|null,string,string,string):Uri $constructor
+     * @param callable $constructor
+     * @psalm-param callable(string,string,string,int|null,string,string,string):Uri $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)

@@ -9,12 +9,14 @@ abstract class ServerRequestBuilder
     use ServerRequestBuilderTrait;
 
     /**
-     * @var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):ServerRequest
+     * @var callable
+     * @psalm-var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):ServerRequest
      */
     protected $constructor;
 
     /**
-     * @param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):ServerRequest $constructor
+     * @param callable $constructor
+     * @psalm-param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):ServerRequest $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)

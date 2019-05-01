@@ -5,6 +5,9 @@ namespace Hamlet\Http\Message;
 use Hamlet\Http\Message\Traits\UriValidatorTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+use function is_string;
+use function ltrim;
+use function parse_url;
 
 class Uri implements UriInterface
 {
@@ -93,12 +96,12 @@ class Uri implements UriInterface
     public static function parse($uri): Uri
     {
         /** @psalm-suppress DocblockTypeContradiction */
-        if (!\is_string($uri)) {
+        if (!is_string($uri)) {
             throw new InvalidArgumentException('URI needs to be a string');
         }
-        $parts = \parse_url($uri);
+        $parts = parse_url($uri);
         if ($parts === false) {
-            throw new \InvalidArgumentException('Unable to parse URI: "'. $uri . '"');
+            throw new InvalidArgumentException('Unable to parse URI: "'. $uri . '"');
         }
 
         $instance = new self;
@@ -355,7 +358,7 @@ class Uri implements UriInterface
                     }
                 } elseif (isset($path[1]) && $path[1] === '/') {
                     if ($authority === '') {
-                        $path = '/' . \ltrim($path, '/');
+                        $path = '/' . ltrim($path, '/');
                     }
                 }
                 $literal .= $path;

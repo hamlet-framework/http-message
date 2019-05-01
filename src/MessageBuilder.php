@@ -9,12 +9,14 @@ abstract class MessageBuilder
     use MessageBuilderTrait;
 
     /**
-     * @var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null):Message
+     * @var callable
+     * @psalm-var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null):Message
      */
     protected $constructor;
 
     /**
-     * @param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null):Message $constructor
+     * @param callable $constructor
+     * @psalm-param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null):Message $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)
