@@ -47,4 +47,3 @@ Please note, that with non-validating builders you need to know what you're doin
 ## Outstanding tasks
 
 - Adapt tests from https://github.com/Sporkmonger/Addressable/blob/master/spec/addressable/uri_spec.rb
-

@@ -172,7 +172,10 @@ class Uri implements UriInterface
         return $this->host;
     }
 
-    public function getPort(): ?int
+    /**
+     * @return int|null
+     */
+    public function getPort()
     {
         $standardPort = self::STANDARD_PORTS[$this->scheme] ?? null;
         if ($this->port === $standardPort) {
