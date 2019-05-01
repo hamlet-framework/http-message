@@ -6,10 +6,14 @@ trait ResponseBuilderTrait
 {
     use MessageBuilderTrait;
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     protected $statusCode;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $reasonPhrase;
 
     /**

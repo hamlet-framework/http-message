@@ -183,7 +183,8 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $uploadedFiles
-     * @return array<string,mixed>
+     * @return array
+     * @psalm-return array<string,mixed>
      */
     protected function validateUploadedFiles($uploadedFiles): array
     {
@@ -255,7 +256,8 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $queryParams
-     * @return array<string|int,string|mixed> QueryParams
+     * @return array
+     * @psalm-return array<string|int,string|mixed>
      */
     protected function validateQueryParams($queryParams): array
     {
@@ -285,7 +287,8 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $serverParams
-     * @return array<string,string>
+     * @return string[]
+     * @psalm-return array<string,string>
      */
     public function validateServerParams($serverParams): array
     {
@@ -305,7 +308,8 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $cookieParams
-     * @return array<string,string>
+     * @return string[]
+     * @psalm-return array<string,string>
      */
     public function validateCookieParams($cookieParams): array
     {
@@ -325,7 +329,8 @@ trait MessageValidatorTrait
 
     /**
      * @param array $attributes
-     * @return array<string,mixed>
+     * @return array
+     * @psalm-return array<string,mixed>
      */
     public function validateAttributes(array $attributes): array
     {

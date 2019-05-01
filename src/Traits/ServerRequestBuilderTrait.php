@@ -6,29 +6,49 @@ trait ServerRequestBuilderTrait
 {
     use RequestBuilderTrait;
 
-    /** @var array<string,string>|null */
+    /**
+     * @var array|null
+     * @psalm-var array<string,string>|null
+     */
     protected $serverParams = null;
 
-    /** @var array<string,string>|null */
+    /**
+     * @var array|null
+     * @psalm-var array<string,string>|null
+     */
     protected $cookieParams = null;
 
-    /** @var array<string|int,mixed>|null */
+    /**
+     * @var array|null
+     * @psalm-var array<string|int,mixed>|null
+     */
     protected $queryParams = null;
 
-    /** @var array<string,mixed>|null */
+    /**
+     * @var array|null
+     * @psalm-var array<string,mixed>|null
+     */
     protected $uploadedFiles = null;
 
-    /** @var object|array|null */
+    /**
+     * @var object|array|null
+     */
     protected $parsedBody = null;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $parsedBodySet = false;
 
-    /** @var array<string,mixed>|null */
+    /**
+     * @var array|null
+     * @psalm-var array<string,mixed>|null
+     */
     protected $attributes = null;
 
     /**
-     * @param array<string,string> $serverParams
+     * @param array $serverParams
+     * @psalm-param array<string,string> $serverParams
      * @return static
      */
     public function withServerParams(array $serverParams)
@@ -38,7 +58,8 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array<string,string> $cookieParams
+     * @param array $cookieParams
+     * @psalm-param array<string,string> $cookieParams
      * @return static
      */
     public function withCookieParams(array $cookieParams)
@@ -48,7 +69,8 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array<string|int,mixed> $queryParams
+     * @param array $queryParams
+     * @psalm-param array<string|int,mixed> $queryParams
      * @return static
      */
     public function withQueryParams(array $queryParams)
@@ -58,7 +80,8 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array<string,mixed> $uploadedFiles
+     * @param array $uploadedFiles
+     * @psalm-param array<string,mixed> $uploadedFiles
      * @return static
      */
     public function withUploadedFiles(array $uploadedFiles)
@@ -79,7 +102,8 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array<string,mixed> $attributes
+     * @param array $attributes
+     * @psalm-param array<string,mixed> $attributes
      * @return static
      */
     public function withAttributes(array $attributes)

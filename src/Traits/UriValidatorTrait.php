@@ -38,7 +38,7 @@ trait UriValidatorTrait
      * @param mixed $port
      * @return int|null
      */
-    protected function normalizePort($port): ?int
+    protected function normalizePort($port)
     {
         if ($port === null) {
             return null;

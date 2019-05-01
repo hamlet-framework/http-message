@@ -132,7 +132,7 @@ abstract class UploadedFileBuilder
      * @param string|null $fileName
      * @return static
      */
-    public function withClientFileName(?string $fileName)
+    public function withClientFileName($fileName)
     {
         if ($fileName !== null) {
             if ($this->clientFileName !== null) {
@@ -150,7 +150,7 @@ abstract class UploadedFileBuilder
      * @param string|null $mediaType
      * @return static
      */
-    public function withClientMediaType(?string $mediaType)
+    public function withClientMediaType($mediaType)
     {
         if ($mediaType !== null) {
             if ($this->clientMediaType !== null) {

@@ -8,16 +8,25 @@ trait MessageBuilderTrait
 {
     use MessageValidatorTrait;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $validate;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $protocolVersion = null;
 
-    /** @var array<string,array<string>>|null */
+    /**
+     * @var array|null
+     * @psalm-var array<string,array<string>>|null
+     */
     protected $headers = null;
 
-    /** @var StreamInterface|null */
+    /**
+     * @var StreamInterface|null
+     */
     protected $body = null;
 
     /**
@@ -31,7 +40,8 @@ trait MessageBuilderTrait
     }
 
     /**
-     * @param array<string,string|array<string>> $headers
+     * @param array $headers
+     * @psalm-param array<string,string|array<string>> $headers
      * @return static
      */
     public function withHeaders(array $headers)

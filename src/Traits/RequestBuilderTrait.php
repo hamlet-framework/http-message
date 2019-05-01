@@ -8,13 +8,19 @@ trait RequestBuilderTrait
 {
     use MessageBuilderTrait;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $requestTarget = null;
 
-    /** @var string|null */
+    /**
+     * @var string|null
+     */
     protected $method = null;
 
-    /** @var UriInterface|null */
+    /**
+     * @var UriInterface|null
+     */
     protected $uri = null;
 
     /**
