@@ -26,7 +26,9 @@
     "hamlet-framework/http-message-spec": "@stable",
     "phpunit/phpunit": "^6 || ^7",
     "squizlabs/php_codesniffer": "@stable",
-    "vimeo/psalm": "@stable"
+    "vimeo/psalm": "@stable",
+    "jakub-onderka/php-parallel-lint": "@stable",
+    "roave/backward-compatibility-check": "@stable"
   },
   "autoload": {
     "psr-4": {
