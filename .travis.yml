@@ -1,6 +1,11 @@
 language: php
 sudo: false
 
+os:
+  - linux
+  - windows
+  - osx
+
 php:
   - '7.0'
   - '7.1'

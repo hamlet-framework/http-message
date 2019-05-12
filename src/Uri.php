@@ -111,10 +111,7 @@ class Uri implements UriInterface
         if (!is_string($uri)) {
             throw new InvalidArgumentException('URI needs to be a string');
         }
-        $parts = parse_url($uri);
-        if ($parts === false) {
-            throw new InvalidArgumentException('Unable to parse URI: "'. $uri . '"');
-        }
+        $parts = self::parseUri($uri);
 
         $instance = new self;
         $instance->scheme   = isset($parts['scheme'])   ? $instance->normalizeScheme($parts['scheme']) : '';
@@ -388,5 +385,31 @@ class Uri implements UriInterface
             $this->literal = $literal;
         }
         return $this->literal;
+    }
+
+    /**
+     * @param string $uri
+     * @return array
+     * @psalm-return array<string,int|string>
+     */
+    private static function parseUri(string $uri): array
+    {
+        $callback = function (array $matches): string {
+            return urlencode((string) $matches[0]);
+        };
+        $encodedUri = preg_replace_callback('%[^:/@?&=#]+%usD', $callback, $uri);
+        /** @psalm-var array<string,int|string>|false $parts */
+        $parts = parse_url($encodedUri);
+        if ($parts === false) {
+            throw new InvalidArgumentException('Malformed URI ' . $uri);
+        }
+        foreach ($parts as $name => $value) {
+            if (is_string($value)) {
+                $parts[$name] = urldecode($value);
+            } else {
+                $parts[$name] = $value;
+            }
+        }
+        return $parts;
     }
 }
