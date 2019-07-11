@@ -112,6 +112,7 @@ trait UriValidatorTrait
                 return rawurlencode($match[0]);
             };
 
+        /** @psalm-suppress MixedTypeCoercion */
         $result = preg_replace_callback($pattern, $callback, $string);
         if ($result === null) {
             throw new InvalidArgumentException('Cannot escape string');
