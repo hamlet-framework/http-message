@@ -36,6 +36,10 @@ class Request extends Message implements RequestInterface
      */
     protected $uriGenerator = null;
 
+    /**
+     * @return callable
+     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null,string|null,string|null,UriInterface|null):self
+     */
     private static function requestConstructor(): callable
     {
         $instance = new Request;
@@ -48,7 +52,7 @@ class Request extends Message implements RequestInterface
              * @param string|null                            $requestTarget
              * @param string|null                            $method
              * @param UriInterface|null                      $uri
-             * @return Request
+             * @return self
              */
             function (
                 $protocolVersion,

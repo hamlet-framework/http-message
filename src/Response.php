@@ -24,6 +24,10 @@ class Response extends Message implements ResponseInterface
      */
     protected $reasonPhrase = null;
 
+    /**
+     * @return callable
+     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null,int|null,string|null):self
+     */
     private static function responseConstructor(): callable
     {
         $instance = new Response;
@@ -35,7 +39,7 @@ class Response extends Message implements ResponseInterface
              * @param StreamInterface|null                   $body
              * @param int|null                               $statusCode
              * @param string|null                            $reasonPhrase
-             * @return Response
+             * @return self
              */
             function (
                 $protocolVersion,

@@ -86,6 +86,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     protected $attributesGenerator = null;
 
+    /**
+     * @return callable
+     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null,string|null,string|null,UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):self
+     */
     private static function serverRequestConstructor(): callable
     {
         $instance = new ServerRequest;
@@ -110,7 +114,7 @@ class ServerRequest extends Request implements ServerRequestInterface
              * @param bool                                   $parsedBodySet
              * @param array|null                             $attributes
              * @psalm-param array<string,mixed>|null         $attributes
-             * @return ServerRequest
+             * @return self
              */
             function (
                 $protocolVersion,

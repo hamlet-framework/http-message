@@ -64,6 +64,10 @@ class Message implements MessageInterface
         return new static;
     }
 
+    /**
+     * @return callable
+     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null):self
+     */
     private static function messageConstructor(): callable
     {
         $instance = new Message;
@@ -73,7 +77,7 @@ class Message implements MessageInterface
              * @param array|null                             $headers
              * @psalm-param array<string,array<string>>|null $headers
              * @param StreamInterface|null                   $body
-             * @return Message
+             * @return self
              */
             function (
                 $protocolVersion,
