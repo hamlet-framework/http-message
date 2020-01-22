@@ -6,7 +6,7 @@ This library generally provides you with three ways of creating objects.
 
 ## Step-wise adjustments
 
-The "standard" approach is to create an object through a series of adjustments.
+The standard approach is to create an object through a series of adjustments.
 
 ```php
 $message = Message::empty()
@@ -32,7 +32,7 @@ It offers the same level of validation as the previous method.
 
 ## Non-validating builders
 
-When creating messages within you app's "secure boundaries", there is often a way to avoid redundant argument validation by using non-validating builders
+When creating messages within you application's secure boundaries, there is a way to avoid redundant argument validation by using non-validating builders
 
 ```php
 $message = Message::nonValidatingBuilder()
@@ -42,7 +42,7 @@ $message = Message::nonValidatingBuilder()
     ->build();
 ```
 
-Please note, that with non-validating builders you need to know what you're doing. When in doubt use validating builders.
+When in doubt use validating builders.
 
 ## Outstanding tasks
 
