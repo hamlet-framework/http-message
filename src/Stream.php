@@ -135,6 +135,7 @@ class Stream implements StreamInterface, LoggerAwareInterface
     {
         if (isset($this->stream)) {
             if (is_resource($this->stream)) {
+                /** @psalm-suppress InvalidPropertyAssignmentValue */
                 fclose($this->stream);
             }
             $this->detach();
