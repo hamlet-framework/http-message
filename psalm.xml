@@ -13,5 +13,6 @@
     </projectFiles>
     <issueHandlers>
         <RedundantConditionGivenDocblockType errorLevel="suppress"/>
+        <UnsafeInstantiation errorLevel="suppress"/>
     </issueHandlers>
 </psalm>
