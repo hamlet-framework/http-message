@@ -77,7 +77,10 @@ trait MessageBuilderTrait
                     $values = ['Host' => $host] + $values;
                 }
             }
-            /** @psalm-suppress MixedTypeCoercion */
+            /**
+             * @psalm-suppress MixedTypeCoercion
+             * @psalm-suppress MixedPropertyTypeCoercion
+             */
             $this->headers = $values;
         } else {
             /** @psalm-suppress InvalidPropertyAssignmentValue */
