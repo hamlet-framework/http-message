@@ -12,6 +12,8 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <RedundantCast errorLevel="suppress"/>
+        <RedundantCastGivenDocblockType errorLevel="suppress"/>
         <RedundantConditionGivenDocblockType errorLevel="suppress"/>
         <UnsafeInstantiation errorLevel="suppress"/>
     </issueHandlers>

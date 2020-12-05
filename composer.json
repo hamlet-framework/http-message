@@ -19,15 +19,15 @@
     "psr/http-message-implementation": "1.0"
   },
   "require": {
-    "php": "^7",
+    "php": "^7 || ^8",
     "psr/http-message": "@stable"
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "@stable",
-    "phpunit/phpunit": "^6 || ^7",
+    "phpunit/phpunit": "^6 || ^7 || ^8",
     "squizlabs/php_codesniffer": "@stable",
     "vimeo/psalm": "@stable",
-    "jakub-onderka/php-parallel-lint": "@stable"
+    "php-parallel-lint/php-parallel-lint": "@stable"
   },
   "autoload": {
     "psr-4": {
