@@ -13,11 +13,10 @@ php:
   - '8.0snapshot'
 
 before_script:
-  - composer clear-cache
   - composer update
 
 script:
   - ./vendor/bin/parallel-lint --exclude vendor src
-  - php -v | grep -q 'PHP 7.0' || ./vendor/bin/phpunit -v
-  - php -v | grep -q 'PHP 7.0' || ./vendor/bin/psalm
+  - ./vendor/bin/phpunit -v
+  - ./vendor/bin/psalm
   - ./vendor/bin/phpcs --standard=PSR2 -n src
