@@ -18,5 +18,5 @@ before_script:
 script:
   - ./vendor/bin/parallel-lint --exclude vendor src
   - ./vendor/bin/phpcs --standard=PSR2 -n src
-  - php -v | grep -q 'PHP 7.0' || ./vendor/bin/phpunit -v
-  - php -v | grep -q 'PHP 7.0' || ./vendor/bin/psalm
+  - php -v | grep -q 'PHP 7.' || ./vendor/bin/phpunit -v
+  - php -v | grep -q 'PHP 7.' || ./vendor/bin/psalm

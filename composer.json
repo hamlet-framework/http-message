@@ -24,7 +24,7 @@
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "@stable",
-    "phpunit/phpunit": "^6 || ^7 || ^8",
+    "phpunit/phpunit": "^6 || ^7 || ^8 || ^9",
     "squizlabs/php_codesniffer": "@stable",
     "vimeo/psalm": "@stable",
     "php-parallel-lint/php-parallel-lint": "@stable",

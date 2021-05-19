@@ -47,3 +47,4 @@ When in doubt use validating builders.
 ## Outstanding tasks
 
 - Adapt tests from https://github.com/Sporkmonger/Addressable/blob/master/spec/addressable/uri_spec.rb
+- Expand test coverage
