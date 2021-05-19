@@ -2,7 +2,6 @@
 
 namespace Hamlet\Http\Message;
 
-use Hamlet\Http\Message\Traits\UriValidatorTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 use function is_string;

@@ -6,6 +6,9 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
+/**
+ * @psalm-import-type Headers from Message
+ */
 class Response extends Message implements ResponseInterface
 {
     /**
@@ -14,8 +17,7 @@ class Response extends Message implements ResponseInterface
     protected $statusCode = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():int)|null
+     * @var (callable():int)|null
      */
     protected $statusCodeGenerator = null;
 
@@ -25,29 +27,22 @@ class Response extends Message implements ResponseInterface
     protected $reasonPhrase = null;
 
     /**
-     * @return callable
-     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null,int|null,string|null):self
+     * @return callable(string|null,Headers|null,StreamInterface|null,int|null,string|null):self
      */
     private static function responseConstructor(): callable
     {
         $instance = new Response;
         return
             /**
-             * @param string|null                            $protocolVersion
-             * @param array|null                             $headers
-             * @psalm-param array<string,array<string>>|null $headers
-             * @param StreamInterface|null                   $body
-             * @param int|null                               $statusCode
-             * @param string|null                            $reasonPhrase
+             * @param string|null           $protocolVersion
+             * @param Headers|null          $headers
+             * @param StreamInterface|null  $body
+             * @param int|null              $statusCode
+             * @param string|null           $reasonPhrase
              * @return self
              */
-            function (
-                $protocolVersion,
-                $headers,
-                $body,
-                $statusCode,
-                $reasonPhrase
-            ) use ($instance): Response {
+            function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response
+            {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
                 $instance->body = $body;

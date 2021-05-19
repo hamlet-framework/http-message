@@ -2,8 +2,6 @@
 
 namespace Hamlet\Http\Message;
 
-use Hamlet\Http\Message\Traits\UriValidatorTrait;
-
 abstract class UriBuilder
 {
     use UriValidatorTrait;

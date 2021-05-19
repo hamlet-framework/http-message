@@ -7,6 +7,9 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
+/**
+ * @psalm-import-type Headers from Message
+ */
 class Request extends Message implements RequestInterface
 {
     /**
@@ -20,8 +23,7 @@ class Request extends Message implements RequestInterface
     protected $method = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():string)|null
+     * @var (callable():string)|null
      */
     protected $methodGenerator = null;
 
@@ -31,37 +33,28 @@ class Request extends Message implements RequestInterface
     protected $uri = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():UriInterface)|null
+     * @var (callable():UriInterface)|null
      */
     protected $uriGenerator = null;
 
     /**
-     * @return callable
-     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null,string|null,string|null,UriInterface|null):self
+     * @return callable(string|null,Headers|null,StreamInterface|null,string|null,string|null,UriInterface|null):self
      */
     private static function requestConstructor(): callable
     {
         $instance = new Request;
         return
             /**
-             * @param string|null                            $protocolVersion
-             * @param array|null                             $headers
-             * @psalm-param array<string,array<string>>|null $headers
-             * @param StreamInterface|null                   $body
-             * @param string|null                            $requestTarget
-             * @param string|null                            $method
-             * @param UriInterface|null                      $uri
+             * @param string|null           $protocolVersion
+             * @param Headers|null          $headers
+             * @param StreamInterface|null  $body
+             * @param string|null           $requestTarget
+             * @param string|null           $method
+             * @param UriInterface|null     $uri
              * @return self
              */
-            function (
-                $protocolVersion,
-                $headers,
-                $body,
-                $requestTarget,
-                $method,
-                $uri
-            ) use ($instance): Request {
+            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request
+            {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
                 $instance->body = $body;

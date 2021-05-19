@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Hamlet\Http\Message\Traits;
+namespace Hamlet\Http\Message;
 
 use Psr\Http\Message\StreamInterface;
 use function array_key_exists;
 use function strtolower;
 
+/**
+ * @psalm-import-type Headers from Message
+ */
 trait MessageBuilderTrait
 {
     use MessageValidatorTrait;
@@ -21,8 +24,7 @@ trait MessageBuilderTrait
     protected $protocolVersion = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,array<string>>|null
+     * @var Headers|null
      */
     protected $headers = null;
 
@@ -42,16 +44,18 @@ trait MessageBuilderTrait
     }
 
     /**
-     * @param array $headers
-     * @psalm-param array<string,string|array<string>> $headers
+     * @param Headers $headers
      * @return static
      */
     public function withHeaders(array $headers)
     {
         if ($this->validate) {
+            /**
+             * @var array<string,array<string>>
+             */
             $values = [];
             $names = [];
-            foreach ($headers as $name => &$value) {
+            foreach ($headers as $name => $value) {
                 $name = $this->validateHeaderName($name);
                 $key = strtolower($name);
                 if ($key === 'host') {
@@ -77,13 +81,8 @@ trait MessageBuilderTrait
                     $values = ['Host' => $host] + $values;
                 }
             }
-            /**
-             * @psalm-suppress MixedTypeCoercion
-             * @psalm-suppress MixedPropertyTypeCoercion
-             */
             $this->headers = $values;
         } else {
-            /** @psalm-suppress InvalidPropertyAssignmentValue */
             $this->headers = $headers;
         }
         return $this;

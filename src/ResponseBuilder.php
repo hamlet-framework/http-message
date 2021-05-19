@@ -2,21 +2,22 @@
 
 namespace Hamlet\Http\Message;
 
-use Hamlet\Http\Message\Traits\ResponseBuilderTrait;
+use Psr\Http\Message\StreamInterface;
 
+/**
+ * @psalm-import-type Headers from Message
+ */
 abstract class ResponseBuilder
 {
     use ResponseBuilderTrait;
 
     /**
-     * @var callable
-     * @psalm-var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,int|null,string|null):Response
+     * @var callable(string|null,Headers|null,StreamInterface|null,int|null,string|null):Response
      */
     protected $constructor;
 
     /**
-     * @param callable $constructor
-     * @psalm-param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,int|null,string|null):Response $constructor
+     * @param callable(string|null,Headers|null,StreamInterface|null,int|null,string|null):Response $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)

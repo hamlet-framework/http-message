@@ -2,12 +2,20 @@
 
 namespace Hamlet\Http\Message;
 
-use Hamlet\Http\Message\Traits\MessageValidatorTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 use function strtolower;
 
+/**
+ * @psalm-type Headers array<string,array<string>>
+ * @psalm-type Server array<string,string>
+ * @psalm-type Cookies array<string,string>
+ * @psalm-type Get array<string|array<string|array<string|array<string|array<string|array<string|array<string|array<string|array<string>>>>>>>>>
+ * @psalm-type Files array<string,\Psr\Http\Message\UploadedFileInterface|array<string,\Psr\Http\Message\UploadedFileInterface|array<string,\Psr\Http\Message\UploadedFileInterface|array<string,\Psr\Http\Message\UploadedFileInterface|array<string,\Psr\Http\Message\UploadedFileInterface|array<string,\Psr\Http\Message\UploadedFileInterface>>>>>>
+ * @psalm-type ParsedBody array|object
+ * @psalm-type Attributes array<string,mixed>
+ */
 class Message implements MessageInterface
 {
     use MessageValidatorTrait;
@@ -18,26 +26,22 @@ class Message implements MessageInterface
     protected $protocolVersion = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():string)|null
+     * @var (callable():string)|null
      */
     protected $protocolVersionGenerator = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,array<string>>|null
+     * @var Headers|null
      */
     protected $headers = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,string>|null
+     * @var array<string,string>|null
      */
     protected $headerNames = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():array<string,array<string>>)|null
+     * @var (callable():Headers)|null
      */
     protected $headersGenerator = null;
 
@@ -47,8 +51,7 @@ class Message implements MessageInterface
     protected $body = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():StreamInterface)|null
+     * @var (callable():StreamInterface)|null
      */
     protected $bodyGenerator = null;
 
@@ -65,25 +68,20 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return callable
-     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null):self
+     * @psalm-return callable(string|null,Headers|null,StreamInterface|null):self
      */
     private static function messageConstructor(): callable
     {
         $instance = new Message;
         return
             /**
-             * @param string|null                            $protocolVersion
-             * @param array|null                             $headers
-             * @psalm-param array<string,array<string>>|null $headers
-             * @param StreamInterface|null                   $body
+             * @param string|null          $protocolVersion
+             * @param Headers|null         $headers
+             * @param StreamInterface|null $body
              * @return self
              */
-            function (
-                $protocolVersion,
-                $headers,
-                $body
-            ) use ($instance): Message {
+            function ($protocolVersion, $headers, $body) use ($instance): Message
+            {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
                 $instance->body = $body;
@@ -93,7 +91,6 @@ class Message implements MessageInterface
 
     /**
      * @return MessageBuilder
-     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function validatingBuilder()
     {
@@ -104,7 +101,6 @@ class Message implements MessageInterface
 
     /**
      * @return MessageBuilder
-     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public static function nonValidatingBuilder()
     {
@@ -139,8 +135,7 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return array
-     * @psalm-return array<string,array<string>>
+     * @return Headers
      */
     public function getHeaders(): array
     {
@@ -168,7 +163,7 @@ class Message implements MessageInterface
 
     /**
      * @param string $name
-     * @return string[]
+     * @return array<string>
      */
     public function getHeader($name): array
     {
@@ -188,7 +183,7 @@ class Message implements MessageInterface
 
     /**
      * @param string $name
-     * @param string|string[] $value
+     * @param string|array<string> $value
      * @return static
      * @throws InvalidArgumentException
      */
@@ -210,7 +205,7 @@ class Message implements MessageInterface
 
     /**
      * @param string $name
-     * @param string|string[] $value
+     * @param string|array<string> $value
      * @return static
      * @throws InvalidArgumentException
      */
@@ -282,8 +277,7 @@ class Message implements MessageInterface
     {
         if (!isset($this->headerNames)) {
             $this->headerNames = [];
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            foreach ($this->getHeaders() as $n => &$_) {
+            foreach ($this->getHeaders() as $n => $_) {
                 $k = strtolower($n);
                 if (!isset($this->headerNames[$k])) {
                     $this->headerNames[$k] = $n;

@@ -2,21 +2,29 @@
 
 namespace Hamlet\Http\Message;
 
-use Hamlet\Http\Message\Traits\ServerRequestBuilderTrait;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
+/**
+ * @psalm-import-type Headers from Message
+ * @psalm-import-type Server from Message
+ * @psalm-import-type Cookies from Message
+ * @psalm-import-type Get from Message
+ * @psalm-import-type Files from Message
+ * @psalm-import-type ParsedBody from Message
+ * @psalm-import-type Attributes from Message
+ */
 abstract class ServerRequestBuilder
 {
     use ServerRequestBuilderTrait;
 
     /**
-     * @var callable
-     * @psalm-var callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):ServerRequest
+     * @var callable(string|null,Headers|null,StreamInterface|null,string|null,string|null,UriInterface|null,Server|null,Cookies|null,Get|null,Files|null,ParsedBody|null,bool,Attributes|null):ServerRequest
      */
     protected $constructor;
 
     /**
-     * @param callable $constructor
-     * @psalm-param callable(string|null,array<string,array<string>>|null,\Psr\Http\Message\StreamInterface|null,string|null,string|null,\Psr\Http\Message\UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):ServerRequest $constructor
+     * @param callable(string|null,Headers|null,StreamInterface|null,string|null,string|null,UriInterface|null,Server|null,Cookies|null,Get|null,Files|null,ParsedBody|null,bool,Attributes|null):ServerRequest $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)

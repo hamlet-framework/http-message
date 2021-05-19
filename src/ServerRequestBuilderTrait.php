@@ -1,37 +1,41 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Hamlet\Http\Message\Traits;
+namespace Hamlet\Http\Message;
 
+/**
+ * @psalm-import-type Server from Message
+ * @psalm-import-type Cookies from Message
+ * @psalm-import-type Get from Message
+ * @psalm-import-type Files from Message
+ * @psalm-import-type ParsedBody from Message
+ * @psalm-import-type Attributes from Message
+ */
 trait ServerRequestBuilderTrait
 {
     use RequestBuilderTrait;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,string>|null
+     * @var Server|null
      */
     protected $serverParams = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,string>|null
+     * @var Cookies|null
      */
     protected $cookieParams = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string|int,mixed>|null
+     * @var Get|null
      */
     protected $queryParams = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,mixed>|null
+     * @var Files|null
      */
     protected $uploadedFiles = null;
 
     /**
-     * @var object|array|null
+     * @var ParsedBody|null
      */
     protected $parsedBody = null;
 
@@ -41,14 +45,12 @@ trait ServerRequestBuilderTrait
     protected $parsedBodySet = false;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,mixed>|null
+     * @var Attributes|null
      */
     protected $attributes = null;
 
     /**
-     * @param array $serverParams
-     * @psalm-param array<string,string> $serverParams
+     * @param Server $serverParams
      * @return static
      */
     public function withServerParams(array $serverParams)
@@ -58,8 +60,7 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array $cookieParams
-     * @psalm-param array<string,string> $cookieParams
+     * @param Cookies $cookieParams
      * @return static
      */
     public function withCookieParams(array $cookieParams)
@@ -69,8 +70,7 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array $queryParams
-     * @psalm-param array<string|int,mixed> $queryParams
+     * @param Get $queryParams
      * @return static
      */
     public function withQueryParams(array $queryParams)
@@ -80,8 +80,7 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array $uploadedFiles
-     * @psalm-param array<string,mixed> $uploadedFiles
+     * @param Files $uploadedFiles
      * @return static
      */
     public function withUploadedFiles(array $uploadedFiles)
@@ -91,7 +90,7 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array|object|null $body
+     * @param ParsedBody|null $body
      * @return static
      */
     public function withParsedBody($body)
@@ -102,8 +101,7 @@ trait ServerRequestBuilderTrait
     }
 
     /**
-     * @param array $attributes
-     * @psalm-param array<string,mixed> $attributes
+     * @param Attributes $attributes
      * @return static
      */
     public function withAttributes(array $attributes)

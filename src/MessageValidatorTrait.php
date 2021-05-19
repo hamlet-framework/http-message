@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Hamlet\Http\Message\Traits;
+namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
@@ -14,6 +14,11 @@ use function preg_match;
 use function strtolower;
 use function trim;
 
+/**
+ * @psalm-import-type Get from Message
+ * @psalm-import-type ParsedBody from Message
+ * @psalm-import-type Files from Message
+ */
 trait MessageValidatorTrait
 {
     /** @var array<int,string> */
@@ -119,7 +124,7 @@ trait MessageValidatorTrait
     /**
      * @param mixed $name
      * @param mixed $value
-     * @return array<int,string>
+     * @return list<string>
      */
     protected function validateHeaderValue($name, $value): array
     {
@@ -191,8 +196,8 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $uploadedFiles
-     * @return array
-     * @psalm-return array<string,mixed>
+     * @return Files
+     * @psalm-suppress InvalidReturnType
      */
     protected function validateUploadedFiles($uploadedFiles): array
     {
@@ -200,7 +205,9 @@ trait MessageValidatorTrait
             throw new InvalidArgumentException('Uploaded files must be an array');
         }
         $result = [];
-        /** @psalm-suppress MixedAssignment */
+        /**
+         * @psalm-suppress MixedAssignment
+         */
         foreach ($uploadedFiles as $key => $item) {
             if (!is_string($key)) {
                 throw new InvalidArgumentException('Uploaded file keys need to be strings');
@@ -252,7 +259,7 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $body
-     * @return array|object|null
+     * @return ParsedBody|null
      */
     protected function validateParsedBody($body)
     {
@@ -264,8 +271,8 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $queryParams
-     * @return array
-     * @psalm-return array<string|int,string|mixed>
+     * @return Get
+     * @psalm-suppress InvalidReturnType
      */
     protected function validateQueryParams($queryParams): array
     {
@@ -273,15 +280,10 @@ trait MessageValidatorTrait
             throw new InvalidArgumentException('Query params must be an array');
         }
         $validatedParams = [];
-        /** @psalm-suppress MixedAssignment */
+        /**
+         * @psalm-suppress MixedAssignment
+         */
         foreach ($queryParams as $key => $value) {
-            /**
-             * @psalm-suppress RedundantCondition
-             * @psalm-suppress TypeDoesNotContainType
-             */
-            if (!is_string($key) && !is_int($key)) {
-                throw new InvalidArgumentException('Keys in query params must be strings or integers');
-            }
             if (is_string($value)) {
                 $validatedParams[$key] = $value;
             } elseif (is_array($value)) {

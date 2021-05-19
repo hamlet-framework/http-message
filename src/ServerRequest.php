@@ -8,58 +8,59 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use function array_key_exists;
 
+/**
+ * @psalm-import-type Headers from Message
+ * @psalm-import-type Server from Message
+ * @psalm-import-type Cookies from Message
+ * @psalm-import-type Get from Message
+ * @psalm-import-type Files from Message
+ * @psalm-import-type ParsedBody from Message
+ * @psalm-import-type Attributes from Message
+ */
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /**
-     * @var array|null
-     * @psalm-var array<string,string>|null
+     * @var Server|null
      */
     protected $serverParams = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():array<string,string>)|null
+     * @var (callable():Server)|null
      */
     protected $serverParamsGenerator = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,string>|null
+     * @var Cookies|null
      */
     protected $cookieParams;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():array<string,string>)|null
+     * @var (callable():Cookies)|null
      */
     protected $cookieParamsGenerator = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string|int,mixed>|null
+     * @var Get|null
      */
     protected $queryParams = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():array<string|int,mixed>)|null
+     * @var (callable():Get)|null
      */
     protected $queryParamsGenerator = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,mixed>|null
+     * @var Files|null
      */
     protected $uploadedFiles = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():array<string,mixed>)|null
+     * @var (callable():Files)|null
      */
     protected $uploadedFilesGenerator = null;
 
     /**
-     * @var array|object|null
+     * @var ParsedBody|null
      */
     protected $parsedBody = null;
 
@@ -69,68 +70,45 @@ class ServerRequest extends Request implements ServerRequestInterface
     protected $parsedBodySet = false;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():(array|object|null))|null
+     * @var (callable():ParsedBody)|null
      */
     protected $parsedBodyGenerator = null;
 
     /**
-     * @var array|null
-     * @psalm-var array<string,mixed>|null
+     * @var Attributes|null
      */
     protected $attributes = null;
 
     /**
-     * @var callable|null
-     * @psalm-var (callable():array<string,mixed>)|null
+     * @var (callable():Attributes)|null
      */
     protected $attributesGenerator = null;
 
     /**
-     * @return callable
-     * @psalm-return callable(string|null,array<string,array<string>>|null,StreamInterface|null,string|null,string|null,UriInterface|null,array<string,string>|null,array<string,string>|null,array<string|int,mixed>|null,array<string,mixed>|null,array|object|null,bool,array<string,mixed>|null):self
+     * @return callable(string|null,Headers|null,StreamInterface|null,string|null,string|null,UriInterface|null,Server|null,Cookies|null,Get|null,Files|null,ParsedBody|null,bool,Attributes|null):self
      */
     private static function serverRequestConstructor(): callable
     {
         $instance = new ServerRequest;
         return
             /**
-             * @param string|null                            $protocolVersion
-             * @param array|null                             $headers
-             * @psalm-param array<string,array<string>>|null $headers
-             * @param StreamInterface|null                   $body
-             * @param string|null                            $requestTarget
-             * @param string|null                            $method
-             * @param UriInterface|null                      $uri
-             * @param array|null                             $serverParams
-             * @psalm-param array<string,string>|null        $serverParams
-             * @param array|null                             $cookieParams
-             * @psalm-param array<string,string>|null        $cookieParams
-             * @param array|null                             $queryParams
-             * @psalm-param array<string|int,mixed>|null     $queryParams
-             * @param array|null                             $uploadedFiles
-             * @psalm-param array<string,mixed>|null         $uploadedFiles
-             * @param array|object|null                      $parsedBody
-             * @param bool                                   $parsedBodySet
-             * @param array|null                             $attributes
-             * @psalm-param array<string,mixed>|null         $attributes
+             * @param string|null           $protocolVersion
+             * @param Headers|null          $headers
+             * @param StreamInterface|null  $body
+             * @param string|null           $requestTarget
+             * @param string|null           $method
+             * @param UriInterface|null     $uri
+             * @param Server|null           $serverParams
+             * @param Cookies|null          $cookieParams
+             * @param Get|null              $queryParams
+             * @param Files|null            $uploadedFiles
+             * @param ParsedBody|null       $parsedBody
+             * @param bool                  $parsedBodySet
+             * @param Attributes|null       $attributes
              * @return self
              */
-            function (
-                $protocolVersion,
-                $headers,
-                $body,
-                $requestTarget,
-                $method,
-                $uri,
-                $serverParams,
-                $cookieParams,
-                $queryParams,
-                $uploadedFiles,
-                $parsedBody,
-                bool $parsedBodySet,
-                $attributes
-            ) use ($instance): ServerRequest {
+            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri, $serverParams, $cookieParams, $queryParams, $uploadedFiles, $parsedBody, bool $parsedBodySet, $attributes) use ($instance): ServerRequest
+            {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers         = $headers;
                 $instance->body            = $body;
@@ -263,7 +241,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * @return array|object|null
+     * @return ParsedBody|null
      */
     public function getParsedBody()
     {
@@ -277,7 +255,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * @param array|object|null $data
+     * @param ParsedBody|null $data
      * @return static
      * @throws InvalidArgumentException
      */
@@ -291,7 +269,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * @return array<string,mixed>
+     * @return Attributes
      */
     public function getAttributes(): array
     {

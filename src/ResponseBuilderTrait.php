@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Hamlet\Http\Message\Traits;
+namespace Hamlet\Http\Message;
 
 trait ResponseBuilderTrait
 {

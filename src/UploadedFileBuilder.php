@@ -123,7 +123,6 @@ abstract class UploadedFileBuilder
         if ($this->errorStatus !== null) {
             throw new InvalidArgumentException('Error status already specified.');
         }
-        /** @psalm-suppress MixedArgument */
         if (!in_array($status, UploadedFile::ERROR_STATUSES)) {
             throw new InvalidArgumentException('Unknown error status "' . $status . '" set.');
         }

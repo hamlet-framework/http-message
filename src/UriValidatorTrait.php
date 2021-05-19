@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Hamlet\Http\Message\Traits;
+namespace Hamlet\Http\Message;
 
 use InvalidArgumentException;
 use function is_int;
@@ -112,7 +112,6 @@ trait UriValidatorTrait
                 return rawurlencode($match[0]);
             };
 
-        /** @psalm-suppress MixedTypeCoercion */
         $result = preg_replace_callback($pattern, $callback, $string);
         if ($result === null) {
             throw new InvalidArgumentException('Cannot escape string');
