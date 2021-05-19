@@ -29,7 +29,11 @@ trait RequestBuilderTrait
      */
     public function withRequestTarget(string $target)
     {
-        $this->requestTarget = $this->validate ? $this->validateRequestTarget($target) : $target;
+        if ($this->validate) {
+            $this->requestTarget = $this->validateRequestTarget($target);
+        } else {
+            $this->requestTarget = $target;
+        }
         return $this;
     }
 
@@ -39,7 +43,11 @@ trait RequestBuilderTrait
      */
     public function withMethod(string $method)
     {
-        $this->method = $this->validate ? $this->validateMethod($method) : $method;
+        if ($this->validate) {
+            $this->method = $this->validateMethod($method);
+        } else {
+            $this->method = $method;
+        }
         return $this;
     }
 

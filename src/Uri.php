@@ -388,8 +388,7 @@ class Uri implements UriInterface
 
     /**
      * @param string $uri
-     * @return array
-     * @psalm-return array<string,int|string>
+     * @return array<string,int|string>
      */
     private static function parseUri(string $uri): array
     {

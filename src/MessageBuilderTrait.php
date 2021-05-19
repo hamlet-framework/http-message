@@ -39,7 +39,11 @@ trait MessageBuilderTrait
      */
     public function withProtocolVersion(string $version)
     {
-        $this->protocolVersion = $this->validate ? $this->validateProtocolVersion($version) : $version;
+        if ($this->validate) {
+            $this->protocolVersion = $this->validateProtocolVersion($version);
+        } else {
+            $this->protocolVersion = $version;
+        }
         return $this;
     }
 
@@ -94,7 +98,7 @@ trait MessageBuilderTrait
      */
     public function withBody(StreamInterface $body)
     {
-        $this->body = $this->validate ? $this->validateBody($body) : $body;
+        $this->body = $body;
         return $this;
     }
 }

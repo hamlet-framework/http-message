@@ -55,7 +55,11 @@ trait ServerRequestBuilderTrait
      */
     public function withServerParams(array $serverParams)
     {
-        $this->serverParams = $this->validate ? $this->validateServerParams($serverParams) : $serverParams;
+        if ($this->validate) {
+            $this->serverParams = $this->validateServerParams($serverParams);
+        } else {
+            $this->serverParams = $serverParams;
+        }
         return $this;
     }
 
@@ -65,7 +69,11 @@ trait ServerRequestBuilderTrait
      */
     public function withCookieParams(array $cookieParams)
     {
-        $this->cookieParams = $this->validate ? $this->validateCookieParams($cookieParams) : $cookieParams;
+        if ($this->validate) {
+            $this->cookieParams = $this->validateCookieParams($cookieParams);
+        } else {
+            $this->cookieParams = $cookieParams;
+        }
         return $this;
     }
 
@@ -75,7 +83,11 @@ trait ServerRequestBuilderTrait
      */
     public function withQueryParams(array $queryParams)
     {
-        $this->queryParams = $this->validate ? $this->validateQueryParams($queryParams) : $queryParams;
+        if ($this->validate) {
+            $this->queryParams = $this->validateQueryParams($queryParams);
+        } else {
+            $this->queryParams = $queryParams;
+        }
         return $this;
     }
 
@@ -85,7 +97,11 @@ trait ServerRequestBuilderTrait
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        $this->uploadedFiles = $this->validate ? $this->validateUploadedFiles($uploadedFiles) : $uploadedFiles;
+        if ($this->validate) {
+            $this->uploadedFiles = $this->validateUploadedFiles($uploadedFiles);
+        } else {
+            $this->uploadedFiles = $uploadedFiles;
+        }
         return $this;
     }
 
@@ -95,7 +111,11 @@ trait ServerRequestBuilderTrait
      */
     public function withParsedBody($body)
     {
-        $this->parsedBody = $this->validate ? $this->validateParsedBody($body) : $body;
+        if ($this->validate) {
+            $this->parsedBody = $this->validateParsedBody($body);
+        } else {
+            $this->parsedBody = $body;
+        }
         $this->parsedBodySet = true;
         return $this;
     }
@@ -106,7 +126,11 @@ trait ServerRequestBuilderTrait
      */
     public function withAttributes(array $attributes)
     {
-        $this->attributes = $this->validate ? $this->validateAttributes($attributes) : $attributes;
+        if ($this->validate) {
+            $this->attributes = $this->validateAttributes($attributes);
+        } else {
+            $this->attributes = $attributes;
+        }
         return $this;
     }
 }

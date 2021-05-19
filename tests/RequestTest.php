@@ -5,7 +5,6 @@ namespace Hamlet\Http\Message;
 use Hamlet\Http\Message\Spec\Traits\DataProviderTrait;
 use Hamlet\Http\Message\Spec\Traits\MessageTestTrait;
 use Hamlet\Http\Message\Spec\Traits\RequestTestTrait;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -46,8 +45,8 @@ class RequestTest extends TestCase
             ->withUri($uri)
             ->build();
 
-        Assert::assertSame('*', $request->getRequestTarget());
-        Assert::assertSame('PUT', $request->getMethod());
-        Assert::assertSame($uri, $request->getUri());
+        $this->assertSame('*', $request->getRequestTarget());
+        $this->assertSame('PUT', $request->getMethod());
+        $this->assertSame($uri, $request->getUri());
     }
 }

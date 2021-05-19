@@ -4,7 +4,7 @@ namespace Hamlet\Http\Message;
 
 use Hamlet\Http\Message\Spec\Traits\DataProviderTrait;
 use Hamlet\Http\Message\Spec\Traits\MessageTestTrait;
-use PHPUnit\Framework\Assert;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
@@ -37,9 +37,15 @@ class MessageTest extends TestCase
             ->withHeaders($headers)
             ->build();
 
-        Assert::assertSame('1.1', $message->getProtocolVersion());
-        Assert::assertSame($body, $message->getBody());
-        Assert::assertSame($headers, $message->getHeaders());
+        $this->assertSame('1.1', $message->getProtocolVersion());
+        $this->assertSame($body, $message->getBody());
+        $this->assertSame($headers, $message->getHeaders());
+    }
+
+    public function test_validating_message_builder_raises_error_on_invalid_protocol_version()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Message::validatingBuilder()->withProtocolVersion('test');
     }
 
     public function test_validating_message_builder_moves_host_at_the_top()
@@ -53,6 +59,18 @@ class MessageTest extends TestCase
             ->withHeaders($headers)
             ->build();
 
-        Assert::assertEquals(['Host', 'a'], array_keys($message->getHeaders()));
+        $this->assertEquals(['Host', 'a'], array_keys($message->getHeaders()));
+    }
+
+    public function test_with_headers_merges_different_spellings()
+    {
+        $message = Message::validatingBuilder()
+            ->withHeaders([
+                'Header' => 1,
+                'HeADeR' => 2,
+                'headeR' => 'x'
+            ])
+            ->build();
+        $this->assertEquals([1, 2, 'x'], $message->getHeader('header'));
     }
 }

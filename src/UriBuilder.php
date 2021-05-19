@@ -52,8 +52,7 @@ abstract class UriBuilder
     private $fragment = '';
 
     /**
-     * @param callable $constructor
-     * @psalm-param callable(string,string,string,int|null,string,string,string):Uri $constructor
+     * @param callable(string,string,string,int|null,string,string,string):Uri $constructor
      * @param bool $validate
      */
     public function __construct(callable $constructor, bool $validate)
@@ -69,7 +68,11 @@ abstract class UriBuilder
 
     public function withScheme(string $scheme): self
     {
-        $this->scheme = $this->validate ? $this->normalizeScheme($scheme) : $scheme;
+        if ($this->validate) {
+            $this->scheme = $this->normalizeScheme($scheme);
+        } else {
+            $this->scheme = $scheme;
+        }
         return $this;
     }
 
@@ -81,31 +84,52 @@ abstract class UriBuilder
 
     public function withHost(string $host): self
     {
-        $this->host = $this->validate ? $this->normalizeHost($host) : $host;
+        if ($this->validate) {
+            $this->host = $this->normalizeHost($host);
+        } else {
+            $this->host = $host;
+        }
         return $this;
     }
 
     public function withPort(int $port): self
     {
-        $this->port = $this->validate ? $this->normalizePort($port) : $port;
+        if ($this->validate) {
+            $this->port = $this->normalizePort($port);
+        } else {
+            $this->port = $port;
+        }
         return $this;
     }
 
     public function withPath(string $path): self
     {
-        $this->path = $this->validate ? $this->normalizePath($path) : $path;
+        if ($this->validate) {
+            $this->path = $this->normalizePath($path);
+        } else {
+            $this->path = $path;
+        }
+
         return $this;
     }
 
     public function withQuery(string $query): self
     {
-        $this->query = $this->validate ? $this->normalizeQuery($query) : $query;
+        if ($this->validate) {
+            $this->query = $this->normalizeQuery($query);
+        } else {
+            $this->query = $query;
+        }
         return $this;
     }
 
     public function withFragment(string $fragment): self
     {
-        $this->fragment = $this->validate ? $this->normalizeFragment($fragment) : $fragment;
+        if ($this->validate) {
+            $this->fragment = $this->normalizeFragment($fragment);
+        } else {
+            $this->fragment = $fragment;
+        }
         return $this;
     }
 }
