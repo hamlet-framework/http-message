@@ -108,7 +108,7 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        if ($this->getStatusCode() === $code) {
+        if ($this->getStatusCode() === $code && $this->getReasonPhrase() === $reasonPhrase) {
             return $this;
         }
 

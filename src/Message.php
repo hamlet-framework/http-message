@@ -68,7 +68,7 @@ class Message implements MessageInterface
     }
 
     /**
-     * @psalm-return callable(string|null,Headers|null,StreamInterface|null):self
+     * @return callable(string|null,Headers|null,StreamInterface|null):self
      */
     private static function messageConstructor(): callable
     {

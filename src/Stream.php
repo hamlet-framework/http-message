@@ -50,8 +50,8 @@ class Stream implements StreamInterface, LoggerAwareInterface
     private $logger = null;
 
     /**
-     * @var array Hash of readable and writable stream types
-     * @psalm-var array{read:array<string,bool>,write:array<string,bool>}
+     * Hash of readable and writable stream types
+     * @var array{read:array<string,bool>,write:array<string,bool>}
      */
     private static $readWriteHash = [
         'read' => [

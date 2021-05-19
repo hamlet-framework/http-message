@@ -237,8 +237,7 @@ trait MessageValidatorTrait
     /**
      * @param mixed $code
      * @param mixed $phrase
-     * @return array
-     * @psalm-return array{0:int,1:string}
+     * @return array{0:int,1:string}
      */
     protected function validateAndNormalizeStatusCodeAndReasonPhrase($code, $phrase): array
     {
@@ -297,8 +296,7 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $serverParams
-     * @return string[]
-     * @psalm-return array<string,string>
+     * @return array<string,string>
      */
     public function validateServerParams($serverParams): array
     {
@@ -318,8 +316,7 @@ trait MessageValidatorTrait
 
     /**
      * @param mixed $cookieParams
-     * @return string[]
-     * @psalm-return array<string,string>
+     * @return array<string,string>
      */
     public function validateCookieParams($cookieParams): array
     {
@@ -339,8 +336,7 @@ trait MessageValidatorTrait
 
     /**
      * @param array $attributes
-     * @return array
-     * @psalm-return array<string,mixed>
+     * @return array<string,mixed>
      */
     public function validateAttributes(array $attributes): array
     {

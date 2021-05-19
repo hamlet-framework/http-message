@@ -396,7 +396,7 @@ class Uri implements UriInterface
             return urlencode((string) $matches[0]);
         };
         $encodedUri = preg_replace_callback('%[^:/@?&=#]+%usD', $callback, $uri);
-        /** @psalm-var array<string,int|string>|false $parts */
+        /** @var array<string,int|string>|false $parts */
         $parts = parse_url($encodedUri);
         if ($parts === false) {
             throw new InvalidArgumentException('Malformed URI ' . $uri);
