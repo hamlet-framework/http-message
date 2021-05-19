@@ -41,8 +41,7 @@ class Response extends Message implements ResponseInterface
              * @param string|null           $reasonPhrase
              * @return self
              */
-            function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response
-            {
+            function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
                 $instance->body = $body;

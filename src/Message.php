@@ -80,8 +80,7 @@ class Message implements MessageInterface
              * @param StreamInterface|null $body
              * @return self
              */
-            function ($protocolVersion, $headers, $body) use ($instance): Message
-            {
+            function ($protocolVersion, $headers, $body) use ($instance): Message {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
                 $instance->body = $body;

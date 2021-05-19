@@ -53,8 +53,7 @@ class Request extends Message implements RequestInterface
              * @param UriInterface|null     $uri
              * @return self
              */
-            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request
-            {
+            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri) use ($instance): Request {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers = $headers;
                 $instance->body = $body;

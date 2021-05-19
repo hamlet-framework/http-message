@@ -26,7 +26,8 @@ class UriTest extends TestCase
             ->withQuery('offset=3&limit=10')
             ->withScheme('https')
             ->withUserInfo('john', '123456')
+            ->withFragment('paperfold')
             ->build();
-        $this->assertEquals('https://john:123456@example.com:457/test.php?offset=3&limit=10', (string) $uri);
+        $this->assertEquals('https://john:123456@example.com:457/test.php?offset=3&limit=10#paperfold', (string) $uri);
     }
 }

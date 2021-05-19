@@ -107,8 +107,7 @@ class ServerRequest extends Request implements ServerRequestInterface
              * @param Attributes|null       $attributes
              * @return self
              */
-            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri, $serverParams, $cookieParams, $queryParams, $uploadedFiles, $parsedBody, bool $parsedBodySet, $attributes) use ($instance): ServerRequest
-            {
+            function ($protocolVersion, $headers, $body, $requestTarget, $method, $uri, $serverParams, $cookieParams, $queryParams, $uploadedFiles, $parsedBody, bool $parsedBodySet, $attributes) use ($instance): ServerRequest {
                 $instance->protocolVersion = $protocolVersion;
                 $instance->headers         = $headers;
                 $instance->body            = $body;

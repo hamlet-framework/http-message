@@ -71,14 +71,7 @@ class UploadedFile implements UploadedFileInterface
              * @param string|null          $clientMediaType
              * @return UploadedFile
              */
-            function (
-                $path,
-                $stream,
-                $size,
-                int $errorStatus,
-                $clientFileName,
-                $clientMediaType
-            ) use ($instance): UploadedFile {
+            function ($path, $stream, $size, int $errorStatus, $clientFileName, $clientMediaType) use ($instance): UploadedFile {
                 $instance->file = $path;
                 $instance->stream = $stream;
                 $instance->size = $size;
