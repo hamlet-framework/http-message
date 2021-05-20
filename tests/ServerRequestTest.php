@@ -83,7 +83,7 @@ class ServerRequestTest extends TestCase
             ->withSize(3)
             ->withErrorStatus(UPLOAD_ERR_OK)
             ->build();
-        $uploadedFiles = ['test' => $uploadedFile];
+        $uploadedFiles = ['test' => ['a' => $uploadedFile]];
         $cookies = ['PHP_SESSION_ID' => '1'];
         $attributes = ['a' => 123];
 
