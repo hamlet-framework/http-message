@@ -2,7 +2,7 @@
   "name": "hamlet-framework/http-message",
   "type": "library",
   "description": "Hamlet Framework / HTTP / Request",
-  "keywords": ["request", "response", "message", "stream", "http", "uri", "url", "psr-7"],
+  "keywords": ["request", "response", "message", "stream", "http", "uri", "url", "psr-7", "psr-17"],
   "license": "GPL-2.0",
   "authors": [
     {
@@ -16,11 +16,13 @@
     "sort-packages": true
   },
   "provide": {
-    "psr/http-message-implementation": "1.0"
+    "psr/http-message-implementation": "1.0",
+    "psr/http-factory-implementation": "1.0"
   },
   "require": {
     "php": "^7 || ^8",
-    "psr/http-message": "@stable"
+    "psr/http-message": "^1",
+    "psr/http-factory": "^1"
   },
   "require-dev": {
     "hamlet-framework/http-message-spec": "@stable",

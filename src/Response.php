@@ -34,11 +34,11 @@ class Response extends Message implements ResponseInterface
         $instance = new Response;
         return
             /**
-             * @param string|null           $protocolVersion
-             * @param Headers|null          $headers
-             * @param StreamInterface|null  $body
-             * @param int|null              $statusCode
-             * @param string|null           $reasonPhrase
+             * @param string|null $protocolVersion
+             * @param Headers|null $headers
+             * @param StreamInterface|null $body
+             * @param int|null $statusCode
+             * @param string|null $reasonPhrase
              * @return self
              */
             function ($protocolVersion, $headers, $body, $statusCode, $reasonPhrase) use ($instance): Response {

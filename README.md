@@ -48,3 +48,4 @@ When in doubt use validating builders.
 
 - Adapt tests from https://github.com/Sporkmonger/Addressable/blob/master/spec/addressable/uri_spec.rb
 - Expand test coverage
+- Implement PSR-17

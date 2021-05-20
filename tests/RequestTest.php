@@ -77,4 +77,24 @@ class RequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         Request::validatingBuilder()->withRequestTarget('request target');
     }
+
+    public function test_keeping_method_does_not_mutate()
+    {
+        $method = 'POST';
+        $request = Request::empty()->withMethod($method);
+        $this->assertSame($request, $request->withMethod($method));
+    }
+
+    public function test_keeping_request_target_does_not_mutate()
+    {
+        $requestTarget = '123';
+        $request = Request::empty()->withRequestTarget($requestTarget);
+        $this->assertSame($request, $request->withRequestTarget($requestTarget));
+    }
+
+    public function test_wihout_non_existing_headers_does_not_mutate()
+    {
+        $request = Request::empty();
+        $this->assertSame($request, $request->withoutHeader('Host'));
+    }
 }
