@@ -28,25 +28,39 @@ use const SEEK_SET;
 
 class Stream implements StreamInterface, LoggerAwareInterface
 {
-    /** @var resource|null */
+    /**
+     * @var resource|null
+     */
     private $stream = null;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $seekable = false;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $readable = false;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $writable = false;
 
-    /** @var array|mixed|null|void */
+    /**
+     * @var array|mixed|null|void
+     */
     private $uri = null;
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     private $size = null;
 
-    /** @var LoggerInterface|null */
+    /**
+     * @var LoggerInterface|null
+     */
     private $logger = null;
 
     /**

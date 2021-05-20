@@ -22,7 +22,7 @@ class StreamFactoryTest extends TestCase
         $this->assertStringStartsWith('<?php', $stream->getContents());
     }
 
-    public function test()
+    public function test_create_stream_from_resource()
     {
         $factory = new StreamFactory;
         $resource = fopen(__FILE__, 'r');

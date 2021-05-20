@@ -78,11 +78,16 @@ class ServerRequestTest extends TestCase
         $serverParams = ['REQUEST_URI' => '/index.php'];
         $query = ['offset' => '33'];
         $body = new stdClass();
-        $uploadedFiles = ['test' => []];
-        $cookies = ['PHP_SESSION_ID', '1'];
+        $uploadedFile = UploadedFile::builder()
+            ->withStream(Stream::fromString('abc'))
+            ->withSize(3)
+            ->withErrorStatus(UPLOAD_ERR_OK)
+            ->build();
+        $uploadedFiles = ['test' => $uploadedFile];
+        $cookies = ['PHP_SESSION_ID' => '1'];
         $attributes = ['a' => 123];
 
-        $request = ServerRequest::nonValidatingBuilder()
+        $request = ServerRequest::validatingBuilder()
             ->withServerParams($serverParams)
             ->withQueryParams($query)
             ->withParsedBody($body)

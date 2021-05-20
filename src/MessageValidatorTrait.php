@@ -216,8 +216,9 @@ trait MessageValidatorTrait
                 $result[$key] = $this->validateUploadedFiles($item);
             } else if ($item instanceof UploadedFileInterface) {
                 $result[$key] = $item;
+            } else {
+                throw new InvalidArgumentException('Uploaded files must implement UploadedFileInterface');
             }
-            throw new InvalidArgumentException('Uploaded files must implement UploadedFileInterface');
         }
         return $result;
     }
