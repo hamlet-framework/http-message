@@ -106,6 +106,9 @@ class UploadedFile implements UploadedFileInterface
         }
 
         assert($this->file !== null);
+        if (!file_exists($this->file)) {
+            throw new RuntimeException('Cannot find file "' . $this->file . '"');
+        }
         $resource = fopen($this->file, 'r');
         if ($resource === false) {
             throw new RuntimeException('Cannot open file "' . $this->file . ' for reading');

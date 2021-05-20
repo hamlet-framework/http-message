@@ -7,6 +7,7 @@ use Hamlet\Http\Message\Spec\Traits\UploadedFileTestTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 
 class UploadedFileTest extends TestCase
 {
@@ -38,5 +39,15 @@ class UploadedFileTest extends TestCase
         $builder->withClientFileName($clientFileName);
         $builder->withClientMediaType($clientMediaType);
         return $builder->build();
+    }
+
+    public function test_not_existent_file_triggers_exception()
+    {
+        $file = UploadedFile::builder()
+            ->withPath(__FILE__ . '.xxx')
+            ->withErrorStatus(UPLOAD_ERR_OK)
+            ->build();
+        $this->expectException(RuntimeException::class);
+        $file->getStream();
     }
 }

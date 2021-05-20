@@ -170,9 +170,6 @@ abstract class UploadedFileBuilder
         if ($this->path === null && $this->stream === null) {
             throw new InvalidArgumentException('Path or stream required.');
         }
-        if ($this->size === null) {
-            throw new InvalidArgumentException('Size not specified.');
-        }
         if ($this->errorStatus === null) {
             throw new InvalidArgumentException('Error status not specified.');
         }
