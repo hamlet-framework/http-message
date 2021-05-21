@@ -107,11 +107,12 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        if ($this->getStatusCode() === $code && $this->getReasonPhrase() === $reasonPhrase) {
+        list($normalizedStatusCode, $normalizedReasonPhrase) = $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reasonPhrase);
+
+        if ($this->getStatusCode() == $normalizedStatusCode && $this->getReasonPhrase() == $normalizedReasonPhrase) {
             return $this;
         }
 
-        list($normalizedStatusCode, $normalizedReasonPhrase) = $this->validateAndNormalizeStatusCodeAndReasonPhrase($code, $reasonPhrase);
         $copy = clone $this;
         $copy->statusCode = $normalizedStatusCode;
         $copy->reasonPhrase = $normalizedReasonPhrase;

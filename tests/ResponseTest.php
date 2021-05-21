@@ -63,4 +63,10 @@ class ResponseTest extends TestCase
             ->build();
         $this->assertEquals('OK', $response->getReasonPhrase());
     }
+
+    public function test_no_mutation_on_identical_status_code()
+    {
+        $response = Response::empty()->withStatus(200);
+        $this->assertSame($response, $response->withStatus(200, 'OK'));
+    }
 }

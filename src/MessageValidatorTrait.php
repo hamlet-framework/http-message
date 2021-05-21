@@ -316,15 +316,12 @@ trait MessageValidatorTrait
     }
 
     /**
-     * @param mixed $cookieParams
+     * @param array $cookieParams
      * @return array<string,string>
      */
-    public function validateCookieParams($cookieParams): array
+    public function validateCookieParams(array $cookieParams): array
     {
         $validatedParams = [];
-        if (!is_array($cookieParams)) {
-            throw new InvalidArgumentException('Cookie params must be an array');
-        }
         /** @psalm-suppress MixedAssignment */
         foreach ($cookieParams as $key => $value) {
             if (!is_string($key) || !is_string($value)) {

@@ -183,7 +183,7 @@ class UploadedFile implements UploadedFileInterface
      * @return void
      * @throws RuntimeException on error
      */
-    private function copyToStream(StreamInterface $source, StreamInterface $destination, $maxLen = -1)
+    private function copyToStream(StreamInterface $source, StreamInterface $destination, int $maxLen = -1)
     {
         if ($maxLen === -1) {
             while (!$source->eof()) {

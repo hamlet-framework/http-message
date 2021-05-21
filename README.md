@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/hamlet-framework/http-message.svg?branch=master)](https://travis-ci.org/hamlet-framework/http-message)
 
+PSR-7 and PSR-17 implementation.
+
 This library generally provides you with three ways of creating objects.
 
 ## Step-wise adjustments
@@ -48,4 +50,3 @@ When in doubt use validating builders.
 
 - Adapt tests from https://github.com/Sporkmonger/Addressable/blob/master/spec/addressable/uri_spec.rb
 - Expand test coverage
-- Implement PSR-17

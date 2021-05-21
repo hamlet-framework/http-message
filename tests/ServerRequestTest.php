@@ -137,6 +137,6 @@ class ServerRequestTest extends TestCase
     public function test_validating_builder_raises_exception_on_invalid_attributes()
     {
         $this->expectException(InvalidArgumentException::class);
-        ServerRequest::validatingBuilder()->withServerParams([new stdClass]);
+        ServerRequest::validatingBuilder()->withAttributes([new stdClass]);
     }
 }
