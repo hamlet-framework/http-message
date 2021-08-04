@@ -104,7 +104,7 @@ trait UriValidatorTrait
 
         $callback =
             /**
-             * @param array<int,string> $match
+             * @param array<string> $match
              * @return string
              */
             function (array $match): string {
