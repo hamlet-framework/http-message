@@ -1,6 +1,6 @@
 # Hamlet / HTTP / Message
 
-![CI Status](https://github.com/hamlet-framework/type/workflows/CI/badge.svg?branch=master&event=push)
+![CI Status](https://github.com/hamlet-framework/http-message/workflows/CI/badge.svg?branch=master&event=push)
 [![Packagist](https://img.shields.io/packagist/v/hamlet-framework/http-message.svg)](https://packagist.org/packages/hamlet-framework/http-message)
 [![Packagist](https://img.shields.io/packagist/dt/hamlet-framework/http-message.svg)](https://packagist.org/packages/hamlet-framework/http-message)
 [![Coverage Status](https://coveralls.io/repos/github/hamlet-framework/http-message/badge.svg?branch=master)](https://coveralls.io/github/hamlet-framework/http-message?branch=master)
